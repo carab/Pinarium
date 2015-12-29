@@ -26,6 +26,7 @@ Frontend :
 
 * Add translations.
 * Add multi-cave system.
+* Add settings page.
 * Improve bottle form, add autocomplete, add photo.
 * Fast button to set a bottle as "dranked" and add "dranked" date.
 * Add search filters.
