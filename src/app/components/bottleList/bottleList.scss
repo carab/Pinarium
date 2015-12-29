@@ -1,0 +1,22 @@
+bottle-list {
+  md-card {
+    md-toolbar.md-default {
+      background-color: transparent;
+      color: inherit;
+    }
+  }
+
+  md-list {
+    .ui-bottle-quantity {
+      min-width: 2rem;
+      text-align: center;
+      color: #999;
+      font-size: 1.2rem;
+    }
+
+    md-list-item.md-2-line,
+    md-list-item.md-2-line > .md-no-style {
+      min-height: auto;
+    }
+  }
+}

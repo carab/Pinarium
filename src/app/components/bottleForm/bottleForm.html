@@ -1,0 +1,138 @@
+<form name="bottleForm" ng-submit="vm.submit()" layout="column" layout-fill class="md-inline-form">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <md-button aria-label="Cancel" class="md-icon-button" ng-click="vm.cancel()" ng-if="!vm.$mdMedia('gt-sm')">
+        <md-icon>keyboard_backspace</md-icon>
+      </md-button>
+      <md-button aria-label="Cancel" class="md-icon-button" ng-click="vm.cancel()" ng-if="vm.$mdMedia('gt-sm')">
+        <md-icon>clear</md-icon>
+      </md-button>
+      <h2 ng-if="vm.isNew()">Add bottle</h2>
+      <h2 ng-if="!vm.isNew()">Edit bottle</h2>
+      <span flex></span>
+      <md-button type="submit" aria-label="Save" class="md-icon-button" ng-if="!vm.$mdMedia('gt-sm')">
+        <md-icon>done</md-icon>
+      </md-button>
+      <md-button type="submit" ng-if="vm.$mdMedia('gt-sm')">Save</md-button>
+    </div>
+  </md-toolbar>
+  <md-content flex layout-padding>
+    <div layout="row" layout-wrap>
+      <md-input-container class="md-block" flex="100" flex-gt-md="70">
+        <label>bottle.appellation</label>
+        <input name="appellation" ng-model="vm.bottle.appellation" required>
+        <div ng-messages="bottleForm.appellation.$error" role="alert">
+          <div ng-message="required">Please enter your bottle appellation</div>
+        </div>
+      </md-input-container>
+      <md-input-container class="md-block" flex="30">
+        <label translate>bottle.vintage</label>
+        <input ng-model="vm.bottle.vintage" type="text" name="vintage">
+      </md-input-container>
+      <md-input-container class="md-block" flex="70" flex-gt-md="50">
+        <label translate>bottle.cuvee</label>
+        <input ng-model="vm.bottle.cuvee" type="text" name="cuvee">
+      </md-input-container>
+      <md-input-container class="md-block" flex="100" flex-gt-md="50">
+        <label translate>bottle.producer</label>
+        <input ng-model="vm.bottle.producer" type="text" name="producer">
+      </md-input-container>
+      <md-input-container class="md-block" flex="50" flex-gt-sm="25">
+        <label>bottle.color</label>
+        <md-select ng-model="vm.bottle.color">
+          <md-option value="">none</md-option>
+          <md-option ng-repeat="color in vm.enums.colors" value="{{color}}">
+            {{color}}
+          </md-option>
+        </md-select>
+      </md-input-container>
+      <md-input-container class="md-block" flex="50" flex-gt-sm="25">
+        <label>bottle.type</label>
+        <md-select ng-model="vm.bottle.type">
+          <md-option ng-repeat="type in vm.enums.types" value="{{type}}">
+            {{type}}
+          </md-option>
+        </md-select>
+      </md-input-container>
+      <md-input-container class="md-block" flex="50" flex-gt-sm="25">
+        <label>bottle.size</label>
+        <md-select ng-model="vm.bottle.size">
+          <md-option ng-repeat="size in vm.enums.sizes" value="{{size}}">
+            {{size}}
+          </md-option>
+        </md-select>
+      </md-input-container>
+      <md-input-container class="md-block" flex="50" flex-gt-sm="25">
+        <label>bottle.effervescence</label>
+        <md-select ng-model="vm.bottle.effervescence">
+          <md-option ng-repeat="effervescence in vm.enums.effervescences" value="{{effervescence}}">
+            {{effervescence}}
+          </md-option>
+        </md-select>
+      </md-input-container>
+    </div>
+    <div layout="row" layout-wrap>
+      <md-input-container class="md-block" flex="50">
+        <label translate>bottle.quantity</label>
+        <input ng-model="vm.bottle.quantity" type="number" name="quantity" min="1">
+        <div ng-messages="bottleForm.quantity.$error">
+          <div ng-message="min"><translate>validation.bottle.quantity.minInvalid</translate></div>
+        </div>
+      </md-input-container>
+      <md-input-container class="md-block" flex="50">
+        <label translate>bottle.quantityDrank</label>
+        <input ng-model="vm.bottle.quantityDrank" type="number" name="quantityDrank" min="0" max="{{vm.bottle.quantity}}">
+        <div ng-messages="bottleForm.quantityDrank.$error">
+          <div ng-message="min"><translate>validation.bottle.quantityDrank.minInvalid</translate></div>
+          <div ng-message="max"><translate>validation.bottle.quantityDrank.maxInvalid</translate></div>
+        </div>
+      </md-input-container>
+    </div>
+    <div layout="row" layout-wrap>
+      <md-input-container class="md-block" flex="50" flex-gt-sm="33">
+        <label translate>bottle.region</label>
+        <input ng-model="vm.bottle.region" type="text" name="region">
+      </md-input-container>
+      <md-input-container class="md-block" flex="50" flex-gt-sm="33">
+        <label translate>bottle.country</label>
+        <input ng-model="vm.bottle.country" type="text" name="country">
+      </md-input-container>
+      <md-input-container class="md-block" flex="50" flex-gt-sm="33">
+        <label translate>bottle.reference</label>
+        <input ng-model="vm.bottle.reference" type="text" name="reference">
+      </md-input-container>
+      <md-input-container class="md-block" flex="50" flex-gt-sm="33">
+        <label>bottle.procurement</label>
+        <md-select ng-model="vm.bottle.procurement">
+          <md-option ng-repeat="procurement in vm.enums.procurements" value="{{procurement}}">
+            {{procurement}}
+          </md-option>
+        </md-select>
+      </md-input-container>
+      <md-datepicker class="md-block" flex="50" flex-gt-sm="33" ng-model="vm.bottle.date" md-placeholder="bottle.date">
+      </md-datepicker>
+      <md-input-container class="md-block" flex="50" flex-gt-sm="33">
+        <label translate>bottle.location</label>
+        <input ng-model="vm.bottle.location" type="text" name="location">
+      </md-input-container>
+      <md-input-container class="md-block" flex="50" flex-gt-sm="33">
+        <label translate>bottle.value</label>
+        <input ng-model="vm.bottle.value" type="text" name="value">
+      </md-input-container>
+      <md-input-container class="md-block" flex="50" flex-gt-sm="33">
+        <label translate>bottle.origin</label>
+        <input ng-model="vm.bottle.origin" type="text" name="origin">
+      </md-input-container>
+      <md-input-container class="md-block" flex="50" flex-gt-sm="33">
+        <label translate>bottle.destination</label>
+        <input ng-model="vm.bottle.destination" type="text" name="destination">
+      </md-input-container>
+    </div>
+    <div layout="row" layout-wrap>
+      <md-input-container class="md-block" flex="100">
+        <label translate>bottle.notes</label>
+        <textarea ng-model="vm.bottle.notes" name="notes"></textarea>
+      </md-input-container>
+    </div>
+  </md-content>
+</form>

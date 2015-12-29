@@ -1,0 +1,103 @@
+<md-card hide show-gt-sm>
+  <md-toolbar ng-hide="vm.selectedBottles.length" class="md-default">
+    <div class="md-toolbar-tools">
+      <span>Bottles</span>
+    </div>
+  </md-toolbar>
+  <md-toolbar ng-show="vm.selectedBottles.length" class="md-accent">
+    <div class="md-toolbar-tools">
+      <span>Selected : {{vm.selectedBottles.length}}</span>
+      <span flex></span>
+      <md-button class="md-icon-button" aria-label="Delete selected bottles" ng-click="vm.removeSelectedBottles($event)"><md-icon>delete</md-icon></md-button>
+    </div>
+  </md-toolbar>
+  <md-data-table-container>
+    <table md-data-table md-row-select="vm.selectedBottles" md-progress="vm.deferred">
+      <thead md-order="vm.order" md-trigger="vm.onOrderChange">
+        <tr>
+          <th name="Quantity" order-by="quantity"></th>
+          <th name="Vintage" order-by="vintage"></th>
+          <th name="Appellation" order-by="appellation"></th>
+          <th name="Cuvée" order-by="cuvee"></th>
+          <th name="Producer" order-by="producer"></th>
+          <th name="Color" order-by="color"></th>
+          <th name="Type" order-by="type" hide show-gt-md></th>
+          <th name="Size" order-by="size" hide show-gt-md></th>
+          <th name="Effervescence" order-by="effervescence" hide show-gt-md></th>
+          <th name="Region" order-by="region" hide show-gt-md></th>
+          <th name="Country" order-by="country" hide show-gt-md></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="bottle in vm.bottles">
+          <td>{{bottle.quantity}}</td>
+          <td>{{bottle.vintage}}</td>
+          <td>{{bottle.appellation}}</td>
+          <td>{{bottle.cuvee}}</td>
+          <td>{{bottle.producer}}</td>
+          <td>{{bottle.color}}</td>
+          <td hide show-gt-md>{{bottle.type}}</td>
+          <td hide show-gt-md>{{bottle.size}}</td>
+          <td hide show-gt-md>{{bottle.effervescence}}</td>
+          <td hide show-gt-md>{{bottle.region}}</td>
+          <td hide show-gt-md>{{bottle.country}}</td>
+          <td>
+            <md-menu>
+              <md-button aria-label="Open menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+                <md-icon>more_vert</md-icon>
+              </md-button>
+              <md-menu-content width="4">
+                <md-menu-item>
+                  <md-button ng-click="vm.editBottle(bottle, $event)">
+                    <md-icon>edit_mode</md-icon>
+                    Modify
+                  </md-button>
+                </md-menu-item>
+                <md-menu-divider></md-menu-divider>
+                <md-menu-item>
+                  <md-button ng-click="vm.removeBottle(bottle, $event)" class="md-warn">
+                    <md-icon>delete</md-icon>
+                    Delete
+                  </md-button>
+                </md-menu-item>
+              </md-menu-content>
+            </md-menu>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </md-data-table-container>
+</md-card>
+<md-list hide-gt-sm>
+  <md-subheader class="md-no-sticky">Bottles</md-subheader>
+  <md-list-item class="md-2-line" ng-repeat="bottle in vm.bottles">
+    <div class="ui-bottle-quantity">
+      <p>{{bottle.quantity}}</p>
+    </div>
+    <div class="md-list-item-text">
+      <h3>{{bottle.appellation}} <small>{{bottle.vintage}} {{bottle.color}}</small></h3>
+      <p>{{bottle.cuvee}} {{bottle.producer}}</p>
+    </div>
+    <md-menu>
+      <md-button aria-label="Open menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+        <md-icon>more_vert</md-icon>
+      </md-button>
+      <md-menu-content width="4">
+        <md-menu-item>
+          <md-button ng-click="vm.editBottle(bottle, $event)">
+            <md-icon>edit_mode</md-icon>
+            Modify
+          </md-button>
+        </md-menu-item>
+        <md-menu-divider></md-menu-divider>
+        <md-menu-item>
+          <md-button ng-click="vm.removeBottle(bottle, $event)" class="md-warn">
+            <md-icon>delete</md-icon>
+            Delete
+          </md-button>
+        </md-menu-item>
+      </md-menu-content>
+    </md-menu>
+  </md-list-item>
+</md-list>
