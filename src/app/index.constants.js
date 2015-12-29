@@ -3,8 +3,7 @@
   'use strict';
 
   angular
-    .module('vinarium')
-    .constant('malarkey', malarkey)
-    .constant('moment', moment);
+    .module('vinarium');
+    //.constant('moment', moment);
 
 })();

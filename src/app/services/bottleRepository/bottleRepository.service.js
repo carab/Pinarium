@@ -6,27 +6,26 @@
     .factory('BottleRepository', bottleRepository);
 
   /** @ngInject */
-  function bottleRepository($q, $firebaseArray, FirebaseConfig) {
+  function bottleRepository($q, $firebaseArray, UserRepository) {
     var service = {
-      apiUrl: FirebaseConfig.api,
-      apiPath: '/bottles',
+      getBottlesRef: getBottlesRef,
       getBottles: getBottles,
       addBottle: addBottle
     };
 
     return service;
 
-    function getRef() {
-      return new Firebase(service.apiUrl + service.apiPath);
+    function getBottlesRef() {
+      return UserRepository.getUserRef().child('bottles');
     }
 
     function getBottles() {
-      var ref = getRef();
-      return $firebaseArray(ref);
+      var ref = getBottlesRef();
+      return $firebaseArray(getBottlesRef());
     }
 
     function addBottle(bottle) {
-      var ref = getRef();
+      var ref = getBottlesRef();
 
       return $q(function(resolve, reject) {
         ref.push(bottle, function(error) {

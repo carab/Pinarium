@@ -1,8 +1,38 @@
-<div layout-gt-sm="row" layout-fill layout-align="space-around center">
-  <section flex-gt-sm="40">
-    <signup-form></signup-form>
-  </section>
-  <section flex-gt-sm="40">
-    <signin-form></signin-form>
-  </section>
-</div>
+<section class="ui-auth" layout="column" layout-fill>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h1 flex>
+        <span>Vinarium</span>
+      </h1>
+    </div>
+  </md-toolbar>
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2 flex>
+        <span>The wine cave manager, simple and easy to use</span>
+      </h2>
+    </div>
+  </md-toolbar>
+  <div hide-xs hide-sm layout-gt-sm="row" flex layout-align="space-around center">
+    <section flex-gt-sm="40">
+      <signup-form></signup-form>
+    </section>
+    <section flex-gt-sm="40">
+      <signin-form></signin-form>
+    </section>
+  </div>
+  <md-content hide-gt-sm flex>
+    <md-tabs md-border-bottom md-dynamic-height>
+      <md-tab label="Sign up">
+        <md-content class="md-padding">
+          <signup-form></signup-form>
+        </md-content>
+      </md-tab>
+        <md-tab label="Sign in">
+          <md-content class="md-padding">
+            <signin-form></signin-form>
+          </md-content>
+        </md-tab>
+    </md-tabs>
+  </md-content>
+</section>

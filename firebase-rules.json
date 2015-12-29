@@ -1,0 +1,19 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth.uid == $uid",
+        ".write": "auth.uid == $uid",
+        "bottles": {
+          "$bottle": {}
+        },
+        "caves": {
+          "$cave": {}
+        }
+      }
+    },
+    "enums": {
+      ".read": true
+    }
+  }
+}

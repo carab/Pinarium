@@ -35,7 +35,7 @@
         $mdDialog.show({
           controller: editBottleController,
           controllerAs: 'vm',
-          template: '<bottle-form layout="column" layout-fill bottle="vm.bottle" submit="vm.save()" cancel="vm.close()"></bottle-form>',
+          template: '<bottle-form layout="column" layout-fill bottle="vm.bottle" submit="vm.save(isValid)" cancel="vm.close()"></bottle-form>',
           parent: angular.element($document.body),
           locals: {
             bottle: bottle,

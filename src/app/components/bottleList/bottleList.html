@@ -1,4 +1,16 @@
-<md-card hide show-gt-sm>
+<div ng-if="!vm.bottles.length" layout layout-margin layout-padding layout-align="center center">
+  <md-card flex-gt-sm="33">
+    <md-card-title>
+      <md-card-title-text>
+        <span class="md-headline">Your cave is empty !</span>
+      </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+      <p>But don't worry, you can add bottles using the button in the bottom right corner !</p>
+    </md-card-content>
+  </md-card>
+</div>
+<md-card ng-if="vm.bottles.length" hide show-gt-sm>
   <md-toolbar ng-hide="vm.selectedBottles.length" class="md-default">
     <div class="md-toolbar-tools">
       <span>Bottles</span>
@@ -69,7 +81,7 @@
     </table>
   </md-data-table-container>
 </md-card>
-<md-list hide-gt-sm>
+<md-list ng-if="vm.bottles.length" hide-gt-sm>
   <md-subheader class="md-no-sticky">Bottles</md-subheader>
   <md-list-item class="md-2-line" ng-repeat="bottle in vm.bottles">
     <div class="ui-bottle-quantity">

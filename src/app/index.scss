@@ -44,6 +44,23 @@
   font-feature-settings: 'liga';
 }
 
+.ui-auth {
+  md-toolbar {
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+}
+
+.ui-md .ui-auth,
+.ui-lg .ui-auth,
+.ui-xl .ui-auth {
+  background: url(../assets/images/banner.jpg) no-repeat center center fixed;
+  background-size: cover;
+}
+
 /**
  *  Do not remove the comment below. It's the markers used by gulp-inject to inject
  *  all your sass files automatically

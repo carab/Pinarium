@@ -10,7 +10,6 @@
       'ngAria',
       'ngNewRouter',
       'ngMaterial',
-      'toastr',
       'md.data.table',
       'firebase'
     ]);

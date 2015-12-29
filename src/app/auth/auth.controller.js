@@ -6,7 +6,7 @@
     .controller('AuthController', AuthController);
 
   /** @ngInject */
-  function AuthController() {
+  function AuthController($location, Auth) {
     var vm = this;
 
     Auth.$onAuth(function(auth) {

@@ -23,14 +23,19 @@
       var vm = this;
 
       Auth.$onAuth(function(auth) {
+        console.log('test');
         vm.auth = auth;
+        console.log(auth);
       });
 
       vm.signout = signout;
 
       function signout() {
+        console.log('1')
         Auth.$unauth();
+        console.log('2')
         $location.path('/auth');
+        console.log('3')
       }
     }
   }

@@ -1,4 +1,4 @@
-<form novalidate name="bottleForm" ng-submit="vm.submit(bottleForm.$valid)" layout="column" layout-fill class="md-inline-form">
+<form novalidate name="bottleForm" ng-submit="vm.submit({isValid: bottleForm.$valid})" layout="column" layout-fill class="md-inline-form">
   <md-toolbar>
     <div class="md-toolbar-tools">
       <md-button aria-label="Cancel" class="md-icon-button" ng-click="vm.cancel()" ng-if="!vm.$mdMedia('gt-sm')">

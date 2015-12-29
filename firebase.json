@@ -1,8 +1,10 @@
 {
   "firebase": "vinarium",
   "public": "dist",
+  "rules": "firebase-rules.json",
   "ignore": [
     "firebase.json",
+    "firebase-rules.json",
     "**/.*",
     "**/node_modules/**"
   ]

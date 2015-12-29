@@ -19,29 +19,41 @@
     return directive;
 
     /** @ngInject */
-    function signupFormController($location, Auth) {
+    function signupFormController($location, Auth, UserRepository) {
       var vm = this;
 
       vm.submit = submit;
 
       function submit(isValid) {
         if (isValid) {
-          Auth.$createUser({
-            email: vm.user.email,
-            password: vm.user.password
-          }).then(function(user) {
-            Auth.$authWithPassword({
-              email: vm.user.email,
-              password: vm.user.password
-            }).then(function(auth) {
-              $location.path('/');
-            }).catch(function(error) {
-              vm.error = error;
-            });
-          }).catch(function(error) {
-            vm.error = error;
-          });
+          vm.submitted = true;
+          signup(vm.user);
         }
+      }
+
+      function signup(user) {
+        Auth.$createUser({
+          email: user.email,
+          password: user.password
+        }).then(function(data) {
+          signin(user);
+        }).catch(function(error) {
+          vm.error = error;
+          vm.submitted = false;
+        });
+      }
+
+      function signin(user) {
+        Auth.$authWithPassword({
+          email: user.email,
+          password: user.password
+        }).then(function(data) {
+          UserRepository.addUser();
+          $location.path('/');
+        }).catch(function(error) {
+          vm.error = error;
+          vm.submitted = false;
+        });
       }
     }
   }

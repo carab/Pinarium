@@ -1,12 +1,31 @@
-<md-toolbar layout="row" layout-align="center center">
-  <md-button aria-label="Home" class="md-icon-button" href="">
-    <md-icon>local_bar</md-icon>
-  </md-button>
-  <md-button hide-xs hide-sm href="">
-    Vinarium
-  </md-button>
-  <span flex></span>
-  <md-button href="" class="md-raised">Bottles</md-button>
-  <md-button href="" class="md-raised">Caves</md-button>
-  <md-button ng-click="vm.signout()" class="md-raised" ng-if="vm.auth">Sign out</md-button>
+<md-toolbar>
+  <div class="md-toolbar-tools">
+    <md-button aria-label="Home" class="md-icon-button" href="">
+      <md-icon>local_bar</md-icon>
+    </md-button>
+    <md-button hide-xs hide-sm href="">
+      Vinarium
+    </md-button>
+    <span flex></span>
+    <md-menu ng-if="vm.auth">
+      <md-button aria-label="User menu" class="md-icon-button ui-avatar" ng-click="$mdOpenMenu($event)">
+        <img ng-src="{{vm.auth.password.profileImageURL}}" alt="{{vm.auth.password.email}}" />
+      </md-button>
+      <md-menu-content>
+        <md-menu-item>
+          <md-button ng-href="/settings">
+            <md-icon md-menu-align-target>settings</md-icon>
+            user.settings
+          </md-button>
+        </md-menu-item>
+        <md-menu-divider></md-menu-divider>
+        <md-menu-item>
+          <md-button ng-click="vm.signout()">
+            <md-icon md-menu-align-target>power_settings_new</md-icon>
+            user.signout
+          </md-button>
+        </md-menu-item>
+      </md-menu-content>
+    </md-menu>
+  </div>
 </md-toolbar>

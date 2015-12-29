@@ -24,7 +24,8 @@
       </div>
     </md-input-container>
     <div layout layout-align="end center">
-      <md-button class="md-primary" type="submit">Submit</md-button>
+      <md-button class="md-primary" type="submit" ng-if="!vm.submitted">Submit</md-button>
+      <md-progress-circular class="md-primary" md-mode="indeterminate" md-diameter="60" ng-if="vm.submitted"></md-progress-circular>
     </div>
   </md-content>
 </form>

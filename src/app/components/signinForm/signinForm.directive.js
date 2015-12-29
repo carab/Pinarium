@@ -26,15 +26,21 @@
 
       function submit(isValid) {
         if (isValid) {
-          Auth.$authWithPassword({
-            email: vm.user.email,
-            password: vm.user.password
-          }).then(function(auth) {
-            $location.path('/');
-          }).catch(function(error) {
-            vm.error = error;
-          });
+          vm.submitted = true;
+          signin(vm.user);
         }
+      }
+
+      function signin(user) {
+        Auth.$authWithPassword({
+          email: vm.user.email,
+          password: vm.user.password
+        }).then(function(auth) {
+          $location.path('/');
+        }).catch(function(error) {
+          vm.error = error;
+          vm.submitted = false;
+        });
       }
     }
   }
