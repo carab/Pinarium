@@ -55,10 +55,12 @@
           vm.save = save;
           vm.close = close;
 
-          function save() {
-            bottles.$save(bottle).then(function() {
-              $mdDialog.hide();
-            });
+          function save(isValid) {
+            if (isValid) {
+              bottles.$save(bottle).then(function() {
+                $mdDialog.hide();
+              });
+            }
           }
 
           function close() {

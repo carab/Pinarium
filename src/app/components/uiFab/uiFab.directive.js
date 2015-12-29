@@ -44,10 +44,12 @@
           vm.save = save;
           vm.close = close;
 
-          function save() {
-            BottleRepository.addBottle(vm.bottle).then(function() {
-              $mdDialog.hide();
-            });
+          function save(isValid) {
+            if (isValid) {
+              BottleRepository.addBottle(vm.bottle).then(function() {
+                $mdDialog.hide();
+              });
+            }
           }
 
           function close() {
