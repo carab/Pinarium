@@ -3,17 +3,17 @@
 
   angular
     .module('vinarium')
-    .controller('MainController', MainController);
+    .controller('AuthController', AuthController);
 
   /** @ngInject */
-  function MainController($location, Auth) {
+  function AuthController() {
     var vm = this;
 
     Auth.$onAuth(function(auth) {
       if (auth) {
-        activate();
+        $location.path('/');
       } else {
-        $location.path('/auth');
+        activate();
       }
     });
 

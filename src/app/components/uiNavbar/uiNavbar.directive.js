@@ -19,8 +19,19 @@
     return directive;
 
     /** @ngInject */
-    function uiNavbarController() {
+    function uiNavbarController($location, Auth) {
+      var vm = this;
 
+      Auth.$onAuth(function(auth) {
+        vm.auth = auth;
+      });
+
+      vm.signout = signout;
+
+      function signout() {
+        Auth.$unauth();
+        $location.path('/auth');
+      }
     }
   }
 

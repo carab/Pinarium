@@ -16,7 +16,8 @@
   /** @ngInject */
   function RouterController($router) {
     $router.config([
-      { path: '/', component: 'main' }
+      { path: '/', component: 'main', as: 'main' },
+      { path: '/auth', component: 'auth', as: 'auth' }
     ]);
   }
 
