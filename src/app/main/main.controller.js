@@ -7,8 +7,6 @@
 
   /** @ngInject */
   function MainController($location, Auth) {
-    var vm = this;
-
     Auth.$onAuth(function(auth) {
       if (auth) {
         activate();

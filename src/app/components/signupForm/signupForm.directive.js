@@ -35,7 +35,7 @@
         Auth.$createUser({
           email: user.email,
           password: user.password
-        }).then(function(data) {
+        }).then(function() {
           signin(user);
         }).catch(function(error) {
           vm.error = error;
@@ -47,7 +47,7 @@
         Auth.$authWithPassword({
           email: user.email,
           password: user.password
-        }).then(function(data) {
+        }).then(function() {
           UserRepository.addUser();
           $location.path('/');
         }).catch(function(error) {

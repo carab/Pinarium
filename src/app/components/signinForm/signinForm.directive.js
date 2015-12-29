@@ -33,9 +33,9 @@
 
       function signin(user) {
         Auth.$authWithPassword({
-          email: vm.user.email,
-          password: vm.user.password
-        }).then(function(auth) {
+          email: user.email,
+          password: user.password
+        }).then(function() {
           $location.path('/');
         }).catch(function(error) {
           vm.error = error;

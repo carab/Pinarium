@@ -20,7 +20,6 @@
     }
 
     function getBottles() {
-      var ref = getBottlesRef();
       return $firebaseArray(getBottlesRef());
     }
 

@@ -7,8 +7,6 @@
 
   /** @ngInject */
   function AuthController($location, Auth) {
-    var vm = this;
-
     Auth.$onAuth(function(auth) {
       if (auth) {
         $location.path('/');
