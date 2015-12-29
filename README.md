@@ -25,6 +25,7 @@ Backend :
 Frontend :
 
 * Add user authentication and cave by user.
+* Add translation system.
 * Attach a photo to the bottles.
 * Fast button to set a bottle as "dranked" and add "dranked" date.
 * Add search filters.
@@ -36,6 +37,7 @@ Frontend :
 Backend :
 
 * More secured Firebase rules.
+* Develop unit tests.
 
 ##
 
