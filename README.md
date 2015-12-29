@@ -24,22 +24,18 @@ Backend :
 
 Frontend :
 
-* Add user authentication and cave by user.
-* Add translation system.
-* Attach a photo to the bottles.
+* Add translations.
+* Add multi-cave system.
+* Improve bottle form, add autocomplete, add photo.
 * Fast button to set a bottle as "dranked" and add "dranked" date.
 * Add search filters.
-* Add cave creation/modification.
-* Add autocomplete on some properties.
 * Automatically fetch bottle data from a photo.
 * Fetch data to know when it is better do drink a bottle.
 
 Backend :
 
 * More secured Firebase rules.
-* Develop unit tests.
-
-##
+* Develop unit and e2e tests.
 
 ## Known bugs
 
