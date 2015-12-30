@@ -24,7 +24,7 @@ Backend :
 
 Frontend :
 
-* Add translations.
+* Add languate switcher.
 * Improve errors coming from Firebase.
 * Add multi-cave system.
 * Add settings page.
