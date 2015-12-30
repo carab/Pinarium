@@ -107,7 +107,7 @@
     "producer": "Domain",
     "region": "Region",
     "country": "Country",
-    "description": "Comment",
+    "notes": "Notes",
     "reference": "Reference",
     "cave": "Cellar",
     "quantity": "Quantity",
@@ -133,9 +133,9 @@
     "effervescence": {
       "effervescence": "Effervescence",
       "still": "Still",
-      "semisparkling": "Semi sparkling",
-      "sparkling": "Sparkling",
-      "verysparkling": "Very sparkling"
+      "semisparkling": "Semi pétillant",
+      "sparkling": "Pétillant",
+      "verysparkling": "Très pétillant"
     },
     "size": {
       "size": "Size",
@@ -154,23 +154,24 @@
       "12000": "Balthazar (12 l)",
       "15000": "Nebuchadnezzar (15 l)",
       "18000": "Melchior (18 l)",
-      "18001": "Solomon (18 l)",
+      "18000b": "Solomon (18 l)",
       "20000": "Solomon (20 l)",
       "25000": "Sovereign (25 l)",
       "26250": "Sovereign (26.25 l)",
       "27000": "Primat (27 l)",
       "30000": "Melchizedek (30 l)"
     },
-    "acquiredFrom": "Acquired from",
-    "acquiredTo": "Acquired to",
-    "acquiredCost": "Acquired cost",
-    "acquiredDate": "Acquired date",
-    "acquiredLocation": "Acquired location",
-    "acquiredMethod": {
-      "acquiredMethod": "Acquired method",
-      "buying": "Buying",
-      "offering": "Offering",
-      "stealing": "Stealing"
+    "value": "Value",
+    "obtainedFrom": "Obtained from",
+    "obtainedTo": "Obtained to",
+    "obtainedOn": "Obtained on",
+    "obtainedAt": "Obtained at",
+    "obtainedBy": {
+      "obtainedBy": "Obtained by",
+      "purchase": "Purchase",
+      "gift": "Gift",
+      "prize": "Prize",
+      "steal": "Steal"
     },
     "formatted": {
       "boughtFor": "Bought for {cost}",

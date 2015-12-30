@@ -38,35 +38,34 @@
         <input ng-model="vm.bottle.producer" type="text" name="producer">
       </md-input-container>
       <md-input-container class="md-block" flex="50" flex-gt-sm="25">
-        <label>bottle.color</label>
+        <label translate>bottle.color</label>
         <md-select ng-model="vm.bottle.color">
-          <md-option value="">none</md-option>
           <md-option ng-repeat="color in vm.enums.colors" value="{{color}}">
-            {{color}}
+            {{'bottle.color.'+color|translate}}
           </md-option>
         </md-select>
       </md-input-container>
       <md-input-container class="md-block" flex="50" flex-gt-sm="25">
-        <label>bottle.type</label>
+        <label translate>bottle.type</label>
         <md-select ng-model="vm.bottle.type">
           <md-option ng-repeat="type in vm.enums.types" value="{{type}}">
-            {{type}}
+            {{'bottle.type.'+type|translate}}
           </md-option>
         </md-select>
       </md-input-container>
       <md-input-container class="md-block" flex="50" flex-gt-sm="25">
-        <label>bottle.size</label>
+        <label translate>bottle.size</label>
         <md-select ng-model="vm.bottle.size">
           <md-option ng-repeat="size in vm.enums.sizes" value="{{size}}">
-            {{size}}
+            {{'bottle.size.'+size|translate}}
           </md-option>
         </md-select>
       </md-input-container>
       <md-input-container class="md-block" flex="50" flex-gt-sm="25">
-        <label>bottle.effervescence</label>
+        <label translate>bottle.effervescence</label>
         <md-select ng-model="vm.bottle.effervescence">
           <md-option ng-repeat="effervescence in vm.enums.effervescences" value="{{effervescence}}">
-            {{effervescence}}
+            {{'bottle.effervescence.'+effervescence|translate}}
           </md-option>
         </md-select>
       </md-input-container>
@@ -102,30 +101,30 @@
         <input ng-model="vm.bottle.reference" type="text" name="reference">
       </md-input-container>
       <md-input-container class="md-block" flex="50" flex-gt-sm="33">
-        <label>bottle.procurement</label>
+        <label translate>bottle.obtainedBy</label>
         <md-select ng-model="vm.bottle.procurement">
           <md-option ng-repeat="procurement in vm.enums.procurements" value="{{procurement}}">
-            {{procurement}}
+            {{'bottle.obtainedBy.'+procurement|translate}}
           </md-option>
         </md-select>
       </md-input-container>
-      <md-datepicker class="md-block" flex="50" flex-gt-sm="33" ng-model="vm.bottle.date" md-placeholder="bottle.date">
+      <md-datepicker class="md-block" flex="50" flex-gt-sm="33" ng-model="vm.bottle.obtainedOn" md-placeholder="{{'bottle.obtainedOn'|translate}}">
       </md-datepicker>
       <md-input-container class="md-block" flex="50" flex-gt-sm="33">
-        <label translate>bottle.location</label>
-        <input ng-model="vm.bottle.location" type="text" name="location">
+        <label translate>bottle.obtainedAt</label>
+        <input ng-model="vm.bottle.obtainedAt" type="text" name="obtainedAt">
       </md-input-container>
       <md-input-container class="md-block" flex="50" flex-gt-sm="33">
         <label translate>bottle.value</label>
         <input ng-model="vm.bottle.value" type="text" name="value">
       </md-input-container>
       <md-input-container class="md-block" flex="50" flex-gt-sm="33">
-        <label translate>bottle.origin</label>
-        <input ng-model="vm.bottle.origin" type="text" name="origin">
+        <label translate>bottle.obtainedFrom</label>
+        <input ng-model="vm.bottle.obtainedFrom" type="text" name="obtainedFrom">
       </md-input-container>
       <md-input-container class="md-block" flex="50" flex-gt-sm="33">
-        <label translate>bottle.destination</label>
-        <input ng-model="vm.bottle.destination" type="text" name="destination">
+        <label translate>bottle.obtainedTo</label>
+        <input ng-model="vm.bottle.obtainedTo" type="text" name="obtainedTo">
       </md-input-container>
     </div>
     <div layout="row" layout-wrap>
