@@ -28,6 +28,13 @@
       "main": [
         "dist/router.es5.js"
       ]
+    },
+    "messageformat": {
+      "main": [
+        "messageformat.js",
+        "locale/fr.js",
+        "locale/en.js"
+      ]
     }
   },
   "resolutions": {

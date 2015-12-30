@@ -38,6 +38,7 @@ Backend :
 
 * More secured Firebase rules.
 * Develop unit and e2e tests.
+* Document language add.
 
 ## Known bugs
 
