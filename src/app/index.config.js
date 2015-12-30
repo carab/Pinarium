@@ -4,7 +4,8 @@
   angular
     .module('vinarium')
     .config(config)
-    .config(material);
+    .config(material)
+    .config(translate);
 
   /** @ngInject */
   function config($logProvider) {
@@ -17,5 +18,20 @@
     $mdThemingProvider.theme('default')
       .primaryPalette('pink')
       .accentPalette('blue');
+  }
+
+  /** @ngInject */
+  function translate($translateProvider) {
+    $translateProvider
+      .useStaticFilesLoader({
+        prefix: '/app/languages/',
+        suffix: '.json'
+        })
+      .useSanitizeValueStrategy('sanitizeParameters')
+      //.useLocalStorage()
+      .useMessageFormatInterpolation()
+      .registerAvailableLanguageKeys(['en', 'fr'])
+      .determinePreferredLanguage()
+      .fallbackLanguage('en');
   }
 })();

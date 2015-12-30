@@ -2,7 +2,7 @@
   <md-toolbar class="md-accent">
     <div class="md-toolbar-tools">
       <h3>
-        <span>Sign up</span>
+        <span translate>user.signup</span>
       </h3>
     </div>
   </md-toolbar>
@@ -12,27 +12,27 @@
       <label translate>user.email</label>
       <input ng-model="vm.user.email" type="email" name="email" required>
       <div ng-messages="signupForm.email.$error" role="alert">
-        <div ng-message="required">Please enter your email.</div>
-        <div ng-message="email">Please enter a valid email.</div>
+        <div ng-message="required"><translate>user.email.required</translate></div>
+        <div ng-message="email"><translate>user.email.invalid</translate></div>
       </div>
     </md-input-container>
     <md-input-container class="md-block">
       <label translate>user.password</label>
       <input ng-model="vm.user.password" type="password" name="password" required>
       <div ng-messages="signupForm.password.$error" role="alert">
-        <div ng-message="required">Please enter your password.</div>
+        <div ng-message="required"><translate>user.password.required</translate></div>
       </div>
     </md-input-container>
     <md-input-container class="md-block">
       <label translate>user.passwordConfirmation</label>
       <input  ng-model="vm.user.passwordConfirmation" type="password" name="passwordConfirmation" required match="vm.user.password">
       <div ng-messages="signupForm.passwordConfirmation.$error" role="alert">
-        <div ng-message="required">Please enter your password confirmation.</div>
-        <div ng-message="match">Please enter the same password as above.</div>
+        <div ng-message="required"><translate>user.passwordConfirmation.required</translate></div>
+        <div ng-message="match"><translate>user.passwordConfirmation.wrong</translate></div>
       </div>
     </md-input-container>
     <div layout layout-align="end center">
-      <md-button class="md-accent" type="submit" ng-if="!vm.submitted">Submit</md-button>
+      <md-button class="md-accent" type="submit" ng-if="!vm.submitted"><translate>label.confirm</translate></md-button>
       <md-progress-circular class="md-accent" md-mode="indeterminate" md-diameter="60" ng-if="vm.submitted"></md-progress-circular>
     </div>
   </md-content>

@@ -21,7 +21,7 @@
     return directive;
 
     /** @ngInject */
-    function bottleListController($mdDialog, $mdMedia, $document, BottleRepository) {
+    function bottleListController($document, $mdDialog, $mdMedia, $translate, BottleRepository) {
       var vm = this;
 
       vm.selectedBottles = [];
@@ -70,34 +70,42 @@
       }
 
       function removeBottle(bottle, ev) {
-        var confirm = $mdDialog.confirm()
-          .title('Delete the following bottle ?')
-          .textContent(bottle.appellation)
-          .clickOutsideToClose(true)
-          .ariaLabel('Delete a bottle')
-          .targetEvent(ev)
-          .ok('Yes, delete it')
-          .cancel('No');
+        $translate(['bottle.deleteAsk', 'bottle.delete', 'label.yes', 'label.no'], {
+          count: 1
+        }).then(function (translations) {
+          var confirm = $mdDialog.confirm()
+            .title(translations['bottle.deleteAsk'])
+            .textContent(bottle.appellation)
+            .clickOutsideToClose(true)
+            .ariaLabel(translations['bottle.delete'])
+            .targetEvent(ev)
+            .ok(translations['label.yes'])
+            .cancel(translations['label.no']);
 
-        $mdDialog.show(confirm).then(function() {
-          vm.bottles.$remove(bottle);
+          $mdDialog.show(confirm).then(function() {
+            vm.bottles.$remove(bottle);
+          });
         });
       }
 
       function removeSelectedBottles(ev) {
-        var confirm = $mdDialog.confirm()
-          .title('Do you really want to delete ' + vm.selectedBottles.length + ' bottles ?')
-          .clickOutsideToClose(true)
-          .ariaLabel('Delete a bottle')
-          .targetEvent(ev)
-          .ok('Yes, delete it')
-          .cancel('No');
+        $translate(['bottle.deleteAsk', 'bottle.delete', 'label.yes', 'label.no'], {
+          count: vm.selectedBottles.length
+        }).then(function (translations) {
+          var confirm = $mdDialog.confirm()
+            .title(translations['bottle.deleteAsk'])
+            .clickOutsideToClose(true)
+            .ariaLabel(translations['bottle.delete'])
+            .targetEvent(ev)
+            .ok(translations['label.yes'])
+            .cancel(translations['label.no']);
 
-        $mdDialog.show(confirm).then(function() {
-          angular.forEach(vm.selectedBottles, function(bottle) {
-            vm.bottles.$remove(bottle);
+          $mdDialog.show(confirm).then(function() {
+            angular.forEach(vm.selectedBottles, function(bottle) {
+              vm.bottles.$remove(bottle);
+            });
+            vm.selectedBottles.length = 0;
           });
-          vm.selectedBottles.length = 0;
         });
       }
     }

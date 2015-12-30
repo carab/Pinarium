@@ -2,42 +2,42 @@
   <md-card flex-gt-sm="33">
     <md-card-title>
       <md-card-title-text>
-        <span class="md-headline">Your cave is empty !</span>
+        <span class="md-headline" translate>cave.empty.title</span>
       </md-card-title-text>
     </md-card-title>
     <md-card-content>
-      <p>But don't worry, you can add bottles using the button in the bottom right corner !</p>
+      <p translate>cave.empty.paragraph</p>
     </md-card-content>
   </md-card>
 </div>
 <md-card ng-if="vm.bottles.length" hide show-gt-sm>
   <md-toolbar ng-hide="vm.selectedBottles.length" class="md-default">
     <div class="md-toolbar-tools">
-      <span>Bottles</span>
+      <span translate translate-values="{count: vm.bottles.length}">bottle.my</span>
     </div>
   </md-toolbar>
   <md-toolbar ng-show="vm.selectedBottles.length" class="md-accent">
     <div class="md-toolbar-tools">
-      <span>Selected : {{vm.selectedBottles.length}}</span>
+      <span translate translate-values="{count: vm.selectedBottles.length}">bottle.selected</span>
       <span flex></span>
-      <md-button class="md-icon-button" aria-label="Delete selected bottles" ng-click="vm.removeSelectedBottles($event)"><md-icon>delete</md-icon></md-button>
+      <md-button class="md-icon-button" aria-label="{{'bottle.deleteSelected'|translate:'{count: vm.selectedBottles.length}'}}" ng-click="vm.removeSelectedBottles($event)"><md-icon>delete</md-icon></md-button>
     </div>
   </md-toolbar>
   <md-data-table-container>
     <table md-data-table md-row-select="vm.selectedBottles" md-progress="vm.deferred">
       <thead md-order="vm.order" md-trigger="vm.onOrderChange">
         <tr>
-          <th name="Quantity" order-by="quantity"></th>
-          <th name="Vintage" order-by="vintage"></th>
-          <th name="Appellation" order-by="appellation"></th>
-          <th name="Cuvée" order-by="cuvee"></th>
-          <th name="Producer" order-by="producer"></th>
-          <th name="Color" order-by="color"></th>
-          <th name="Type" order-by="type" hide show-gt-md></th>
-          <th name="Size" order-by="size" hide show-gt-md></th>
-          <th name="Effervescence" order-by="effervescence" hide show-gt-md></th>
-          <th name="Region" order-by="region" hide show-gt-md></th>
-          <th name="Country" order-by="country" hide show-gt-md></th>
+          <th name="{{'bottle.quantity'|translate}}" order-by="quantity"></th>
+          <th name="{{'bottle.vintage'|translate}}" order-by="vintage"></th>
+          <th name="{{'bottle.appellation'|translate}}" order-by="appellation"></th>
+          <th name="{{'bottle.cuvee'|translate}}" order-by="cuvee"></th>
+          <th name="{{'bottle.producer'|translate}}" order-by="producer"></th>
+          <th name="{{'bottle.color'|translate}}" order-by="color"></th>
+          <th name="{{'bottle.type'|translate}}" order-by="type" hide show-gt-md></th>
+          <th name="{{'bottle.size'|translate}}" order-by="size" hide show-gt-md></th>
+          <th name="{{'bottle.effervescence'|translate}}" order-by="effervescence" hide show-gt-md></th>
+          <th name="{{'bottle.region'|translate}}" order-by="region" hide show-gt-md></th>
+          <th name="{{'bottle.country'|translate}}" order-by="country" hide show-gt-md></th>
           <th></th>
         </tr>
       </thead>
@@ -56,21 +56,21 @@
           <td hide show-gt-md>{{bottle.country}}</td>
           <td>
             <md-menu>
-              <md-button aria-label="Open menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+              <md-button aria-label="{{'label.actions'|translate}}" class="md-icon-button" ng-click="$mdOpenMenu($event)">
                 <md-icon>more_vert</md-icon>
               </md-button>
               <md-menu-content width="4">
                 <md-menu-item>
                   <md-button ng-click="vm.editBottle(bottle, $event)">
                     <md-icon>edit_mode</md-icon>
-                    Modify
+                    <translate>label.update</translate>
                   </md-button>
                 </md-menu-item>
                 <md-menu-divider></md-menu-divider>
                 <md-menu-item>
                   <md-button ng-click="vm.removeBottle(bottle, $event)" class="md-warn">
                     <md-icon>delete</md-icon>
-                    Delete
+                    <translate>label.delete</translate>
                   </md-button>
                 </md-menu-item>
               </md-menu-content>
@@ -92,21 +92,21 @@
       <p>{{bottle.cuvee}} {{bottle.producer}}</p>
     </div>
     <md-menu>
-      <md-button aria-label="Open menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+      <md-button aria-label="{{'label.actions'|translate}}" class="md-icon-button" ng-click="$mdOpenMenu($event)">
         <md-icon>more_vert</md-icon>
       </md-button>
       <md-menu-content width="4">
         <md-menu-item>
           <md-button ng-click="vm.editBottle(bottle, $event)">
             <md-icon>edit_mode</md-icon>
-            Modify
+            <translate>label.update</translate>
           </md-button>
         </md-menu-item>
         <md-menu-divider></md-menu-divider>
         <md-menu-item>
           <md-button ng-click="vm.removeBottle(bottle, $event)" class="md-warn">
             <md-icon>delete</md-icon>
-            Delete
+            <translate>label.delete</translate>
           </md-button>
         </md-menu-item>
       </md-menu-content>

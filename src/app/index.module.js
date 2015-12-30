@@ -11,6 +11,7 @@
       'ngNewRouter',
       'ngMaterial',
       'md.data.table',
-      'firebase'
+      'firebase',
+      'pascalprecht.translate'
     ]);
 })();

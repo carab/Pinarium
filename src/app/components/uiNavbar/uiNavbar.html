@@ -1,28 +1,28 @@
 <md-toolbar>
   <div class="md-toolbar-tools">
-    <md-button aria-label="Home" class="md-icon-button" href="">
+    <md-button aria-label="{{'app.name'|translate}}" class="md-icon-button" href="">
       <md-icon>local_bar</md-icon>
     </md-button>
     <md-button hide-xs hide-sm href="">
-      Vinarium
+      <translate>app.name</translate>
     </md-button>
     <span flex></span>
     <md-menu ng-if="vm.auth">
-      <md-button aria-label="User menu" class="md-icon-button ui-avatar" ng-click="$mdOpenMenu($event)">
+      <md-button aria-label="{{'user.menu'|translate}}" class="md-icon-button ui-avatar" ng-click="$mdOpenMenu($event)">
         <img ng-src="{{vm.auth.password.profileImageURL}}" alt="{{vm.auth.password.email}}" />
       </md-button>
       <md-menu-content>
         <md-menu-item>
           <md-button>
             <md-icon md-menu-align-target>settings</md-icon>
-            user.settings
+            <translate>user.settings</translate>
           </md-button>
         </md-menu-item>
         <md-menu-divider></md-menu-divider>
         <md-menu-item>
           <md-button ng-click="vm.signout()">
             <md-icon md-menu-align-target>power_settings_new</md-icon>
-            user.signout
+            <translate>user.signout</translate>
           </md-button>
         </md-menu-item>
       </md-menu-content>

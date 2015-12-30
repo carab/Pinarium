@@ -1,0 +1,227 @@
+{
+  "app": {
+    "callout": "Le gestionnaire de cave à vin simple et efficace."
+  },
+  "language": {
+    "language": "Langue",
+    "current": "Français"
+  },
+  "label": {
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "continue": "Continuer",
+    "submit": "Envoyer",
+    "save": "Sauvegarder",
+    "search": "Rechercher",
+    "update": "Modifier",
+    "delete": "Supprimer",
+    "actions": "Actions",
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "user": {
+    "name": "Nom",
+    "email": {
+      "email": "Email",
+      "required": "Veuillez entrer votre adresse email.",
+      "invalid": "Veuillez entrer une adresse email valide.",
+      "notExists": "Cette adresse email n'est pas enregistrée.",
+      "exists": "Cette adresse email est déjà enregistrée."
+    },
+    "password": {
+      "password": "Mot de passe",
+      "required": "Veuillez entrer un mot de passe.",
+      "notCorrect": "Ce mot de passe incorrect.",
+      "tooShort": "Veuillez entrer un mot de passe de 3 caractères minimum."
+    },
+    "passwordConfirmation": {
+      "passwordConfirmation": "Confirmation du mot de passe",
+      "required": "Veuillez entrer votre confirmation de mot de passe.",
+      "wrong": "Veuillez entrer le même mot de passe."
+    },
+    "currentPassword": "Mot de passe actuel",
+    "newPassword": "Nouveau mot de passe",
+    "signup": {
+      "signup": "S'inscrire",
+      "other": "S'inscrire avec {provider}"
+    },
+    "signin": {
+      "signin": "Se connecter",
+      "other": "Se connecter avec {provider}"
+    },
+    "menu": "Menu utilisateur",
+    "signout": "Déconnexion",
+    "settings": "Paramètres"
+  },
+  "cave": {
+    "form": {
+      "add": "Nouvelle Cave",
+      "edit": "Modifier"
+    },
+    "name": {
+      "name": "Nom",
+      "default": "Ma Cave"
+    },
+    "description": "Description",
+    "formatted": {
+      "quantityEmpty": "{quantityEmpty, plural, =0 {Aucune bouteille vide} =1 {1 bouteille vide} other {# bouteilles vides}}",
+      "quantityLeft": "{quantityLeft, plural, =0 {Aucune bouteille} =1 {1 bouteille} other {# bouteilles}}",
+      "quantityLeftAndEmpty": "{quantityLeft, plural, =0 {Aucune pleine} =1 {1 pleine} other {# pleines}}, {quantityEmpty, plural, =0 {aucune vide} =1 {1 vide} other {# vides}}",
+      "quantityBy": "{label} : {quantity}"
+    },
+    "empty": {
+      "title": "Votre cave est vide !",
+      "paragraph": "Mais pas de panique, vous pouvez ajouter des bouteilles en cliquant sur le bouton en bas à droite !"
+    }
+  },
+  "bottle": {
+    "my": "{count, plural, =0 {Aucune bouteille} =1 {Ma Bouteille} other {Mes Bouteilles}}",
+    "list": {
+      "page": "Mes Bouteilles",
+      "count": "Vous {bottles, plural, =0 {n'avez aucune bouteille} =1 {avez 1 bouteille} other {avez # bouteilles}} dans {caves, plural, =0 {votre cave} =1 {votre cave} other {vos caves}}.",
+      "editBottle": "Modifier",
+      "drank": "Marquer une bouteille comme bue"
+    },
+    "add": {
+      "add": "Ajouter une bouteille"
+    },
+    "edit": {
+      "edit": "Modifier une Bouteille",
+      "save": "Sauvegarder"
+    },
+    "drankDialog": {
+      "title": "Combien de bouteilles avez-vous bues ?"
+    },
+    "appellation": "Appellation",
+    "cuvee": "Cuvée",
+    "vintage": "Millésime",
+    "producer": "Domaine",
+    "region": "Région",
+    "country": "Pays",
+    "description": "Commentaire",
+    "reference": "Référence",
+    "cave": "Cave",
+    "quantity": "Quantité",
+    "quantityEmpty": "Quantité bue",
+    "quantityDrank": "Quantité bue",
+    "picture": "Photo",
+    "color": {
+      "color": "Couleur",
+      "red": "Rouge",
+      "white": "Blanc",
+      "rose": "Rosé"
+    },
+    "type": {
+      "type": "Type",
+      "raw": "Brut",
+      "dry": "Sec",
+      "semidry": "Demi sec",
+      "sweet": "Doux",
+      "mellow": "Moelleux",
+      "liquorous": "Liquoreux",
+      "alcohol": "Alcool"
+    },
+    "effervescence": {
+      "effervescence": "Effervescence",
+      "still": "Tranquille",
+      "semisparkling": "Semi sparkling",
+      "sparkling": "Effervescent",
+      "verysparkling": "Very sparkling"
+    },
+    "size": {
+      "size": "Contenance",
+      "200": "Piccolo (20 cl)",
+      "250": "Chopine (25 cl)",
+      "375": "Fillette (37.5 cl)",
+      "500": "Médium (50 cl)",
+      "750": "Bouteille (75 cl)",
+      "1000": "Litre (1 l)",
+      "1500": "Magnum (1.5 l)",
+      "2250": "Marie-jeanne (2.25 l)",
+      "3000": "Jéroboam (3 l)",
+      "4500": "Réhoboam (4.5 l)",
+      "6000": "Mathusalem (6 l)",
+      "9000": "Salmanazar (9 l)",
+      "12000": "Balthazar (12 l)",
+      "15000": "Nabuchodonosor (15 l)",
+      "18000": "Melchior (18 l)",
+      "18001": "Salomon (18 l)",
+      "20000": "Salomon (20 l)",
+      "25000": "Souverain (25 l)",
+      "26250": "Souverain (26.25 l)",
+      "27000": "Primat (27 l)",
+      "30000": "Melchizédec (30 l)"
+    },
+    "acquiredFrom": "Obtenue par",
+    "acquiredTo": "Obtenue pour",
+    "acquiredCost": "Coût d'obtention",
+    "acquiredDate": "Date d'obtention",
+    "acquiredLocation": "Lieu d'obtention",
+    "acquiredMethod": {
+      "acquiredMethod": "Obtention",
+      "buying": "Achat",
+      "offering": "Cadeau",
+      "stealing": "Vol"
+    },
+    "formatted": {
+      "boughtFor": "Achetée {cost}",
+      "offeredBy": "Offerte par {from}",
+      "stolenTo": "Volée à {from}",
+      "sizeOfType": "{size} de {type}",
+      "regionAndCountry": "{region}, {country}",
+      "appellation": "{appellation}",
+      "appellationAndVintage": "{appellation} {vintage}",
+      "appellationAndCuvee": "{appellation}, {cuvee}",
+      "appellationAndVintageAndCuvee": "{appellation} {vintage}, cuvée {cuvee}",
+      "producer": ", {producer}",
+      "addedOn": "Ajoutée le {date}",
+      "quantityLeft": "{quantityLeft}x"
+    },
+    "selected": "{count, plural, =0 {Aucune bouteille sélectionnée} =1 {1 bouteille sélectionnée} other {# bouteilles sélectionnées}}",
+    "deleteSelected": "{count, plural, =0 {Rien à supprimer} =1 {Supprimer la bouteille sélectionnée} other {Supprimer les bouteilles sélectionnées}}",
+    "delete": "{count, plural, =1 {Supprimer une bouteille} other {Supprimer des bouteilles}}",
+    "deleteAsk": "{count, plural, =1 {Supprimer une bouteille ?} other {Supprimer # bouteilles ?}}"
+  },
+  "validation": {
+    "cave": {
+      "name": {
+        "empty": "Veuillez entrer le nom de votre cave."
+      }
+    },
+    "bottle": {
+      "appellation": {
+        "empty": "Veuillez renseigner l'appellation de votre bouteille."
+      },
+      "acquired": {
+        "method": {
+          "invalid": "Veuillez sélectionner la méthode d'acquisition de votre bouteille."
+        }
+      },
+      "cave": {
+        "empty": "Veuillez sélectionner la cave où est stockée votre bouteille."
+      },
+      "quantity": {
+        "minInvalid": "La quantité doit être supérieure ou égale à 1."
+      },
+      "quantityEmpty": {
+        "minInvalid": "La quantité bue doit être supérieure ou égale à 0.",
+        "maxInvalid": "La quantité bue doit être inférieure ou égale à la quantité totale."
+      }
+    }
+  },
+  "toast": {
+    "account": {
+      "settings": {
+        "success": "Votre compte a été mis à jour."
+      }
+    },
+    "bottles": {
+      "add": {
+        "success": "Une nouvelle bouteille a été ajoutée."
+      },
+      "edit": {
+        "success": "Votre bouteille a été modifiée."
+      }
+    }
+  }
+}

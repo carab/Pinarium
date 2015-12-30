@@ -1,28 +1,28 @@
 <form novalidate name="bottleForm" ng-submit="vm.submit({isValid: bottleForm.$valid})" layout="column" layout-fill class="md-inline-form">
   <md-toolbar>
     <div class="md-toolbar-tools">
-      <md-button aria-label="Cancel" class="md-icon-button" ng-click="vm.cancel()" ng-if="!vm.$mdMedia('gt-sm')">
+      <md-button aria-label="{{'label.cancel'|translate}}" class="md-icon-button" ng-click="vm.cancel()" ng-if="!vm.$mdMedia('gt-sm')">
         <md-icon>keyboard_backspace</md-icon>
       </md-button>
-      <md-button aria-label="Cancel" class="md-icon-button" ng-click="vm.cancel()" ng-if="vm.$mdMedia('gt-sm')">
+      <md-button aria-label="{{'label.cancel'|translate}}" class="md-icon-button" ng-click="vm.cancel()" ng-if="vm.$mdMedia('gt-sm')">
         <md-icon>clear</md-icon>
       </md-button>
-      <h2 ng-if="vm.isNew()">Add bottle</h2>
-      <h2 ng-if="!vm.isNew()">Edit bottle</h2>
+      <h2 ng-if="vm.isNew()" translate>bottle.add</h2>
+      <h2 ng-if="!vm.isNew()" translate>bottle.edit</h2>
       <span flex></span>
-      <md-button type="submit" aria-label="Save" class="md-icon-button" ng-if="!vm.$mdMedia('gt-sm')">
+      <md-button type="submit" aria-label="{{'label.save'|translate}}" class="md-icon-button" ng-if="!vm.$mdMedia('gt-sm')">
         <md-icon>done</md-icon>
       </md-button>
-      <md-button type="submit" ng-if="vm.$mdMedia('gt-sm')">Save</md-button>
+      <md-button type="submit" ng-if="vm.$mdMedia('gt-sm')" class="md-raised"><translate>label.save</translate></md-button>
     </div>
   </md-toolbar>
   <md-content flex layout-padding>
     <div layout="row" layout-wrap>
       <md-input-container class="md-block" flex="100" flex-gt-md="70">
-        <label>bottle.appellation</label>
+        <label translate>bottle.appellation</label>
         <input name="appellation" ng-model="vm.bottle.appellation" required>
         <div ng-messages="bottleForm.appellation.$error" role="alert">
-          <div ng-message="required">Please enter your bottle appellation</div>
+          <div ng-message="required"><translate>validation.bottle.appellation</translate></div>
         </div>
       </md-input-container>
       <md-input-container class="md-block" flex="30">
