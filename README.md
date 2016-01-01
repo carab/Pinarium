@@ -34,7 +34,8 @@ Frontend :
 * Automatically fetch bottle data from a photo.
 * Fetch data to know when it is better do drink a bottle.
 * Import/Export feature.
-* Reminder to drink feature.
+* Reminder to drink feature + auto reminder with progress bar.
+* Mass edit actions.
 
 Backend :
 
