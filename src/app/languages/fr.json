@@ -124,9 +124,9 @@
     "effervescence": {
       "effervescence": "Effervescence",
       "still": "Tranquille",
-      "semisparkling": "Semi sparkling",
-      "sparkling": "Effervescent",
-      "verysparkling": "Very sparkling"
+      "semisparkling": "Semi pétillant",
+      "sparkling": "Pétillant",
+      "verysparkling": "Très pétillant"
     },
     "size": {
       "size": "Contenance",
@@ -153,6 +153,9 @@
       "30000": "Melchizédec (30 l)"
     },
     "value": "Valeur",
+    "alcohol": "Degré alcoolique",
+    "capsule": "Capsule",
+    "addedOn": "Ajoutée le",
     "obtainedFrom": "Obtenue par",
     "obtainedTo": "Obtenue pour",
     "obtainedOn": "Obtenue le",

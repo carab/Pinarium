@@ -33,6 +33,8 @@ Frontend :
 * Add search filters.
 * Automatically fetch bottle data from a photo.
 * Fetch data to know when it is better do drink a bottle.
+* Import/Export feature.
+* Reminder to drink feature.
 
 Backend :
 

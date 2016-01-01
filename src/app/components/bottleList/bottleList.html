@@ -82,7 +82,9 @@
   </md-data-table-container>
 </md-card>
 <md-list ng-if="vm.bottles.length" hide-gt-sm>
-  <md-subheader class="md-no-sticky">Bottles</md-subheader>
+  <md-subheader class="md-no-sticky">
+    <span translate translate-values="{count: vm.bottles.length}">bottle.my</span>
+  </md-subheader>
   <md-list-item class="md-2-line" ng-repeat="bottle in vm.bottles">
     <div class="ui-bottle-quantity">
       <p>{{bottle.quantity}}</p>

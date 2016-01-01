@@ -133,9 +133,9 @@
     "effervescence": {
       "effervescence": "Effervescence",
       "still": "Still",
-      "semisparkling": "Semi pétillant",
-      "sparkling": "Pétillant",
-      "verysparkling": "Très pétillant"
+      "semisparkling": "Semi sparkling",
+      "sparkling": "Sparkling",
+      "verysparkling": "Very sparkling"
     },
     "size": {
       "size": "Size",
@@ -162,6 +162,9 @@
       "30000": "Melchizedek (30 l)"
     },
     "value": "Value",
+    "alcohol": "Alcohol level",
+    "capsule": "Capsule",
+    "addedOn": "Added on",
     "obtainedFrom": "Obtained from",
     "obtainedTo": "Obtained to",
     "obtainedOn": "Obtained on",
