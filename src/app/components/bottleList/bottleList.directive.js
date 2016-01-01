@@ -24,8 +24,12 @@
     function bottleListController($document, $mdDialog, $mdMedia, $translate, BottleRepository) {
       var vm = this;
 
+      vm.loaded = false;
       vm.selectedBottles = [];
       vm.bottles = BottleRepository.getBottles();
+      vm.bottles.$loaded(function () {
+        vm.loaded = true;
+      });
 
       vm.editBottle = editBottle;
       vm.removeBottle = removeBottle;
