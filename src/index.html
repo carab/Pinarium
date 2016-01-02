@@ -29,7 +29,7 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div ng-viewport ng-controller="RouterController" layout="column" layout-fill ng-class="{'ui-xs': $mdMedia('xs'), 'ui-sm': $mdMedia('sm'), 'ui-md': $mdMedia('md'), 'ui-lg': $mdMedia('lg'), 'ui-xl': $mdMedia('xl')}"></div>
+    <div ng-viewport ng-controller="RouterController as router" layout="column" layout-fill ng-class="{'ui-xs': router.$mdMedia('xs'), 'ui-sm': router.$mdMedia('sm'), 'ui-md': router.$mdMedia('md'), 'ui-lg': router.$mdMedia('lg'), 'ui-xl': router.$mdMedia('xl')}"></div>
 
     <!-- build:js(src) scripts/vendor.js -->
     <!-- bower:js -->

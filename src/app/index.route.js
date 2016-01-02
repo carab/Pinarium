@@ -14,8 +14,11 @@
   }
 
   /** @ngInject */
-  function RouterController($router, $scope, $mdMedia) {
-    $scope.$mdMedia = $mdMedia;
+  function RouterController($router, $mdMedia) {
+    var vm = this;
+
+    vm.$mdMedia = $mdMedia;
+    
     $router.config([
       { path: '/', component: 'main' },
       { path: '/auth', component: 'auth' }
