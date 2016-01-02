@@ -25,12 +25,11 @@
       var vm = this;
 
       vm.submit = submit;
+      vm.error = 'bouhouh';
 
-      function submit(isValid) {
-        if (isValid) {
-          vm.submitted = true;
-          signup(vm.user);
-        }
+      function submit() {
+        vm.submitted = true;
+        signup(vm.user);
       }
 
       function signup(user) {

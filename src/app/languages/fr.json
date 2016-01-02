@@ -26,12 +26,12 @@
       "required": "Veuillez entrer votre adresse email.",
       "invalid": "Veuillez entrer une adresse email valide.",
       "notExists": "Cette adresse email n'est pas enregistrée.",
-      "exists": "Cette adresse email est déjà enregistrée."
+      "exists": "Cette adresse email est déjà utilisée."
     },
     "password": {
       "password": "Mot de passe",
       "required": "Veuillez entrer un mot de passe.",
-      "notCorrect": "Ce mot de passe incorrect.",
+      "notCorrect": "Ce mot de passe est incorrect.",
       "tooShort": "Veuillez entrer un mot de passe de 3 caractères minimum."
     },
     "passwordConfirmation": {

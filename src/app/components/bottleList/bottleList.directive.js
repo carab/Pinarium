@@ -41,7 +41,7 @@
             ariaLabel: translations['bottle.edit'],
             controller: editBottleController,
             controllerAs: 'vm',
-            template: '<bottle-form layout="column" layout-fill bottle="vm.bottle" submit="vm.save(isValid)" cancel="vm.close()"></bottle-form>',
+            template: '<bottle-form layout="column" layout-fill bottle="vm.bottle" submit="vm.save()" cancel="vm.close()"></bottle-form>',
             parent: angular.element($document.body),
             locals: {
               bottle: bottle,
@@ -61,12 +61,10 @@
             vm.save = save;
             vm.close = close;
 
-            function save(isValid) {
-              if (isValid) {
-                bottles.$save(bottle).then(function() {
-                  $mdDialog.hide();
-                });
-              }
+            function save() {
+              bottles.$save(bottle).then(function() {
+                $mdDialog.hide();
+              });
             }
 
             function close() {

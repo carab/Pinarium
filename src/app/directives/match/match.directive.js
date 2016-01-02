@@ -15,23 +15,23 @@
 
     return directive;
 
-    function link(scope, elem, attrs, ctrl) {
-      if (!ctrl) return;
+    function link(scope, element, attrs, ngModel) {
+      if (!ngModel) return;
       if (!attrs['match']) return;
 
-      var firstPassword = $parse(attrs['match']);
+      var parser = $parse(attrs['match']);
 
       var validator = function (value) {
-        var temp = firstPassword(scope),
-        v = value === temp;
-        ctrl.$setValidity('match', v);
+        var toMatch = parser(scope),
+        v = value === toMatch;
+        ngModel.$setValidity('match', v);
         return value;
       }
 
-      ctrl.$parsers.unshift(validator);
-      ctrl.$formatters.push(validator);
-      attrs.$observe('match', function () {
-        validator(ctrl.$viewValue);
+      ngModel.$parsers.push(validator);
+
+      scope.$watch(attrs['match'], function (value) {
+        validator(ngModel.$viewValue);
       });
     }
   }

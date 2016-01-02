@@ -1,4 +1,4 @@
-<form novalidate name="signinForm" ng-submit="vm.submit(signinForm.$valid)" class="md-whiteframe-5dp">
+<form novalidate name="vm.signinForm" ng-submit="vm.signinForm.$valid && vm.submit()" class="md-whiteframe-5dp">
   <md-toolbar ng-if="!vm.hideTitle">
     <div class="md-toolbar-tools">
       <h3>
@@ -7,20 +7,21 @@
     </div>
   </md-toolbar>
   <md-content class="layout-padding">
-    <p ng-if="vm.error">{{vm.error.code}}</p>
     <md-input-container class="md-block">
       <label translate>user.email</label>
-      <input ng-model="vm.user.email" type="email" name="email" required>
-      <div ng-messages="signinForm.email.$error" role="alert">
+      <input ng-model="vm.user.email" type="email" name="email" required firebase-error="vm.error" firebase-codes="INVALID_USER">
+      <div ng-messages="vm.signinForm.email.$error" role="alert">
         <div ng-message="required"><translate>user.email.required</translate></div>
         <div ng-message="email"><translate>user.email.invalid</translate></div>
+        <div ng-message="firebaseError"><translate>user.email.notExists</translate></div>
       </div>
     </md-input-container>
     <md-input-container class="md-block">
       <label translate>user.password</label>
-      <input ng-model="vm.user.password" type="password" name="password" required>
-      <div ng-messages="signinForm.password.$error" role="alert">
+      <input ng-model="vm.user.password" type="password" name="password" required firebase-error="vm.error" firebase-codes="INVALID_PASSWORD">
+      <div ng-messages="vm.signinForm.password.$error" role="alert">
         <div ng-message="required"><translate>user.password.required</translate></div>
+        <div ng-message="firebaseError"><translate>user.password.notCorrect</translate></div>
       </div>
     </md-input-container>
     <div layout layout-align="end center">

@@ -24,8 +24,6 @@ Backend :
 
 Frontend :
 
-* Add languate switcher.
-* Improve errors coming from Firebase.
 * Add multi-cave system.
 * Add settings page.
 * Improve bottle form, add autocomplete, add photo.

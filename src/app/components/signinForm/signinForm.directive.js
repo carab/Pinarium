@@ -26,11 +26,9 @@
 
       vm.submit = submit;
 
-      function submit(isValid) {
-        if (isValid) {
-          vm.submitted = true;
-          signin(vm.user);
-        }
+      function submit() {
+        vm.submitted = true;
+        signin(vm.user);
       }
 
       function signin(user) {

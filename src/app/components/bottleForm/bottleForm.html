@@ -1,4 +1,4 @@
-<form novalidate name="bottleForm" ng-submit="vm.submit({isValid: bottleForm.$valid})" layout="column" layout-fill class="md-inline-form">
+<form novalidate name="vm.bottleForm" ng-submit="vm.bottleForm.$valid && vm.submit()" layout="column" layout-fill class="md-inline-form">
   <md-toolbar>
     <div class="md-toolbar-tools">
       <md-button aria-label="{{'label.cancel'|translate}}" class="md-icon-button" ng-click="vm.cancel()" ng-if="!vm.$mdMedia('gt-sm')">
@@ -21,7 +21,7 @@
       <md-input-container class="md-block" flex="100" flex-gt-md="70">
         <label translate>bottle.appellation</label>
         <input name="appellation" ng-model="vm.bottle.appellation" required>
-        <div ng-messages="bottleForm.appellation.$error" role="alert">
+        <div ng-messages="vm.bottleForm.appellation.$error" role="alert">
           <div ng-message="required"><translate>validation.bottle.appellation</translate></div>
         </div>
       </md-input-container>
@@ -82,14 +82,14 @@
       <md-input-container class="md-block" flex="50">
         <label translate>bottle.quantity</label>
         <input ng-model="vm.bottle.quantity" type="number" name="quantity" min="1">
-        <div ng-messages="bottleForm.quantity.$error">
+        <div ng-messages="vm.bottleForm.quantity.$error">
           <div ng-message="min"><translate>validation.bottle.quantity.minInvalid</translate></div>
         </div>
       </md-input-container>
       <md-input-container class="md-block" flex="50">
         <label translate>bottle.quantityDrank</label>
         <input ng-model="vm.bottle.quantityDrank" type="number" name="quantityDrank" min="0" max="{{vm.bottle.quantity}}">
-        <div ng-messages="bottleForm.quantityDrank.$error">
+        <div ng-messages="vm.bottleForm.quantityDrank.$error">
           <div ng-message="min"><translate>validation.bottle.quantityDrank.minInvalid</translate></div>
           <div ng-message="max"><translate>validation.bottle.quantityDrank.maxInvalid</translate></div>
         </div>

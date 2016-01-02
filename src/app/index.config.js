@@ -3,18 +3,19 @@
 
   angular
     .module('vinarium')
-    .config(config)
-    .config(material)
-    .config(translate);
+    .config(log)
+    .config(theme)
+    .config(translate)
+    .config(datepicker);
 
   /** @ngInject */
-  function config($logProvider) {
+  function log($logProvider) {
     // Enable log
     $logProvider.debugEnabled(true);
   }
 
   /** @ngInject */
-  function material($mdThemingProvider) {
+  function theme($mdThemingProvider) {
     $mdThemingProvider.theme('default')
       .primaryPalette('pink')
       .accentPalette('blue');
@@ -33,5 +34,29 @@
       .registerAvailableLanguageKeys(AvailableLanguages)
       .determinePreferredLanguage()
       .fallbackLanguage(AvailableLanguages[0]);
+  }
+
+  /** @ngInject */
+  function datepicker($mdDateLocaleProvider, moment) {
+    $mdDateLocaleProvider.firstDayOfWeek = 1;
+
+    $mdDateLocaleProvider.parseDate = function(dateString) {
+      var m = moment(dateString, 'L', true);
+      return m.isValid() ? m.toDate() : new Date(NaN);
+    };
+
+    $mdDateLocaleProvider.formatDate = function(date) {
+      if (angular.isDefined(date)) {
+        return moment(date).format('L');
+      } else {
+        return null;
+      }
+    };
+
+    //$mdDateLocaleProvider.weekNumberFormatter = function(weekNumber) {
+    //  return 'Semaine ' + weekNumber;
+    //};
+    //$mdDateLocaleProvider.msgCalendar = 'Calendrier';
+    //$mdDateLocaleProvider.msgOpenCalendar = 'Ouvrir le calendrier';
   }
 })();
