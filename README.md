@@ -36,6 +36,10 @@ Frontend :
 * Import/Export feature.
 * Reminder to drink feature + auto reminder with progress bar.
 * Mass edit actions.
+* Map of the references to ease locating a bottle in the physical cave.
+* Search with "plat".
+* Reconnaissance code bar.
+* Stars for ranking.
 
 Backend :
 
