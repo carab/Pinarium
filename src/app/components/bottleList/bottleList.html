@@ -27,37 +27,31 @@
     </div>
   </md-toolbar>
   <md-data-table-container>
-    <table md-data-table md-row-select="vm.selectedBottles" md-progress="vm.deferred">
-      <thead md-order="vm.order" md-trigger="vm.onOrderChange">
-        <tr>
-          <th name="{{'bottle.quantity'|translate}}" order-by="quantity"></th>
-          <th name="{{'bottle.vintage'|translate}}" order-by="vintage"></th>
-          <th name="{{'bottle.appellation'|translate}}" order-by="appellation"></th>
-          <th name="{{'bottle.cuvee'|translate}}" order-by="cuvee"></th>
-          <th name="{{'bottle.producer'|translate}}" order-by="producer"></th>
-          <th name="{{'bottle.color'|translate}}" order-by="color"></th>
-          <th name="{{'bottle.type'|translate}}" order-by="type" hide show-gt-md></th>
-          <th name="{{'bottle.size'|translate}}" order-by="size" hide show-gt-md></th>
-          <th name="{{'bottle.effervescence'|translate}}" order-by="effervescence" hide show-gt-md></th>
-          <th name="{{'bottle.region'|translate}}" order-by="region" hide show-gt-md></th>
-          <th name="{{'bottle.country'|translate}}" order-by="country" hide show-gt-md></th>
-          <th></th>
+    <table md-table md-data-table md-row-select ng-model="vm.selectedBottles" md-progress="vm.deferred">
+      <thead md-head md-order="vm.order" md-trigger="vm.onOrderChange">
+        <tr md-row>
+          <th md-column md-numeric md-order-by="quantity"><span translate>bottle.quantity</span></th>
+          <th md-column md-numeric md-order-by="vintage"><span translate>bottle.vintage</span></th>
+          <th md-column md-order-by="appellation"><span translate>bottle.appellation</span></th>
+          <th md-column md-order-by="cuvee"><span translate>bottle.cuvee</span></th>
+          <th md-column md-order-by="producer"><span translate>bottle.producer</span></th>
+          <th md-column md-order-by="color"><span translate>bottle.color</span></th>
+          <th md-column md-order-by="type" hide show-gt-md><span translate>bottle.type</span></th>
+          <th md-column md-order-by="size" hide show-gt-md><span translate>bottle.size</span></th>
+          <th md-column></th>
         </tr>
       </thead>
-      <tbody>
-        <tr ng-repeat="bottle in vm.bottles">
-          <td>{{bottle.quantity}}</td>
-          <td>{{bottle.vintage}}</td>
-          <td>{{bottle.appellation}}</td>
-          <td>{{bottle.cuvee}}</td>
-          <td>{{bottle.producer}}</td>
-          <td><span ng-if="bottle.color">{{'bottle.color.'+bottle.color|translate}}</span></td>
-          <td hide show-gt-md><span ng-if="bottle.type">{{'bottle.type.'+bottle.type|translate}}</span></td>
-          <td hide show-gt-md><span ng-if="bottle.size">{{'bottle.size.'+bottle.size|translate}}</span></td>
-          <td hide show-gt-md><span ng-if="bottle.effervescence">{{'bottle.effervescence.'+bottle.effervescence|translate}}</span></td>
-          <td hide show-gt-md>{{bottle.region}}</td>
-          <td hide show-gt-md>{{bottle.country}}</td>
-          <td>
+      <tbody md-body>
+        <tr md-row md-select="bottle" ng-repeat="bottle in vm.bottles">
+          <td md-cell>{{bottle.quantity}}</td>
+          <td md-cell>{{bottle.vintage}}</td>
+          <td md-cell>{{bottle.appellation}}</td>
+          <td md-cell>{{bottle.cuvee}}</td>
+          <td md-cell>{{bottle.producer}}</td>
+          <td md-cell><span ng-if="bottle.color">{{'bottle.color.'+bottle.color|translate}}</span></td>
+          <td md-cell hide show-gt-md><span ng-if="bottle.type">{{'bottle.type.'+bottle.type|translate}}</span></td>
+          <td md-cell hide show-gt-md><span ng-if="bottle.size">{{'bottle.size.'+bottle.size|translate}}</span></td>
+          <td md-cell>
             <md-menu>
               <md-button aria-label="{{'label.actions'|translate}}" class="md-icon-button" ng-click="$mdOpenMenu($event)">
                 <md-icon>more_vert</md-icon>
@@ -93,8 +87,17 @@
       <p>{{bottle.quantity}}</p>
     </div>
     <div class="md-list-item-text">
-      <h3>{{bottle.appellation}} <small>{{bottle.vintage}} {{bottle.color}}</small></h3>
-      <p>{{bottle.cuvee}} {{bottle.producer}}</p>
+      <h3>{{bottle.appellation}}</h3>
+      <p>
+        {{bottle.cuvee}}
+        {{bottle.producer}}
+      </p>
+      <p>
+        <small>{{bottle.vintage}}</small>
+        <small ng-if="bottle.color">{{'bottle.color.'+bottle.color|translate}}</small>
+        <small ng-if="bottle.type">{{'bottle.type.'+bottle.type|translate}}</small>
+        <small ng-if="bottle.size">{{'bottle.size.'+bottle.size|translate}}</small>
+      </p>
     </div>
     <md-menu>
       <md-button aria-label="{{'label.actions'|translate}}" class="md-icon-button" ng-click="$mdOpenMenu($event)">

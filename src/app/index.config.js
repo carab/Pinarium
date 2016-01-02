@@ -21,17 +21,17 @@
   }
 
   /** @ngInject */
-  function translate($translateProvider) {
+  function translate($translateProvider, AvailableLanguages) {
     $translateProvider
       .useStaticFilesLoader({
         prefix: '/app/languages/',
         suffix: '.json'
         })
       .useSanitizeValueStrategy('sanitizeParameters')
-      //.useLocalStorage()
+      .useLocalStorage()
       .useMessageFormatInterpolation()
-      .registerAvailableLanguageKeys(['en', 'fr'])
+      .registerAvailableLanguageKeys(AvailableLanguages)
       .determinePreferredLanguage()
-      .fallbackLanguage('en');
+      .fallbackLanguage(AvailableLanguages[0]);
   }
 })();

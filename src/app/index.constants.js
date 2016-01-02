@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('vinarium');
-    //.constant('moment', moment);
+    .module('vinarium')
+    .constant('AvailableLanguages', ['en', 'fr']);
 
 })();

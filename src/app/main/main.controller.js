@@ -6,7 +6,11 @@
     .controller('MainController', MainController);
 
   /** @ngInject */
-  function MainController($location, Auth) {
+  function MainController($location, $mdSidenav, Auth) {
+    var vm = this;
+
+    vm.closeSidebar = closeSidebar;
+
     Auth.$onAuth(function(auth) {
       if (auth) {
         activate();
@@ -17,6 +21,10 @@
 
     function activate() {
 
+    }
+
+    function closeSidebar() {
+      $mdSidenav('sidebar').close();
     }
   }
 })();

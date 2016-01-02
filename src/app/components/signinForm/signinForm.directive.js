@@ -13,7 +13,9 @@
       scope: {},
       controller: signinFormController,
       controllerAs: 'vm',
-      bindToController: {}
+      bindToController: {
+        hideTitle: '='
+      }
     };
 
     return directive;

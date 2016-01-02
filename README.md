@@ -46,6 +46,7 @@ Backend :
 * More secured Firebase rules.
 * Develop unit and e2e tests.
 * Document language add.
+* Use gulp-htmlmin and gulp-cssnano instead.
 
 ## Known bugs
 

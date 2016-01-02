@@ -60,7 +60,8 @@
     },
     "menu": "User menu",
     "signout": "Signout",
-    "settings": "Settings"
+    "settings": "Settings",
+    "switchLanguage": "Switch language"
   },
   "cave": {
     "form": {

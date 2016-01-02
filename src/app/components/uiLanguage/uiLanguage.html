@@ -1,0 +1,11 @@
+<md-input-container class="md-block">
+  <label ng-hide="vm.hideLabel" translate>language</label>
+  <md-icon class="md-accent">language</md-icon>
+  <md-select
+      ng-model="vm.currentLanguage"
+      ng-change="vm.switchLanguage(vm.currentLanguage)">
+    <md-option ng-repeat="language in vm.languages" ng-value="language">
+      <translate>{{ 'language.' + language }}</translate>
+    </md-option>
+  </md-select>
+</md-input-container>

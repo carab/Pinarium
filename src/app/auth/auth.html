@@ -13,6 +13,11 @@
       </h2>
     </div>
   </md-toolbar>
+  <md-toolbar>
+    <div class="md-toolbar-tools" layout-align="center center">
+      <ui-language hide-label="true"></ui-language>
+    </div>
+  </md-toolbar>
   <div hide-xs hide-sm layout-gt-sm="row" flex layout-align="space-around center">
     <section flex-gt-sm="40">
       <signup-form></signup-form>
@@ -23,14 +28,14 @@
   </div>
   <md-content hide-gt-sm flex>
     <md-tabs md-border-bottom md-dynamic-height>
-      <md-tab label="Sign up">
+      <md-tab label="{{'user.signup'|translate}}">
         <md-content class="md-padding">
-          <signup-form></signup-form>
+          <signup-form hide-title="true"></signup-form>
         </md-content>
       </md-tab>
-        <md-tab label="Sign in">
+        <md-tab label="{{'user.signin'|translate}}">
           <md-content class="md-padding">
-            <signin-form></signin-form>
+            <signin-form hide-title="true"></signin-form>
           </md-content>
         </md-tab>
     </md-tabs>

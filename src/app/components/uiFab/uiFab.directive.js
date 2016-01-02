@@ -19,43 +19,46 @@
     return directive;
 
     /** @ngInject */
-    function uiFabController($mdDialog, $mdMedia, $document) {
+    function uiFabController($document, $mdDialog, $mdMedia, $translate) {
       var vm = this;
 
       vm.addBottle = addBottle;
 
       function addBottle(ev) {
-        $mdDialog.show({
-          controller: addBottleController,
-          controllerAs: 'vm',
-          template: '<bottle-form layout="column" layout-fill bottle="vm.bottle" submit="vm.save(isValid)" cancel="vm.close()"></bottle-form>',
-          parent: angular.element($document.body),
-          locals: {},
-          targetEvent: ev,
-          fullscreen: ($mdMedia('sm') || $mdMedia('xs'))
-        });
+        $translate(['bottle.add']).then(function (translations) {
+          $mdDialog.show({
+            ariaLabel: translations['bottle.add'],
+            controller: addBottleController,
+            controllerAs: 'vm',
+            template: '<bottle-form layout="column" layout-fill bottle="vm.bottle" submit="vm.save(isValid)" cancel="vm.close()"></bottle-form>',
+            parent: angular.element($document.body),
+            locals: {},
+            targetEvent: ev,
+            fullscreen: ($mdMedia('sm') || $mdMedia('xs'))
+          });
 
-        /** @ngInject */
-        function addBottleController($mdDialog, BottleRepository) {
-          var vm = this;
+          /** @ngInject */
+          function addBottleController($mdDialog, BottleRepository) {
+            var vm = this;
 
-          vm.bottle = {};
+            vm.bottle = {};
 
-          vm.save = save;
-          vm.close = close;
+            vm.save = save;
+            vm.close = close;
 
-          function save(isValid) {
-            if (isValid) {
-              BottleRepository.addBottle(vm.bottle).then(function() {
-                $mdDialog.hide();
-              });
+            function save(isValid) {
+              if (isValid) {
+                BottleRepository.addBottle(vm.bottle).then(function() {
+                  $mdDialog.hide();
+                });
+              }
+            }
+
+            function close() {
+              $mdDialog.cancel();
             }
           }
-
-          function close() {
-            $mdDialog.cancel();
-          }
-        }
+        });
       }
     }
   }

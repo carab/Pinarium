@@ -51,7 +51,8 @@
     },
     "menu": "Menu utilisateur",
     "signout": "Déconnexion",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "switchLanguage": "Changer la langue"
   },
   "cave": {
     "form": {

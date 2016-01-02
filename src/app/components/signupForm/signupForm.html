@@ -1,5 +1,5 @@
 <form novalidate name="signupForm" ng-submit="vm.submit(signupForm.$valid)" class="md-whiteframe-5dp">
-  <md-toolbar class="md-accent">
+  <md-toolbar ng-if="!vm.hideTitle" class="md-accent">
     <div class="md-toolbar-tools">
       <h3>
         <span translate>user.signup</span>

@@ -1,9 +1,14 @@
 <md-toolbar>
   <div class="md-toolbar-tools">
-    <md-button aria-label="{{'app.name'|translate}}" class="md-icon-button" href="">
+    <md-button ng-click="vm.toggleSidebar()" hide-gt-sm class="md-icon-button">
+      <md-icon aria-label="Menu">
+        menu
+      </md-icon>
+    </md-button>
+    <md-button hide show-gt-sm aria-label="{{'app.name'|translate}}" class="md-icon-button" href="">
       <md-icon>local_bar</md-icon>
     </md-button>
-    <md-button hide-xs hide-sm href="">
+    <md-button ng-href="/">
       <translate>app.name</translate>
     </md-button>
     <span flex></span>
@@ -18,6 +23,12 @@
             <translate>user.settings</translate>
           </md-button>
         </md-menu-item>
+          <md-menu-item>
+            <md-button ng-click="vm.switchLanguage($event)">
+              <md-icon md-menu-align-target>language</md-icon>
+              <translate>language</translate>
+            </md-button>
+          </md-menu-item>
         <md-menu-divider></md-menu-divider>
         <md-menu-item>
           <md-button ng-click="vm.signout()">

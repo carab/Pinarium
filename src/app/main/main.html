@@ -1,11 +1,33 @@
-<div layout="column" layout-fill>
-  <md-content layout="column" layout-fill>
-    <header>
-      <ui-navbar></ui-navbar>
-    </header>
-
-    <bottle-list></bottle-list>
-  </md-content>
+<div class="ui-main" layout="column" layout-fill>
+  <ui-navbar></ui-navbar>
+  <div layout="row" flex>
+    <md-sidenav class="md-sidenav-left md-whiteframe-4dp" md-component-id="sidebar" md-is-locked-open="$mdMedia('gt-sm')">
+      <md-toolbar hide-gt-sm>
+        <div class="md-toolbar-tools">
+          <md-button aria-label="{{'label.cancel'|translate}}" class="md-icon-button" ng-click="main.closeSidebar()">
+            <md-icon>clear</md-icon>
+          </md-button>
+          <md-button ng-href="/">
+            <translate>app.name</translate>
+          </md-button>
+        </div>
+      </md-toolbar>
+      <md-list>
+        <md-list-item ng-click="doPrimaryAction($event)">
+          <p>Bottles</p>
+        </md-list-item>
+        <md-list-item ng-click="doPrimaryAction($event)">
+          <p>Stairs</p>
+        </md-list-item>
+        <md-list-item ng-click="doPrimaryAction($event)">
+          <p>Caves</p>
+        </md-list-item>
+      </md-list>
+    </md-sidenav>
+    <md-content class="ui-main-content" flex layout="column">
+      <bottle-list></bottle-list>
+    </md-content>
+  </div>
 </div>
 
 <ui-fab></ui-fab>

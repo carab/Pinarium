@@ -17,8 +17,8 @@
   function RouterController($router, $scope, $mdMedia) {
     $scope.$mdMedia = $mdMedia;
     $router.config([
-      { path: '/', component: 'main', as: 'main' },
-      { path: '/auth', component: 'auth', as: 'auth' }
+      { path: '/', component: 'main' },
+      { path: '/auth', component: 'auth' }
     ]);
   }
 

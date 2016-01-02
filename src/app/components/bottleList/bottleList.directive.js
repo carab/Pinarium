@@ -36,41 +36,44 @@
       vm.removeSelectedBottles = removeSelectedBottles;
 
       function editBottle(bottle, ev) {
-        $mdDialog.show({
-          controller: editBottleController,
-          controllerAs: 'vm',
-          template: '<bottle-form layout="column" layout-fill bottle="vm.bottle" submit="vm.save(isValid)" cancel="vm.close()"></bottle-form>',
-          parent: angular.element($document.body),
-          locals: {
-            bottle: bottle,
-            bottles: vm.bottles
-          },
-          targetEvent: ev,
-          fullscreen: ($mdMedia('sm') || $mdMedia('xs'))
-        });
+        $translate(['bottle.edit']).then(function (translations) {
+          $mdDialog.show({
+            ariaLabel: translations['bottle.edit'],
+            controller: editBottleController,
+            controllerAs: 'vm',
+            template: '<bottle-form layout="column" layout-fill bottle="vm.bottle" submit="vm.save(isValid)" cancel="vm.close()"></bottle-form>',
+            parent: angular.element($document.body),
+            locals: {
+              bottle: bottle,
+              bottles: vm.bottles
+            },
+            targetEvent: ev,
+            fullscreen: ($mdMedia('sm') || $mdMedia('xs'))
+          });
 
-        /** @ngInject */
-        function editBottleController($mdDialog, $mdMedia, bottle, bottles) {
-          var vm = this;
+          /** @ngInject */
+          function editBottleController($mdDialog, $mdMedia, bottle, bottles) {
+            var vm = this;
 
-          vm.bottle = bottle;
-          vm.$mdMedia = $mdMedia;
+            vm.bottle = bottle;
+            vm.$mdMedia = $mdMedia;
 
-          vm.save = save;
-          vm.close = close;
+            vm.save = save;
+            vm.close = close;
 
-          function save(isValid) {
-            if (isValid) {
-              bottles.$save(bottle).then(function() {
-                $mdDialog.hide();
-              });
+            function save(isValid) {
+              if (isValid) {
+                bottles.$save(bottle).then(function() {
+                  $mdDialog.hide();
+                });
+              }
+            }
+
+            function close() {
+              $mdDialog.cancel();
             }
           }
-
-          function close() {
-            $mdDialog.cancel();
-          }
-        }
+        });
       }
 
       function removeBottle(bottle, ev) {
