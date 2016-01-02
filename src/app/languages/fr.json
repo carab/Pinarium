@@ -93,7 +93,10 @@
     "drankDialog": {
       "title": "Combien de bouteilles avez-vous bues ?"
     },
-    "appellation": "Appellation",
+    "appellation": {
+      "appellation": "Appellation",
+      "required": "Veuillez renseigner l'appellation de votre bouteille."
+    },
     "cuvee": "Cuvée",
     "vintage": "Millésime",
     "producer": "Domaine",
@@ -194,9 +197,6 @@
       }
     },
     "bottle": {
-      "appellation": {
-        "empty": "Veuillez renseigner l'appellation de votre bouteille."
-      },
       "acquired": {
         "method": {
           "invalid": "Veuillez sélectionner la méthode d'acquisition de votre bouteille."

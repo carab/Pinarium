@@ -102,7 +102,10 @@
     "drankDialog": {
       "title": "How many bottles did you drink ?"
     },
-    "appellation": "Appellation",
+    "appellation": {
+      "appellation": "Appellation",
+      "empty": "Please enter your bottle appellation."
+    },
     "cuvee": "Cuvée",
     "vintage": "Vintage",
     "producer": "Domain",
@@ -203,9 +206,6 @@
       }
     },
     "bottle": {
-      "appellation": {
-        "empty": "Please enter your bottle appellation."
-      },
       "acquired": {
         "method": {
           "invalid": "Please select the acquisition method."
