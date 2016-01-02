@@ -60,8 +60,14 @@
 
             vm.save = save;
             vm.close = close;
-
+            
             function save() {
+              if (bottle.obtainedOn) {
+                bottle.obtainedOn = bottle.obtainedOn.toString();
+              }
+              if (bottle.addedOn) {
+                bottle.addedOn = bottle.addedOn.toString();
+              }
               bottles.$save(bottle).then(function() {
                 $mdDialog.hide();
               });

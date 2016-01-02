@@ -30,7 +30,7 @@
 
       ngModel.$parsers.push(validator);
 
-      scope.$watch(attrs['match'], function (value) {
+      scope.$watch(attrs['match'], function () {
         validator(ngModel.$viewValue);
       });
     }

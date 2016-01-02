@@ -36,7 +36,7 @@
 
       ngModel.$parsers.push(validator);
 
-      scope.$watch(attrs['firebaseError'], function (value) {
+      scope.$watch(attrs['firebaseError'], function () {
         locked = false;
         validator(ngModel.$viewValue);
       });
