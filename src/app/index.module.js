@@ -8,7 +8,7 @@
       'ngSanitize',
       'ngMessages',
       'ngAria',
-      'ngNewRouter',
+      'ngComponentRouter',
       'ngMaterial',
       'md.data.table',
       'firebase',

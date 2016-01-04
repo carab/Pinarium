@@ -13,20 +13,18 @@
         </div>
       </md-toolbar>
       <md-list>
-        <md-list-item ng-click="doPrimaryAction($event)">
+        <md-list-item ng-click="main.navigate(['Main', 'Bottles'])">
           <md-icon>list</md-icon>
-          <p>Bottles</p>
+          <p translate translate-values="{count: main.bottles.length}">bottle.my</p>
         </md-list-item>
-        <md-list-item ng-click="doPrimaryAction($event)">
-          <p>Stairs</p>
-        </md-list-item>
-        <md-list-item ng-click="doPrimaryAction($event)">
-          <p>Caves</p>
+        <md-list-item ng-click="main.navigate(['Main', 'Caves'])">
+          <md-icon>layers</md-icon>
+          <p translate translate-values="{count: main.caves.length}">cave.my</p>
         </md-list-item>
       </md-list>
     </md-sidenav>
     <md-content class="ui-main-content" flex layout="column">
-      <bottle-list></bottle-list>
+      <ng-outlet></ng-outlet>
     </md-content>
   </div>
 </div>

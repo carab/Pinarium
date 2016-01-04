@@ -55,9 +55,12 @@
     "switchLanguage": "Changer la langue"
   },
   "cave": {
-    "form": {
-      "add": "Nouvelle Cave",
-      "edit": "Modifier"
+    "my": "{count, plural, =0 {Aucune cave} =1 {Ma Cave} other {Mes Caves}}",
+    "add": {
+      "add": "Nouvelle Cave"
+    },
+    "edit": {
+      "edit": "Modifier une cave"
     },
     "name": {
       "name": "Nom",

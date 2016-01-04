@@ -4,6 +4,7 @@
   angular
     .module('vinarium')
     .config(log)
+    .config(location)
     .config(theme)
     .config(translate)
     .config(datepicker);
@@ -12,6 +13,11 @@
   function log($logProvider) {
     // Enable log
     $logProvider.debugEnabled(true);
+  }
+
+  /** @ngInject */
+  function location($locationProvider) {
+    $locationProvider.html5Mode(true);
   }
 
   /** @ngInject */

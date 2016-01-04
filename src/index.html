@@ -4,12 +4,16 @@
     <meta charset="utf-8">
     <title>Vinarium</title>
     <meta name="description" content="">
+    <base href="/">
+
     <meta name="viewport" content="width=device-width">
     <meta name="theme-color" content="#E91E5A">
     <meta name="mobile-web-app-capable" content="yes">
+
     <link rel="icon" sizes="192x192" href="favicon-192.png">
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="manifest" href="manifest.json">
+
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
     <!-- build:css({.tmp/serve,src}) styles/vendor.css -->
@@ -29,7 +33,7 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div ng-viewport ng-controller="RouterController as router" layout="column" layout-fill ng-class="{'ui-xs': router.$mdMedia('xs'), 'ui-sm': router.$mdMedia('sm'), 'ui-md': router.$mdMedia('md'), 'ui-lg': router.$mdMedia('lg'), 'ui-xl': router.$mdMedia('xl')}"></div>
+    <app></app>
 
     <!-- build:js(src) scripts/vendor.js -->
     <!-- bower:js -->
