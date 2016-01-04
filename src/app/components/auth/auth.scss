@@ -1,0 +1,16 @@
+.ui-auth {
+  md-toolbar {
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+}
+
+.ui-md .ui-auth,
+.ui-lg .ui-auth,
+.ui-xl .ui-auth {
+  background: url(../assets/images/banner.jpg) no-repeat center center fixed;
+  background-size: cover;
+}
