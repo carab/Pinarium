@@ -142,7 +142,7 @@ function ngOutletDirective($animate, $q, $router) {
                     throw new Error('Component is not a string for ' + instruction.urlPath);
                 }
                 this.controller.$$routeParams = instruction.params;
-                this.controller.$$template = '<div ' + dashCase(componentName) + '></div>';
+                this.controller.$$template = '<div ' + dashCase(componentName) + ' layout layout-fill></div>';
                 this.controller.$$router = this.router.childRouter(instruction.componentType);
                 var newScope = scope.$new();
                 var clone = $transclude(newScope, function (clone) {
