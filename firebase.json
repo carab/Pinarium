@@ -2,6 +2,10 @@
   "firebase": "vinarium",
   "public": "dist",
   "rules": "firebase-rules.json",
+  "rewrites": [{
+    "source": "**",
+    "destination": "/index.html"
+  }],
   "ignore": [
     "firebase.json",
     "firebase-rules.json",
