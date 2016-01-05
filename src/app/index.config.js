@@ -74,7 +74,12 @@
   $stateProvider
     .state('auth', {
       url: '/auth',
-      template: '<auth layout layout-fill></auth>'
+      template: '<auth layout layout-fill></auth>',
+      onEnter: function($state, Auth) {
+        Auth.$requireAuth().then(function() {
+          $state.go('app.bottles');
+        });
+      }
     })
 
     .state('app', {
@@ -82,9 +87,10 @@
       abstract: true,
       template: '<main layout layout-fill></main>',
       resolve: {
-        'auth': ['Auth', function(Auth) {
+        /** ngInject */
+        auth: function(Auth) {
           return Auth.$requireAuth();
-        }]
+        }
       }
     })
 
