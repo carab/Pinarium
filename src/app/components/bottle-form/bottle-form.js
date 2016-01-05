@@ -43,7 +43,7 @@
       if (isNew()) {
         promise = BottleRepository.addBottle(vm.bottle);
       } else {
-        vm.bottle.$save();
+        promise = vm.bottle.$save();
       }
 
       promise.then(function() {
