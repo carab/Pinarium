@@ -8,7 +8,7 @@
     	templateUrl: 'app/components/signup-form/signup-form.html',
     	controller: SignupFormController,
       controllerAs: 'vm',
-      bindToController: {
+      bindings: {
         hideTitle: '='
       }
     });

@@ -8,7 +8,7 @@
     	templateUrl: 'app/components/bottle-form/bottle-form.html',
     	controller: BottleFormController,
       controllerAs: 'vm',
-      bindToController: {
+      bindings: {
         bottle: '=',
         submit: '&',
         cancel: '&'

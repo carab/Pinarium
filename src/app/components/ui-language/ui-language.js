@@ -8,7 +8,7 @@
     	templateUrl: 'app/components/ui-language/ui-language.html',
     	controller: UiLanguageController,
       controllerAs: 'vm',
-      bindToController: {
+      bindings: {
         hideLabel: '='
       }
     });
