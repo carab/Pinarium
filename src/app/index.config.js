@@ -7,7 +7,8 @@
     .config(location)
     .config(theme)
     .config(translate)
-    .config(datepicker);
+    .config(datepicker)
+    .config(router);
 
   /** @ngInject */
   function log($logProvider) {
@@ -64,5 +65,90 @@
     //};
     //$mdDateLocaleProvider.msgCalendar = 'Calendrier';
     //$mdDateLocaleProvider.msgOpenCalendar = 'Ouvrir le calendrier';
+  }
+
+  /** @ngInject */
+  function router($stateProvider, $urlRouterProvider) {
+  $urlRouterProvider.otherwise('/auth');
+
+  $stateProvider
+    .state('auth', {
+      url: '/auth',
+      template: '<auth layout layout-fill></auth>'
+    })
+
+    .state('app', {
+      url: '/app',
+      abstract: true,
+      template: '<main layout layout-fill></main>',
+      resolve: {
+        'auth': ['Auth', function(Auth) {
+          return Auth.$requireAuth();
+        }]
+      }
+    })
+
+    .state('app.bottles', {
+      url: '',
+      template: '<bottle-list></bottle-list>'
+    })
+
+    .state('app.bottles.add', {
+      url: '/add',
+      resolve: {
+        /** ngInject */
+        event: function($stateParams) {
+          return $stateParams.event;
+        }
+      },
+      /** ngInject */
+      onEnter: function($state, BottleFormDialog) {
+        BottleFormDialog.show(event).finally(function() {
+          $state.go('^');
+        });
+      },
+      /** ngInject */
+      onExit: function(BottleFormDialog) {
+        BottleFormDialog.close();
+      }
+    })
+
+    .state('app.bottles.edit', {
+      url: '/edit/:id',
+      resolve: {
+        /** ngInject */
+        event: function($stateParams) {
+          return $stateParams.event;
+        }
+      },
+      /** ngInject */
+      onEnter: function($state, $stateParams, BottleFormDialog) {
+        BottleFormDialog.show(event, $stateParams.id).finally(function() {
+          $state.go('^');
+        });
+      },
+      /** ngInject */
+      onExit: function(BottleFormDialog) {
+        BottleFormDialog.close();
+      }
+    })
+
+    .state('app.caves', {
+      url: '/caves',
+      template: '<cave-list></cave-list>'
+    })
+
+    .state('app.caves.add', {
+      url: '/add',
+      onEnter: ['$document', '$stateParams', '$state', '$mdDialog', function($document, $stateParams, $state, $mdDialog) {
+        $mdDialog.show({
+          ariaLabel: 'test',
+          template: '<cave-form></cave-form>',
+          parent: angular.element($document.body)
+        }).finally(function() {
+            $state.go('^');
+        });
+      }]
+    });
   }
 })();

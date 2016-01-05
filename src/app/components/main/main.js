@@ -7,35 +7,24 @@
     	restrict: 'EA',
       replace: true,
     	templateUrl: 'app/components/main/main.html',
-    	controller: MainController,
-      $canActivate: canActivate,
-      $routeConfig: [{
-        path: '/',
-        component: 'bottleList',
-        name: 'Bottles',
-        useAsDefault: true
-      }, {
-        path: '/caves',
-        component: 'caveList',
-        name: 'Caves'
-      }]
+    	controller: MainController
     });
 
   /** @ngInject */
-  function canActivate($router, Auth) {
+  function canActivate(Auth) {
     var promise = Auth.$requireAuth();
 
     promise.then(null, function () {
-      $router.navigate(['/Auth']);
+      //
     });
 
     return promise;
   }
 
   /** @ngInject */
-  function MainController($router, $mdSidenav, Auth, BottleRepository, CaveRepository) {
-    this.$router = $router;
+  function MainController($mdSidenav, $state, Auth, BottleRepository, CaveRepository) {
     this.$mdSidenav = $mdSidenav;
+    this.$state = $state;
     this.Auth = Auth;
 
     this.bottles = BottleRepository.getBottles();
@@ -46,8 +35,8 @@
     this.$mdSidenav('sidebar').close();
   }
 
-  MainController.prototype.navigate = function(route) {
-    this.$router.navigate(route);
+  MainController.prototype.go = function(route) {
+    this.$state.go(route);
     this.$mdSidenav('sidebar').close();
   }
 

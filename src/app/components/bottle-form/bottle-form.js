@@ -9,16 +9,17 @@
     	controller: BottleFormController,
       controllerAs: 'vm',
       bindings: {
-        bottle: '=',
-        submit: '&',
-        cancel: '&'
+        id: '=',
+        onSave: '&',
+        onCancel: '&'
       }
     });
 
   /** @ngInject */
-  function BottleFormController($mdMedia, EnumRepository) {
+  function BottleFormController($mdMedia, EnumRepository, BottleRepository) {
     var vm = this;
 
+    vm.bottle = isNew() ? {} : BottleRepository.getBottle(vm.id);
     vm.$mdMedia = $mdMedia;
     vm.enums = {
       colors: EnumRepository.getEnum('colors'),
@@ -29,9 +30,30 @@
     };
 
     vm.isNew = isNew;
+    vm.save = save;
+    vm.cancel = cancel;
 
     function isNew() {
-      return (typeof vm.bottle.$id === 'undefined');
+      return !vm.id;
+    }
+
+    function save() {
+      var promise;
+
+      if (isNew()) {
+        promise = BottleRepository.addBottle(vm.bottle);
+      } else {
+        vm.bottle.$save();
+      }
+
+      promise.then(function() {
+        vm.onSave();
+      });
+    }
+
+    function cancel() {
+      vm.onCancel();
     }
   }
+
 })();

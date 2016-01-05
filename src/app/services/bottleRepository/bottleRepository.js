@@ -6,10 +6,11 @@
     .factory('BottleRepository', bottleRepository);
 
   /** @ngInject */
-  function bottleRepository($q, $firebaseArray, UserRepository) {
+  function bottleRepository($q, $firebaseArray, $firebaseObject, UserRepository) {
     var service = {
       getBottlesRef: getBottlesRef,
       getBottles: getBottles,
+      getBottle: getBottle,
       addBottle: addBottle
     };
 
@@ -21,6 +22,10 @@
 
     function getBottles() {
       return $firebaseArray(getBottlesRef());
+    }
+
+    function getBottle(id) {
+      return $firebaseObject(getBottlesRef().child(id));
     }
 
     function addBottle(bottle) {

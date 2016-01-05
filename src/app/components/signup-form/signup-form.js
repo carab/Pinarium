@@ -14,7 +14,7 @@
     });
 
   /** @ngInject */
-  function SignupFormController($location, Auth, UserRepository) {
+  function SignupFormController($state, Auth, UserRepository) {
     var vm = this;
 
     vm.submit = submit;
@@ -43,7 +43,7 @@
         password: user.password
       }).then(function() {
         UserRepository.addUser();
-        $location.path('/');
+        $state.go('app.bottles');
       }).catch(function(error) {
         vm.error = error;
         vm.submitted = false;

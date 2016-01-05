@@ -8,8 +8,8 @@
       'ngSanitize',
       'ngMessages',
       'ngAria',
-      'ngComponentRouter',
       'ngMaterial',
+      'ui.router',
       'md.data.table',
       'firebase',
       'pascalprecht.translate'

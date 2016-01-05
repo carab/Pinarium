@@ -11,7 +11,7 @@
     });
 
   /** @ngInject */
-  function BottleListController($document, $mdDialog, $mdMedia, $translate, BottleRepository) {
+  function BottleListController($document, $mdDialog, $mdMedia, $state, $translate, BottleRepository) {
     var vm = this;
 
     vm.loaded = false;
@@ -25,48 +25,10 @@
     vm.removeBottle = removeBottle;
     vm.removeSelectedBottles = removeSelectedBottles;
 
-    function editBottle(bottle, ev) {
-      $translate(['bottle.edit']).then(function (translations) {
-        $mdDialog.show({
-          ariaLabel: translations['bottle.edit'],
-          controller: editBottleController,
-          controllerAs: 'vm',
-          template: '<bottle-form layout="column" layout-fill bottle="vm.bottle" submit="vm.save()" cancel="vm.close()"></bottle-form>',
-          parent: angular.element($document.body),
-          locals: {
-            bottle: bottle,
-            bottles: vm.bottles
-          },
-          targetEvent: ev,
-          fullscreen: ($mdMedia('sm') || $mdMedia('xs'))
-        });
-
-        /** @ngInject */
-        function editBottleController($mdDialog, $mdMedia, bottle, bottles) {
-          var vm = this;
-
-          vm.bottle = bottle;
-          vm.$mdMedia = $mdMedia;
-
-          vm.save = save;
-          vm.close = close;
-
-          function save() {
-            if (bottle.obtainedOn) {
-              bottle.obtainedOn = bottle.obtainedOn.toString();
-            }
-            if (bottle.addedOn) {
-              bottle.addedOn = bottle.addedOn.toString();
-            }
-            bottles.$save(bottle).then(function() {
-              $mdDialog.hide();
-            });
-          }
-
-          function close() {
-            $mdDialog.cancel();
-          }
-        }
+    function editBottle(bottle, event) {
+      $state.go('app.bottles.edit', {
+        id: bottle.$id,
+        event: event
       });
     }
 
@@ -110,5 +72,5 @@
       });
     }
   }
-  
+
 })();

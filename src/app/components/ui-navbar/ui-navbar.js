@@ -11,7 +11,7 @@
     });
 
     /** @ngInject */
-  function UiNavbarController($router, $document, $mdDialog, $mdSidenav, $translate, Auth) {
+  function UiNavbarController($document, $mdDialog, $mdSidenav, $state, $translate, Auth) {
     var vm = this;
 
     Auth.$onAuth(function(auth) {
@@ -24,7 +24,7 @@
 
     function signout() {
       Auth.$unauth();
-      $router.navigate(['/Auth']);
+      $state.go('auth');
     }
 
     function switchLanguage(ev) {

@@ -14,7 +14,7 @@
     });
 
   /** @ngInject */
-  function SigninFormController($router, Auth, UserRepository) {
+  function SigninFormController($state, Auth, UserRepository) {
     var vm = this;
 
     vm.submit = submit;
@@ -29,7 +29,7 @@
         email: user.email,
         password: user.password
       }).then(function() {
-        $router.navigate(['/Main']);
+        $state.go('app.bottles');
       }).catch(function(error) {
         vm.error = error;
         vm.submitted = false;

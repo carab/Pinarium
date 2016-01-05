@@ -10,18 +10,8 @@
     });
 
   /** @ngInject */
-  function AppController($mdMedia, $router) {
+  function AppController($mdMedia) {
     this.$mdMedia = $mdMedia;
-
-    $router.config([{
-      path: '/',
-      component: 'auth',
-      name: 'Auth'
-    }, {
-      path: '/app/...',
-      component: 'main',
-      name: 'Main'
-    }]);
   }
 
 })();
