@@ -26,7 +26,7 @@
     vm.removeSelectedBottles = removeSelectedBottles;
     vm.getCave = getCave;
 
-    var caves = [];
+    var caves = {};
     function getCave(id) {
       if (id) {
         if (!caves[id]) {
