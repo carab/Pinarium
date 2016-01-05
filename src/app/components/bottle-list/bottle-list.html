@@ -36,7 +36,8 @@
             <th md-column md-order-by="appellation"><span translate>bottle.appellation</span></th>
             <th md-column md-order-by="cuvee"><span translate>bottle.cuvee</span></th>
             <th md-column md-order-by="producer"><span translate>bottle.producer</span></th>
-            <th md-column md-order-by="color"><span translate>bottle.color</span></th>
+            <th md-column md-order-by="cave"><span translate>bottle.cave</span></th>
+            <th md-column md-order-by="color" hide show-gt-md><span translate>bottle.color</span></th>
             <th md-column md-order-by="type" hide show-gt-md><span translate>bottle.type</span></th>
             <th md-column md-order-by="size" hide show-gt-md><span translate>bottle.size</span></th>
             <th md-column></th>
@@ -49,7 +50,8 @@
             <td md-cell>{{bottle.appellation}}</td>
             <td md-cell>{{bottle.cuvee}}</td>
             <td md-cell>{{bottle.producer}}</td>
-            <td md-cell><span ng-if="bottle.color">{{'bottle.color.'+bottle.color|translate}}</span></td>
+            <td md-cell>{{vm.getCave(bottle.cave).name}}</td>
+            <td md-cell hide show-gt-md><span ng-if="bottle.color">{{'bottle.color.'+bottle.color|translate}}</span></td>
             <td md-cell hide show-gt-md><span ng-if="bottle.type">{{'bottle.type.'+bottle.type|translate}}</span></td>
             <td md-cell hide show-gt-md><span ng-if="bottle.size">{{'bottle.size.'+bottle.size|translate}}</span></td>
             <td md-cell>

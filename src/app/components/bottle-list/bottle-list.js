@@ -11,7 +11,7 @@
     });
 
   /** @ngInject */
-  function BottleListController($document, $mdDialog, $mdMedia, $state, $translate, BottleRepository) {
+  function BottleListController($document, $mdDialog, $mdMedia, $state, $translate, BottleRepository, CaveRepository) {
     var vm = this;
 
     vm.loaded = false;
@@ -24,6 +24,18 @@
     vm.editBottle = editBottle;
     vm.removeBottle = removeBottle;
     vm.removeSelectedBottles = removeSelectedBottles;
+    vm.getCave = getCave;
+
+    var caves = [];
+    function getCave(id) {
+      if (id) {
+        if (!caves[id]) {
+          caves[id] = CaveRepository.getCave(id);
+        }
+
+        return caves[id];
+      }
+    }
 
     function editBottle(bottle, event) {
       $state.go('app.bottles.edit', {
