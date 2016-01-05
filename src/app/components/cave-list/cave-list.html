@@ -1,3 +1,27 @@
 <div class="cave-list" flex>
-  <a ng-link="['Add']">add cave</a>
+  <div layout layout-align="center center">
+    <md-button ng-click="vm.addCave($event)" class="md-raised md-accent">
+      <translate>cave.add</translate>
+    </md-button>
+  </div>
+  <md-card ng-repeat="cave in vm.caves">
+    <md-card-title>
+      <md-card-title-text>
+        <span class="md-headline">{{cave.name}}</span>
+      </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+      <p>
+        {{cave.description}}
+      </p>
+      <p>
+        bouteilles : {{vm.cave.currentQuantity}}
+      </p>
+    </md-card-content>
+    <md-card-actions layout="row" layout-align="end center">
+      <md-button class="md-icon-button" aria-label="{{'cave.edit'|translate}}" ng-click="vm.editCave(cave, $event)">
+        <md-icon>edit_mode</md-icon>
+      </md-button>
+    </md-card-actions>
+  </md-card>
 </div>

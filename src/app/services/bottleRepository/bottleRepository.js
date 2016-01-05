@@ -11,6 +11,7 @@
       getBottlesRef: getBottlesRef,
       getBottles: getBottles,
       getBottle: getBottle,
+      getByCave: getByCave,
       addBottle: addBottle
     };
 
@@ -26,6 +27,11 @@
 
     function getBottle(id) {
       return $firebaseObject(getBottlesRef().child(id));
+    }
+
+    function getByCave(cave) {
+      var ref = getBottlesRef();
+      return $firebaseArray(ref.orderByChild('cave').equalTo(cave));
     }
 
     function addBottle(bottle) {

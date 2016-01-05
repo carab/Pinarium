@@ -3,10 +3,10 @@
 
   angular
     .module('vinarium')
-    .factory('BottleFormDialog', BottleFormDialog);
+    .factory('CaveFormDialog', CaveFormDialog);
 
   /** @ngInject */
-  function BottleFormDialog($q, $document, $mdDialog, $mdMedia, $translate) {
+  function CaveFormDialog($q, $document, $mdDialog, $mdMedia, $translate) {
     return {
       show: show,
       close: close
@@ -15,12 +15,12 @@
     function show(event, id) {
       var deferred = $q.defer();
 
-      $translate(['bottle.add', 'bottle.edit']).then(function (translations) {
+      $translate(['cave.add', 'cave.edit']).then(function (translations) {
         var config = {
-          ariaLabel: id ? translations['bottle.edit'] : translations['bottle.add'],
-          controller: BottleFormDialogController,
+          ariaLabel: id ? translations['cave.edit'] : translations['cave.add'],
+          controller: CaveFormDialogController,
           controllerAs: 'vm',
-          template: '<bottle-form layout="column" layout-fill id="vm.id" on-save="vm.hide()" on-cancel="vm.cancel()"></bottle-form>',
+          template: '<cave-form layout="column" layout-fill id="vm.id" on-save="vm.hide()" on-cancel="vm.cancel()"></cave-form>',
           parent: angular.element($document.body),
           fullscreen: ($mdMedia('sm') || $mdMedia('xs'))
         }
@@ -36,7 +36,7 @@
         });
 
         /** @ngInject */
-        function BottleFormDialogController($mdDialog) {
+        function CaveFormDialogController($mdDialog) {
           var vm = this;
 
           vm.id = id;

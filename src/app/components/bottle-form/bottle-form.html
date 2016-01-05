@@ -25,6 +25,14 @@
           <div ng-message="required"><translate>bottle.appellation.required</translate></div>
         </div>
       </md-input-container>
+      <md-input-container class="md-block" flex="50">
+        <label translate>bottle.cave</label>
+        <md-select ng-model="vm.bottle.cave">
+          <md-option ng-repeat="cave in vm.caves" value="{{cave.$id}}">
+            {{cave.name}}
+          </md-option>
+        </md-select>
+      </md-input-container>
       <md-input-container class="md-block" flex="30">
         <label translate>bottle.vintage</label>
         <input ng-model="vm.bottle.vintage" type="number" name="vintage">

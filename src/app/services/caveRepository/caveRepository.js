@@ -6,10 +6,11 @@
     .factory('CaveRepository', caveRepository);
 
   /** @ngInject */
-  function caveRepository($q, $firebaseArray, UserRepository) {
+  function caveRepository($q, $firebaseArray, $firebaseObject, UserRepository) {
     var service = {
       getCavesRef: getCavesRef,
       getCaves: getCaves,
+      getCave: getCave,
       addCave: addCave
     };
 
@@ -21,6 +22,10 @@
 
     function getCaves() {
       return $firebaseArray(getCavesRef());
+    }
+
+    function getCave(id) {
+      return $firebaseObject(getCavesRef().child(id));
     }
 
     function addCave(cave) {

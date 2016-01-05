@@ -1,3 +1,34 @@
-<form novalidate name="vm.caveForm" ng-submit="vm.caveForm.$valid && vm.submit()" class="md-inline-form">
- TEST
+<form novalidate name="vm.caveForm" ng-submit="vm.caveForm.$valid && vm.save()" class="md-inline-form">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <md-button aria-label="{{'label.cancel'|translate}}" class="md-icon-button" ng-click="vm.cancel()" ng-if="!vm.$mdMedia('gt-sm')">
+        <md-icon>keyboard_backspace</md-icon>
+      </md-button>
+      <md-button aria-label="{{'label.cancel'|translate}}" class="md-icon-button" ng-click="vm.cancel()" ng-if="vm.$mdMedia('gt-sm')">
+        <md-icon>clear</md-icon>
+      </md-button>
+      <h2 ng-if="vm.isNew()" translate>cave.add</h2>
+      <h2 ng-if="!vm.isNew()" translate>cave.edit</h2>
+      <span flex></span>
+      <md-button type="submit" aria-label="{{'label.save'|translate}}" class="md-icon-button" ng-if="!vm.$mdMedia('gt-sm')">
+        <md-icon>done</md-icon>
+      </md-button>
+      <md-button type="submit" ng-if="vm.$mdMedia('gt-sm')" class="md-raised"><translate>label.save</translate></md-button>
+    </div>
+  </md-toolbar>
+  <md-content flex layout-padding>
+    <div layout="column" layout-wrap>
+      <md-input-container class="md-block" flex>
+        <label translate>cave.name</label>
+        <input name="name" ng-model="vm.cave.name" required>
+        <div ng-messages="vm.caveForm.name.$error" role="alert">
+          <div ng-message="required"><translate>cave.name.required</translate></div>
+        </div>
+      </md-input-container>
+      <md-input-container class="md-block" flex>
+        <label translate>cave.description</label>
+        <textarea name="description" ng-model="vm.cave.description"></textarea>
+      </md-input-container>
+    </div>
+  </md-content>
 </form>

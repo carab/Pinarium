@@ -90,8 +90,7 @@
       "add": "Ajouter une bouteille"
     },
     "edit": {
-      "edit": "Modifier une Bouteille",
-      "save": "Sauvegarder"
+      "edit": "Modifier une Bouteille"
     },
     "drankDialog": {
       "title": "Combien de bouteilles avez-vous bues ?"

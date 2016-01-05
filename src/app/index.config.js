@@ -140,15 +140,42 @@
 
     .state('app.caves.add', {
       url: '/add',
-      onEnter: ['$document', '$stateParams', '$state', '$mdDialog', function($document, $stateParams, $state, $mdDialog) {
-        $mdDialog.show({
-          ariaLabel: 'test',
-          template: '<cave-form></cave-form>',
-          parent: angular.element($document.body)
-        }).finally(function() {
-            $state.go('^');
+      resolve: {
+        /** ngInject */
+        event: function($stateParams) {
+          return $stateParams.event;
+        }
+      },
+      /** ngInject */
+      onEnter: function($state, CaveFormDialog) {
+        CaveFormDialog.show(event).finally(function() {
+          $state.go('^');
         });
-      }]
+      },
+      /** ngInject */
+      onExit: function(CaveFormDialog) {
+        CaveFormDialog.close();
+      }
+    })
+
+    .state('app.caves.edit', {
+      url: '/edit/:id',
+      resolve: {
+        /** ngInject */
+        event: function($stateParams) {
+          return $stateParams.event;
+        }
+      },
+      /** ngInject */
+      onEnter: function($state, $stateParams, CaveFormDialog) {
+        CaveFormDialog.show(event, $stateParams.id).finally(function() {
+          $state.go('^');
+        });
+      },
+      /** ngInject */
+      onExit: function(CaveFormDialog) {
+        CaveFormDialog.close();
+      }
     });
   }
 })();

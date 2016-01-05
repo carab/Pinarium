@@ -16,7 +16,7 @@
     });
 
   /** @ngInject */
-  function BottleFormController($mdMedia, EnumRepository, BottleRepository) {
+  function BottleFormController($mdMedia, EnumRepository, BottleRepository, CaveRepository) {
     var vm = this;
 
     vm.bottle = isNew() ? {} : BottleRepository.getBottle(vm.id);
@@ -28,6 +28,7 @@
       types: EnumRepository.getEnum('types'),
       procurements: EnumRepository.getEnum('procurements')
     };
+    vm.caves = CaveRepository.getCaves();
 
     vm.isNew = isNew;
     vm.save = save;
