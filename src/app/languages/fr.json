@@ -79,22 +79,15 @@
     }
   },
   "bottle": {
+    "bottle": "Bouteille",
     "my": "{count, plural, =0 {Aucune bouteille} =1 {Ma Bouteille} other {Mes Bouteilles}}",
-    "list": {
-      "page": "Mes Bouteilles",
-      "count": "Vous {bottles, plural, =0 {n'avez aucune bouteille} =1 {avez 1 bouteille} other {avez # bouteilles}} dans {caves, plural, =0 {votre cave} =1 {votre cave} other {vos caves}}.",
-      "editBottle": "Modifier",
-      "drank": "Marquer une bouteille comme bue"
-    },
     "add": {
       "add": "Ajouter une bouteille"
     },
     "edit": {
       "edit": "Modifier une Bouteille"
     },
-    "drankDialog": {
-      "title": "Combien de bouteilles avez-vous bues ?"
-    },
+    "stock": "Stock",
     "appellation": {
       "appellation": "Appellation",
       "required": "Veuillez renseigner l'appellation de votre bouteille."

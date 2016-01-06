@@ -20,7 +20,7 @@
           ariaLabel: id ? translations['bottle.edit'] : translations['bottle.add'],
           controller: BottleFormDialogController,
           controllerAs: 'vm',
-          template: '<bottle-form layout="column" layout-fill id="vm.id" on-save="vm.hide()" on-cancel="vm.cancel()"></bottle-form>',
+          template: '<md-dialog flex flex-gt-sm="75" flex-gt-md="50"><bottle-form id="vm.id" on-save="vm.hide()" on-cancel="vm.cancel()"></bottle-form></md-dialog>',
           parent: angular.element($document.body),
           fullscreen: ($mdMedia('sm') || $mdMedia('xs'))
         }

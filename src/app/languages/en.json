@@ -88,22 +88,15 @@
     }
   },
   "bottle": {
+    "bottle": "Bottle",
     "my": "{count, plural, =0 {No bottle} =1 {My Bottle} other {My Bottles}}",
-    "list": {
-      "page": "My Bottles",
-      "count": "You have {bottles, plural, =0 {no bottle} =1 {1 bottle} other {# bottles}} in your {caves, plural, =0 {cellar} =1 {cellar} other {cellars}}.",
-      "editBottle": "Update",
-      "drank": "Mark a bottle as drank"
-    },
     "add": {
       "add": "Add a bottle"
     },
     "edit": {
       "edit": "Edit Bottle"
     },
-    "drankDialog": {
-      "title": "How many bottles did you drink ?"
-    },
+    "stock": "Stock",
     "appellation": {
       "appellation": "Appellation",
       "empty": "Please enter your bottle appellation."

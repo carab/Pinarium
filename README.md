@@ -14,6 +14,7 @@ Frontend :
 * List your bottles.
 * Manage your quantities and your "dranked" quantities.
 * Modify or delete bottles.
+* Modify or delete caves.
 * Mobile friendly interface.
 
 Backend :
@@ -24,9 +25,8 @@ Backend :
 
 Frontend :
 
-* Add multi-cave system.
 * Add settings page.
-* Improve bottle form, add autocomplete, add photo.
+* Improve bottle form : add autocomplete, add photo.
 * Fast button to set a bottle as "dranked" and add "dranked" date.
 * Add search filters.
 * Automatically fetch bottle data from a photo.
@@ -41,14 +41,13 @@ Frontend :
 
 Backend :
 
-* More secured Firebase rules.
 * Develop unit and e2e tests.
 * Document language add.
 * Use gulp-htmlmin and gulp-cssnano instead.
 
 ## Known bugs
 
-* Modifying a bottle without submitting still modify the bottle until next page reload.
+* French translations are bugging ('My bottles' isn't translated).
 
 ## How to contribute
 
