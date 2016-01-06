@@ -24,7 +24,7 @@
       vm.loaded = false;
       vm.selectedBottles = [];
       vm.bottles = BottleRepository.getBottles();
-      vm.bottles.$loaded(function (bottles) {
+      vm.promise = vm.bottles.$loaded(function (bottles) {
         vm.loaded = true;
         loadBottlesCave(bottles);
       });

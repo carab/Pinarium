@@ -1,5 +1,5 @@
 <div class="bottle-list" flex>
-  <div ng-if="!vm.loaded" layout layout-align="center end">
+  <div ng-if="!vm.loaded" hide-gt-md layout layout-align="center end">
     <md-progress-circular class="md-primary" md-mode="indeterminate" md-diameter="128"></md-progress-circular>
   </div>
   <div ng-if="vm.loaded && !vm.bottles.length" layout layout-margin layout-padding layout-align="center center">
@@ -14,7 +14,7 @@
       </md-card-content>
     </md-card>
   </div>
-  <md-card ng-if="vm.bottles.length" hide show-gt-sm>
+  <md-card hide show-gt-sm>
     <md-toolbar ng-hide="vm.selectedBottles.length" class="md-default">
       <div class="md-toolbar-tools">
         <span translate translate-values="{count: vm.bottles.length}">bottle.my</span>
@@ -28,15 +28,15 @@
       </div>
     </md-toolbar>
     <md-data-table-container>
-      <table md-table md-data-table md-row-select ng-model="vm.selectedBottles" md-progress="vm.deferred">
-        <thead md-head md-order="vm.order" md-trigger="vm.onOrderChange">
+      <table md-table md-data-table md-row-select ng-model="vm.selectedBottles" md-progress="vm.promise">
+        <thead md-head md-order="vm.order" md-on-reorder="vm.onReorder">
           <tr md-row>
             <th md-column md-numeric md-order-by="quantity"><span translate>bottle.quantity</span></th>
             <th md-column md-numeric md-order-by="vintage"><span translate>bottle.vintage</span></th>
             <th md-column md-order-by="appellation"><span translate>bottle.appellation</span></th>
             <th md-column md-order-by="cuvee"><span translate>bottle.cuvee</span></th>
             <th md-column md-order-by="producer"><span translate>bottle.producer</span></th>
-            <th md-column md-order-by="cave"><span translate>bottle.cave</span></th>
+            <th md-column md-order-by="cave.name"><span translate>bottle.cave</span></th>
             <th md-column md-order-by="color" hide show-gt-md><span translate>bottle.color</span></th>
             <th md-column md-order-by="type" hide show-gt-md><span translate>bottle.type</span></th>
             <th md-column md-order-by="size" hide show-gt-md><span translate>bottle.size</span></th>
@@ -44,7 +44,7 @@
           </tr>
         </thead>
         <tbody md-body>
-          <tr md-row md-select="bottle" ng-repeat="bottle in vm.bottles">
+          <tr md-row md-select="bottle" ng-repeat="bottle in vm.bottles | orderBy: vm.order">
             <td md-cell>{{bottle.quantity}}</td>
             <td md-cell>{{bottle.vintage}}</td>
             <td md-cell>{{bottle.appellation}}</td>
