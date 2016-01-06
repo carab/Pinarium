@@ -17,7 +17,8 @@
     "delete": "Supprimer",
     "actions": "Actions",
     "yes": "Oui",
-    "no": "Non"
+    "no": "Non",
+    "loading": "Chargement..."
   },
   "user": {
     "name": "Nom",

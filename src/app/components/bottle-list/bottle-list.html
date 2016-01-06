@@ -1,23 +1,9 @@
 <div class="bottle-list" flex>
-  <div ng-if="!vm.loaded" hide-gt-md layout layout-align="center end">
-    <md-progress-circular class="md-primary" md-mode="indeterminate" md-diameter="128"></md-progress-circular>
-  </div>
-  <div ng-if="vm.loaded && !vm.bottles.length" layout layout-margin layout-padding layout-align="center center">
-    <md-card flex-gt-sm="33">
-      <md-card-title>
-        <md-card-title-text>
-          <span class="md-headline" translate>cave.empty.title</span>
-        </md-card-title-text>
-      </md-card-title>
-      <md-card-content>
-        <p translate>cave.empty.paragraph</p>
-      </md-card-content>
-    </md-card>
-  </div>
-  <md-card hide show-gt-sm>
+  <md-card ng-if="!vm.loaded || vm.bottles.length" hide show-gt-sm>
     <md-toolbar ng-hide="vm.selectedBottles.length" class="md-default">
       <div class="md-toolbar-tools">
-        <span translate translate-values="{count: vm.bottles.length}">bottle.my</span>
+        <span ng-if="vm.loaded" translate translate-values="{count: vm.bottles.length}">bottle.my</span>
+        <span ng-if="!vm.loaded" translate>label.loading</span>
       </div>
     </md-toolbar>
     <md-toolbar ng-show="vm.selectedBottles.length" class="md-accent">
@@ -81,6 +67,21 @@
       </table>
     </md-data-table-container>
   </md-card>
+  <div ng-if="vm.loaded && !vm.bottles.length" layout layout-margin layout-padding layout-align="center center">
+    <md-card flex-gt-sm="33">
+      <md-card-title>
+        <md-card-title-text>
+          <span class="md-headline" translate>cave.empty.title</span>
+        </md-card-title-text>
+      </md-card-title>
+      <md-card-content>
+        <p translate>cave.empty.paragraph</p>
+      </md-card-content>
+    </md-card>
+  </div>
+  <div ng-if="!vm.loaded" hide-gt-md layout layout-align="center end">
+    <md-progress-circular class="md-primary" md-mode="indeterminate" md-diameter="128"></md-progress-circular>
+  </div>
   <md-list ng-if="vm.loaded && vm.bottles.length" hide-gt-sm>
     <md-subheader class="md-no-sticky">
       <span translate translate-values="{count: vm.bottles.length}">bottle.my</span>

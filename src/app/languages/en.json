@@ -26,7 +26,8 @@
     "delete": "Delete",
     "actions": "Actions",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "loading": "Loading..."
   },
   "user": {
     "name": "Name",
