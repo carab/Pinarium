@@ -19,7 +19,7 @@
   function BottleFormController($mdMedia, EnumRepository, BottleRepository, CaveRepository) {
     var vm = this;
 
-    vm.bottle = isNew() ? {} : BottleRepository.getBottle(vm.id);
+    vm.bottle = isNew() ? BottleRepository.getDefault() : BottleRepository.getBottle(vm.id);
     vm.$mdMedia = $mdMedia;
     vm.enums = {
       colors: EnumRepository.getEnum('colors'),

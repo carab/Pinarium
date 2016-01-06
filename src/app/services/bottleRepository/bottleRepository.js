@@ -3,20 +3,28 @@
 
   angular
     .module('vinarium')
-    .factory('BottleRepository', bottleRepository);
+    .factory('BottleRepository', BottleRepository);
 
   /** @ngInject */
-  function bottleRepository($q, $firebaseArray, $firebaseObject, UserRepository) {
+  function BottleRepository($q, $firebaseArray, $firebaseObject, UserRepository, CaveRepository) {
     var service = {
       getRef: getRef,
       get: get,
       getBottles: getBottles,
       getBottle: getBottle,
       getByCave: getByCave,
-      addBottle: addBottle
+      addBottle: addBottle,
+      getDefault: getDefault
     };
 
     return service;
+
+    function getDefault() {
+      return {
+        quantity: 1,
+        quantityDrank: 0
+      }
+    }
 
     function getRef() {
       return UserRepository.getUserRef().child('bottles');

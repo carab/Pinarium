@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "Vinarium",
-    "callout": "The wine cave manager, simple and easy to use."
+    "callout": "The wine cellar manager, simple and easy to use."
   },
   "language": {
     "language": "Language",
@@ -73,7 +73,8 @@
     },
     "name": {
       "name": "Name",
-      "default": "My Cellar"
+      "default": "My Cellar",
+      "required": "Please enter your cellar name."
     },
     "description": "Description",
     "formatted": {
@@ -83,7 +84,7 @@
       "quantityBy": "{label} : {quantity}"
     },
     "empty": {
-      "title": "Your cave is empty!",
+      "title": "Your cellar is empty!",
       "paragraph": "But don't worry, you can add bottles using the button in the bottom right corner!"
     }
   },
@@ -91,10 +92,12 @@
     "bottle": "Bottle",
     "my": "{count, plural, =0 {No bottle} =1 {My Bottle} other {My Bottles}}",
     "add": {
-      "add": "Add a bottle"
+      "add": "Add a bottle",
+      "success": "A new bottle has been added."
     },
     "edit": {
-      "edit": "Edit Bottle"
+      "edit": "Edit Bottle",
+      "success": "Your bottle has been updated."
     },
     "stock": "Stock",
     "appellation": {
@@ -108,10 +111,21 @@
     "country": "Country",
     "notes": "Notes",
     "reference": "Reference",
-    "cave": "Cellar",
-    "quantity": "Quantity",
-    "quantityEmpty": "Drank Quantity",
-    "quantityDrank": "Drank Quantity",
+    "cave": {
+      "cave": "Cellar",
+      "required": "Please select the cellar where your bottle is stored."
+    },
+    "quantity": {
+      "quantity": "Quantity",
+      "required": "Quantity must be set.",
+      "minInvalid": "Quantity must at least be 1."
+    },
+    "quantityDrank": {
+      "quantityDrank": "Drank Quantity",
+      "required": "Drank quantity must be set.",
+      "minInvalid": "Drank quantity must at least be 0.",
+      "maxInvalid": "Drank quantity must be less than or equal to the quantity."
+    },
     "picture": "Picture",
     "color": {
       "color": "Color",
@@ -193,44 +207,5 @@
     "deleteSelected": "{count, plural, =0 {Nothing to delete} =1 {Delete selected bottle} other {Delete selected bottles}}",
     "delete": "{count, plural, =1 {Delete a bottle} other {Delete bottles}}",
     "deleteAsk": "{count, plural, =1 {Delete 1 bottle?} other {Delete # following bottles?}}"
-  },
-  "validation": {
-    "cave": {
-      "name": {
-        "empty": "Please enter your cellar name"
-      }
-    },
-    "bottle": {
-      "acquired": {
-        "method": {
-          "invalid": "Please select the acquisition method."
-        }
-      },
-      "cave": {
-        "empty": "Please select the cellar where your bottle is stored."
-      },
-      "quantity": {
-        "minInvalid": "Quantity must be at least 1."
-      },
-      "quantityEmpty": {
-        "minInvalid": "Quantity drank must be at least 0.",
-        "maxInvalid": "Quantity drank must be less than or equal to the global quantity."
-      }
-    }
-  },
-  "toast": {
-    "account": {
-      "settings": {
-        "success": "Your account has been updated."
-      }
-    },
-    "bottles": {
-      "add": {
-        "success": "A new bottle has been added."
-      },
-      "edit": {
-        "success": "Your bottle has been updated."
-      }
-    }
   }
 }

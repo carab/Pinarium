@@ -64,7 +64,8 @@
     },
     "name": {
       "name": "Nom",
-      "default": "Ma Cave"
+      "default": "Ma Cave",
+      "required": "Veuillez entrer le nom de votre cave."
     },
     "description": "Description",
     "formatted": {
@@ -82,10 +83,12 @@
     "bottle": "Bouteille",
     "my": "{count, plural, =0 {Aucune bouteille} =1 {Ma Bouteille} other {Mes Bouteilles}}",
     "add": {
-      "add": "Ajouter une bouteille"
+      "add": "Ajouter une bouteille",
+      "success": "Une nouvelle bouteille a été ajoutée."
     },
     "edit": {
-      "edit": "Modifier une Bouteille"
+      "edit": "Modifier une Bouteille",
+      "success": "Votre bouteille a été modifiée."
     },
     "stock": "Stock",
     "appellation": {
@@ -99,10 +102,21 @@
     "country": "Pays",
     "notes": "Notes",
     "reference": "Référence",
-    "cave": "Cave",
-    "quantity": "Quantité",
-    "quantityEmpty": "Quantité bue",
-    "quantityDrank": "Quantité bue",
+    "cave": {
+      "cave": "Cave",
+      "required": "Veuillez sélectionner la cave où est stockée votre bouteille."
+    },
+    "quantity": {
+      "quantity": "Quantité",
+      "required": "La quantité est obligatoire.",
+      "minInvalid": "La quantité doit être supérieure ou égale à 1."
+    },
+    "quantityDrank": {
+      "quantityDrank": "Quantité bue",
+      "required": "La quantité bue est obligatoire.",
+      "minInvalid": "La quantité bue doit être supérieure ou égale à 0.",
+      "maxInvalid": "La quantité bue doit être inférieure ou égale à la quantité totale."
+    },
     "picture": "Photo",
     "color": {
       "color": "Couleur",
@@ -184,44 +198,5 @@
     "deleteSelected": "{count, plural, =0 {Rien à supprimer} =1 {Supprimer la bouteille sélectionnée} other {Supprimer les bouteilles sélectionnées}}",
     "delete": "{count, plural, =1 {Supprimer une bouteille} other {Supprimer des bouteilles}}",
     "deleteAsk": "{count, plural, =1 {Supprimer une bouteille ?} other {Supprimer # bouteilles ?}}"
-  },
-  "validation": {
-    "cave": {
-      "name": {
-        "empty": "Veuillez entrer le nom de votre cave."
-      }
-    },
-    "bottle": {
-      "acquired": {
-        "method": {
-          "invalid": "Veuillez sélectionner la méthode d'acquisition de votre bouteille."
-        }
-      },
-      "cave": {
-        "empty": "Veuillez sélectionner la cave où est stockée votre bouteille."
-      },
-      "quantity": {
-        "minInvalid": "La quantité doit être supérieure ou égale à 1."
-      },
-      "quantityEmpty": {
-        "minInvalid": "La quantité bue doit être supérieure ou égale à 0.",
-        "maxInvalid": "La quantité bue doit être inférieure ou égale à la quantité totale."
-      }
-    }
-  },
-  "toast": {
-    "account": {
-      "settings": {
-        "success": "Votre compte a été mis à jour."
-      }
-    },
-    "bottles": {
-      "add": {
-        "success": "Une nouvelle bouteille a été ajoutée."
-      },
-      "edit": {
-        "success": "Votre bouteille a été modifiée."
-      }
-    }
   }
 }

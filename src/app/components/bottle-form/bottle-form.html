@@ -93,11 +93,14 @@
         <md-datepicker class="md-block" flex="100" flex-gt-sm="33" ng-model="vm.bottle.addedOn" md-placeholder="{{'bottle.addedOn'|translate}}"></md-datepicker>
         <md-input-container class="md-block" flex="50" flex-gt-sm="33">
           <label translate>bottle.cave</label>
-          <md-select ng-model="vm.bottle.cave">
+          <md-select ng-model="vm.bottle.cave" name="cave" required>
             <md-option ng-repeat="cave in vm.caves" value="{{cave.$id}}">
               {{cave.name}}
             </md-option>
           </md-select>
+          <div ng-messages="vm.bottleForm.cave.$error">
+            <div ng-message="required"><translate>bottle.cave.required</translate></div>
+          </div>
         </md-input-container>
         <md-input-container class="md-block" flex="50" flex-gt-sm="33">
           <label translate>bottle.reference</label>
@@ -105,17 +108,19 @@
         </md-input-container>
         <md-input-container class="md-block" flex="50" flex-gt-sm="25">
           <label translate>bottle.quantity</label>
-          <input ng-model="vm.bottle.quantity" type="number" name="quantity" min="1">
+          <input ng-model="vm.bottle.quantity" type="number" name="quantity" required min="1">
           <div ng-messages="vm.bottleForm.quantity.$error">
-            <div ng-message="min"><translate>validation.bottle.quantity.minInvalid</translate></div>
+            <div ng-message="required"><translate>bottle.quantity.required</translate></div>
+            <div ng-message="min"><translate>bottle.quantity.minInvalid</translate></div>
           </div>
         </md-input-container>
         <md-input-container class="md-block" flex="50" flex-gt-sm="25">
           <label translate>bottle.quantityDrank</label>
-          <input ng-model="vm.bottle.quantityDrank" type="number" name="quantityDrank" min="0" max="{{vm.bottle.quantity}}">
+          <input ng-model="vm.bottle.quantityDrank" type="number" name="quantityDrank" required min="0" max="{{vm.bottle.quantity}}">
           <div ng-messages="vm.bottleForm.quantityDrank.$error">
-            <div ng-message="min"><translate>validation.bottle.quantityDrank.minInvalid</translate></div>
-            <div ng-message="max"><translate>validation.bottle.quantityDrank.maxInvalid</translate></div>
+            <div ng-message="required"><translate>bottle.quantityDrank.required</translate></div>
+            <div ng-message="min"><translate>bottle.quantityDrank.minInvalid</translate></div>
+            <div ng-message="max"><translate>bottle.quantityDrank.maxInvalid</translate></div>
           </div>
         </md-input-container>
       </md-content>
