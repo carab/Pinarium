@@ -14,27 +14,28 @@
   function BottleListController($document, $mdDialog, $mdMedia, $state, $translate, BottleRepository, CaveRepository) {
     var vm = this;
 
-    vm.loaded = false;
-    vm.selectedBottles = [];
-    vm.bottles = BottleRepository.getBottles();
-    vm.bottles.$loaded(function () {
-      vm.loaded = true;
-    });
-
     vm.editBottle = editBottle;
     vm.removeBottle = removeBottle;
     vm.removeSelectedBottles = removeSelectedBottles;
-    vm.getCave = getCave;
 
-    var caves = {};
-    function getCave(id) {
-      if (id) {
-        if (!caves[id]) {
-          caves[id] = CaveRepository.getCave(id);
+    activate();
+
+    function activate() {
+      vm.loaded = false;
+      vm.selectedBottles = [];
+      vm.bottles = BottleRepository.getBottles();
+      vm.bottles.$loaded(function (bottles) {
+        vm.loaded = true;
+        loadBottlesCave(bottles);
+      });
+    }
+
+    function loadBottlesCave(bottles) {
+      angular.forEach(bottles, function(bottle) {
+        if (angular.isString(bottle.cave)) {
+          bottle.cave = CaveRepository.getCave(bottle.cave);
         }
-
-        return caves[id];
-      }
+      });
     }
 
     function editBottle(bottle, event) {

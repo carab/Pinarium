@@ -14,11 +14,18 @@
   function CaveListController($state, CaveRepository, BottleRepository) {
     var vm = this;
 
-    vm.caves = CaveRepository.getCaves();
-
     vm.editCave = editCave;
     vm.addCave = addCave;
-    vm.getBottlesTotal = getBottlesTotal;
+
+    activate();
+
+    function activate() {
+      vm.caves = CaveRepository.getCaves();
+
+      vm.caves.$loaded(function (caves) {
+        loadCavesQuantity(caves);
+      });
+    }
 
     function editCave(cave, event) {
       $state.go('app.caves.edit', {
@@ -33,18 +40,15 @@
       });
     }
 
-    var bottlesTotals = {};
-    function getBottlesTotal(cave) {
-      if (!bottlesTotals[cave.$id]) {
-        bottlesTotals[cave.$id] = 0;
+    function loadCavesQuantity(caves) {
+      angular.forEach(caves, function (cave) {
+        cave.quantity = 0;
         BottleRepository.getByCave(cave.$id).$loaded(function (bottles) {
           angular.forEach(bottles, function (bottle) {
-            bottlesTotals[cave.$id] += bottle.quantity;
+            cave.quantity += bottle.quantity;
           });
         });
-      }
-
-      return bottlesTotals[cave.$id];
+      });
     }
   }
 })();

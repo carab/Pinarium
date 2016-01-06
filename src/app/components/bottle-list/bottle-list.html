@@ -50,7 +50,7 @@
             <td md-cell>{{bottle.appellation}}</td>
             <td md-cell>{{bottle.cuvee}}</td>
             <td md-cell>{{bottle.producer}}</td>
-            <td md-cell>{{vm.getCave(bottle.cave).name}}</td>
+            <td md-cell>{{bottle.cave.name}}</td>
             <td md-cell hide show-gt-md><span ng-if="bottle.color">{{'bottle.color.'+bottle.color|translate}}</span></td>
             <td md-cell hide show-gt-md><span ng-if="bottle.type">{{'bottle.type.'+bottle.type|translate}}</span></td>
             <td md-cell hide show-gt-md><span ng-if="bottle.size">{{'bottle.size.'+bottle.size|translate}}</span></td>
