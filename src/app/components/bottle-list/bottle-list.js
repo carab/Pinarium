@@ -11,7 +11,7 @@
     });
 
   /** @ngInject */
-  function BottleListController($document, $mdDialog, $mdMedia, $state, $translate, BottleRepository, CaveRepository) {
+  function BottleListController($document, $mdDialog, $mdMedia, $state, $stateParams, $translate, BottleRepository, CaveRepository) {
     var vm = this;
 
     vm.editBottle = editBottle;
@@ -23,7 +23,7 @@
     function activate() {
       vm.loaded = false;
       vm.selectedBottles = [];
-      vm.bottles = BottleRepository.getBottles();
+      vm.bottles = BottleRepository.get();
       vm.promise = vm.bottles.$loaded(function (bottles) {
         vm.loaded = true;
         loadBottlesCave(bottles);

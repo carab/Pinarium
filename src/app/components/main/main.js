@@ -27,7 +27,7 @@
     this.$state = $state;
     this.Auth = Auth;
 
-    this.bottles = BottleRepository.getBottles();
+    this.bottles = BottleRepository.get();
     this.caves = CaveRepository.getCaves();
   }
 

@@ -10,10 +10,10 @@
     var service = {
       getRef: getRef,
       get: get,
-      getBottles: getBottles,
-      getBottle: getBottle,
+      getOne: getOne,
       getByCave: getByCave,
-      addBottle: addBottle,
+      add: add,
+      save: save,
       getDefault: getDefault
     };
 
@@ -32,15 +32,10 @@
 
     function get(ref) {
       ref = ref ? ref : getRef();
-      console.log(ref);
       return $firebaseArray(getRef());
     }
 
-    function getBottles() {
-      return $firebaseArray(getRef());
-    }
-
-    function getBottle(id) {
+    function getOne(id) {
       return $firebaseObject(getRef().child(id));
     }
 
@@ -49,7 +44,11 @@
       return $firebaseArray(ref.orderByChild('cave').equalTo(cave));
     }
 
-    function addBottle(bottle) {
+    function save(bottle) {
+      return bottle.$save();
+    }
+
+    function add(bottle) {
       var ref = getRef();
 
       return $q(function(resolve, reject) {

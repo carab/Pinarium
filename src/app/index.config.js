@@ -34,7 +34,7 @@
       .useStaticFilesLoader({
         prefix: '/app/languages/',
         suffix: '.json'
-        })
+      })
       .useSanitizeValueStrategy('sanitizeParameters')
       .useLocalStorage()
       .useMessageFormatInterpolation()
@@ -101,15 +101,12 @@
 
     .state('app.bottles.add', {
       url: '/add',
-      resolve: {
-        /** ngInject */
-        event: function($stateParams) {
-          return $stateParams.event;
-        }
+      params: {
+        event: null
       },
       /** ngInject */
-      onEnter: function($state, BottleFormDialog) {
-        BottleFormDialog.show(event).finally(function() {
+      onEnter: function($state, $stateParams, BottleFormDialog) {
+        BottleFormDialog.show($stateParams.event).finally(function() {
           $state.go('^');
         });
       },
@@ -121,15 +118,12 @@
 
     .state('app.bottles.edit', {
       url: '/edit/:id',
-      resolve: {
-        /** ngInject */
-        event: function($stateParams) {
-          return $stateParams.event;
-        }
+      params: {
+        event: null
       },
       /** ngInject */
       onEnter: function($state, $stateParams, BottleFormDialog) {
-        BottleFormDialog.show(event, $stateParams.id).finally(function() {
+        BottleFormDialog.show($stateParams.event, $stateParams.id).finally(function() {
           $state.go('^');
         });
       },
@@ -146,15 +140,12 @@
 
     .state('app.caves.add', {
       url: '/add',
-      resolve: {
-        /** ngInject */
-        event: function($stateParams) {
-          return $stateParams.event;
-        }
+      params: {
+        event: null
       },
       /** ngInject */
-      onEnter: function($state, CaveFormDialog) {
-        CaveFormDialog.show(event).finally(function() {
+      onEnter: function($state, $stateParams, CaveFormDialog) {
+        CaveFormDialog.show($stateParams.event).finally(function() {
           $state.go('^');
         });
       },
@@ -166,15 +157,12 @@
 
     .state('app.caves.edit', {
       url: '/edit/:id',
-      resolve: {
-        /** ngInject */
-        event: function($stateParams) {
-          return $stateParams.event;
-        }
+      params: {
+        event: null
       },
       /** ngInject */
       onEnter: function($state, $stateParams, CaveFormDialog) {
-        CaveFormDialog.show(event, $stateParams.id).finally(function() {
+        CaveFormDialog.show($stateParams.event, $stateParams.id).finally(function() {
           $state.go('^');
         });
       },

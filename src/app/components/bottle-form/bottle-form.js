@@ -19,7 +19,7 @@
   function BottleFormController($mdMedia, EnumRepository, BottleRepository, CaveRepository) {
     var vm = this;
 
-    vm.bottle = isNew() ? BottleRepository.getDefault() : BottleRepository.getBottle(vm.id);
+    vm.bottle = isNew() ? BottleRepository.getDefault() : BottleRepository.getOne(vm.id);
     vm.$mdMedia = $mdMedia;
     vm.enums = {
       colors: EnumRepository.getEnum('colors'),
@@ -42,9 +42,9 @@
       var promise;
 
       if (isNew()) {
-        promise = BottleRepository.addBottle(vm.bottle);
+        promise = BottleRepository.add(vm.bottle);
       } else {
-        promise = vm.bottle.$save();
+        promise = BottleRepository.save(vm.bottle);
       }
 
       promise.then(function() {
