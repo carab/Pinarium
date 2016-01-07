@@ -47,7 +47,6 @@ Backend :
 
 ## Known bugs
 
-* French translations are bugging ('My bottles' isn't translated).
 * Dates aren't saved.
 
 ## How to contribute
