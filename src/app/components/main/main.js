@@ -4,10 +4,10 @@
   angular
     .module('vinarium')
     .component('main', {
-    	restrict: 'EA',
+      restrict: 'EA',
       replace: true,
-    	templateUrl: 'app/components/main/main.html',
-    	controller: MainController
+      templateUrl: 'app/components/main/main.html',
+      controller: MainController
     });
 
   /** @ngInject */

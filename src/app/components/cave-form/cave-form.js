@@ -4,9 +4,9 @@
   angular
     .module('vinarium')
     .component('caveForm', {
-    	restrict: 'EA',
-    	templateUrl: 'app/components/cave-form/cave-form.html',
-    	controller: CaveFormController,
+      restrict: 'EA',
+      templateUrl: 'app/components/cave-form/cave-form.html',
+      controller: CaveFormController,
       controllerAs: 'vm',
       bindings: {
         id: '=',

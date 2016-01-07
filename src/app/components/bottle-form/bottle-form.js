@@ -4,9 +4,9 @@
   angular
     .module('vinarium')
     .component('bottleForm', {
-    	restrict: 'EA',
-    	templateUrl: 'app/components/bottle-form/bottle-form.html',
-    	controller: BottleFormController,
+      restrict: 'EA',
+      templateUrl: 'app/components/bottle-form/bottle-form.html',
+      controller: BottleFormController,
       controllerAs: 'vm',
       bindings: {
         id: '=',

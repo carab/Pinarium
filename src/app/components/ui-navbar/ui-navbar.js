@@ -4,9 +4,9 @@
   angular
     .module('vinarium')
     .component('uiNavbar', {
-    	restrict: 'EA',
-    	templateUrl: 'app/components/ui-navbar/ui-navbar.html',
-    	controller: UiNavbarController,
+      restrict: 'EA',
+      templateUrl: 'app/components/ui-navbar/ui-navbar.html',
+      controller: UiNavbarController,
       controllerAs: 'vm'
     });
 

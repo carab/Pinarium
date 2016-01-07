@@ -4,9 +4,9 @@
   angular
     .module('vinarium')
     .component('app', {
-    	restrict: 'EA',
-    	templateUrl: 'app/components/app/app.html',
-    	controller: AppController
+      restrict: 'EA',
+      templateUrl: 'app/components/app/app.html',
+      controller: AppController
     });
 
   /** @ngInject */

@@ -4,9 +4,9 @@
   angular
     .module('vinarium')
     .component('caveList', {
-    	restrict: 'EA',
-    	templateUrl: 'app/components/cave-list/cave-list.html',
-    	controller: CaveListController,
+      restrict: 'EA',
+      templateUrl: 'app/components/cave-list/cave-list.html',
+      controller: CaveListController,
       controllerAs: 'vm'
     });
 

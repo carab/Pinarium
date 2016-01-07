@@ -4,9 +4,9 @@
   angular
     .module('vinarium')
     .component('signupForm', {
-    	restrict: 'EA',
-    	templateUrl: 'app/components/signup-form/signup-form.html',
-    	controller: SignupFormController,
+      restrict: 'EA',
+      templateUrl: 'app/components/signup-form/signup-form.html',
+      controller: SignupFormController,
       controllerAs: 'vm',
       bindings: {
         hideTitle: '='

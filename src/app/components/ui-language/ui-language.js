@@ -4,9 +4,9 @@
   angular
     .module('vinarium')
     .component('uiLanguage', {
-    	restrict: 'EA',
-    	templateUrl: 'app/components/ui-language/ui-language.html',
-    	controller: UiLanguageController,
+      restrict: 'EA',
+      templateUrl: 'app/components/ui-language/ui-language.html',
+      controller: UiLanguageController,
       controllerAs: 'vm',
       bindings: {
         hideLabel: '='

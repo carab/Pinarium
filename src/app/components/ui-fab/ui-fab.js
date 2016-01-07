@@ -4,9 +4,9 @@
   angular
     .module('vinarium')
     .component('uiFab', {
-    	restrict: 'EA',
-    	templateUrl: 'app/components/ui-fab/ui-fab.html',
-    	controller: UiFabController,
+      restrict: 'EA',
+      templateUrl: 'app/components/ui-fab/ui-fab.html',
+      controller: UiFabController,
       controllerAs: 'vm'
     });
 

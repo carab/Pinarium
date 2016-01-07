@@ -4,9 +4,9 @@
   angular
     .module('vinarium')
     .component('bottleList', {
-    	restrict: 'EA',
-    	templateUrl: 'app/components/bottle-list/bottle-list.html',
-    	controller: BottleListController,
+      restrict: 'EA',
+      templateUrl: 'app/components/bottle-list/bottle-list.html',
+      controller: BottleListController,
       controllerAs: 'vm'
     });
 
