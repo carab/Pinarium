@@ -19,7 +19,8 @@
     "angular-translate-interpolation-messageformat": "~2.8.1",
     "angular-translate-storage-local": "~2.8.1",
     "angular-moment": "~0.10.3",
-    "angular-ui-router": "1.0.0alpha0"
+    "angular-ui-router": "1.0.0alpha0",
+    "messageformat": "v0.3.0-1"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.2"
@@ -28,12 +29,6 @@
     "angular-new-router": {
       "main": [
         "dist/router.es5.js"
-      ]
-    },
-    "messageformat": {
-      "main": [
-        "messageformat.js",
-        "locale/fr.js"
       ]
     },
     "moment": {
@@ -45,6 +40,7 @@
   },
   "resolutions": {
     "angular": "1.5.0-rc.0",
-    "angular-material": "~1.0.1"
+    "angular-material": "~1.0.1",
+    "messageformat": "v0.3.0-1"
   }
 }
