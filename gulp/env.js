@@ -6,20 +6,12 @@ var conf = require('./conf');
 
 var $ = require('gulp-load-plugins')();
 
-gulp.task('env:development', function () {
-  return gulp.src(path.join(conf.paths.src, '/app/index.env.json'))
-    .pipe($.ngConfig('vinarium', {
-      environment: 'development',
-      createModule: false
-    }))
-    .pipe(gulp.dest(path.join(conf.paths.tmp, '/serve/app/')));
-});
-
-gulp.task('env:production', function () {
-  return gulp.src(path.join(conf.paths.src, '/app/index.env.json'))
-    .pipe($.ngConfig('vinarium', {
-      environment: 'production',
-      createModule: false
+gulp.task('translations', function() {
+  return gulp.src(path.join(conf.paths.src, '/app/languages/*.json'))
+    .pipe($.angularTranslate({
+      standalone: false,
+      module: 'vinarium',
+      filename: 'index.translations.js'
     }))
     .pipe(gulp.dest(path.join(conf.paths.tmp, '/serve/app/')));
 });

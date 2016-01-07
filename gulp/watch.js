@@ -26,11 +26,22 @@ gulp.task('watch', ['env:development', 'inject'], function () {
   });
 
   gulp.watch([
+    path.join(conf.paths.src, '/app/*.json')
+  ], function(event) {
+    gulp.start('env:development');
+  });
+
+  gulp.watch([
+    path.join(conf.paths.src, '/app/languages/*.json')
+  ], function(event) {
+    gulp.start('translations');
+  });
+
+  gulp.watch([
     path.join(conf.paths.src, '/app/**/*.js'),
-    path.join(conf.paths.src, '/app/**/*.json')
+    path.join(conf.paths.tmp, '/serve/**/*.js')
   ], function(event) {
     if(isOnlyChange(event)) {
-      gulp.start('env:development');
       gulp.start('scripts-reload');
     } else {
       gulp.start('inject-reload');

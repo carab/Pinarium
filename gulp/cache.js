@@ -7,7 +7,7 @@ var conf = require('./conf');
 var $ = require('gulp-load-plugins')();
 
 gulp.task('manifest', function() {
-  gulp.src([path.join(conf.paths.dist, '/**')], { base: './' })
+  gulp.src([path.join(conf.paths.dist, '/**')], { base: './dist' })
     .pipe($.manifest({
       hash: true,
       preferOnline: true,

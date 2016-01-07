@@ -31,10 +31,6 @@
   /** @ngInject */
   function translate($translateProvider, AvailableLanguages) {
     $translateProvider
-      .useStaticFilesLoader({
-        prefix: '/app/languages/',
-        suffix: '.json'
-      })
       .useSanitizeValueStrategy('sanitizeParameters')
       .useLocalStorage()
       .useMessageFormatInterpolation()
