@@ -14,7 +14,7 @@
     });
 
   /** @ngInject */
-  function SigninFormController($state, Auth, UserRepository) {
+  function SigninFormController($state, Auth) {
     var vm = this;
 
     vm.submit = submit;

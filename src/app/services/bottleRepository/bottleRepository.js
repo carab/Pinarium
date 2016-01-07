@@ -6,7 +6,7 @@
     .factory('BottleRepository', BottleRepository);
 
   /** @ngInject */
-  function BottleRepository($q, $firebaseArray, $firebaseObject, UserRepository, CaveRepository) {
+  function BottleRepository($q, $firebaseArray, $firebaseObject, UserRepository) {
     var service = {
       getRef: getRef,
       get: get,

@@ -43,10 +43,6 @@
     function toggleSidebar() {
       $mdSidenav('sidebar').toggle();
     }
-
-    function closeSidebar() {
-      $mdSidenav('sidebar').close();
-    }
   }
 
 })();

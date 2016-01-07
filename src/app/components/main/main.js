@@ -11,17 +11,6 @@
     });
 
   /** @ngInject */
-  function canActivate(Auth) {
-    var promise = Auth.$requireAuth();
-
-    promise.then(null, function () {
-      //
-    });
-
-    return promise;
-  }
-
-  /** @ngInject */
   function MainController($mdSidenav, $state, Auth, BottleRepository, CaveRepository) {
     this.$mdSidenav = $mdSidenav;
     this.$state = $state;

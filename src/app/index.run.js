@@ -17,7 +17,7 @@
       moment.locale(locale.toLowerCase());
     }
 
-    $rootScope.$on('$stateChangeError', function(event, next, previous, error, test) {
+    $rootScope.$on('$stateChangeError', function() {
       Auth.$requireAuth().catch(function() {
         $state.go('auth');
       });
