@@ -25,18 +25,16 @@ Backend :
 
 Frontend :
 
-* Add settings page.
-* Improve bottle form : add autocomplete, add photo.
+* Add a settings page to set default values for forms.
+* Improve bottle form : add autocomplete, add medals data, add degustations, add plates, add photo.
 * Fast button to set a bottle as "dranked" and add "dranked" date.
 * Add search filters.
 * Automatically fetch bottle data from a photo.
 * Fetch data to know when it is better do drink a bottle.
 * Import/Export feature.
 * Reminder to drink feature + auto reminder with progress bar.
-* Mass edit actions.
+* Mass edit actions : move cave, edit property.
 * Map of the references to ease locating a bottle in the physical cave.
-* Search with "plat".
-* Reconnaissance code bar.
 * Stars for ranking.
 
 Backend :
