@@ -17,7 +17,7 @@
     return service;
 
     function getCavesRef() {
-      return UserRepository.getUserRef().child('caves');
+      return UserRepository.getRef().child('caves');
     }
 
     function getCaves() {

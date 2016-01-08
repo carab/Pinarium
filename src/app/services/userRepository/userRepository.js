@@ -9,7 +9,7 @@
   /** @ngInject */
   function userRepository($q, $firebaseArray, $firebaseObject, Auth, FirebaseConfig) {
     var service = {
-      getUserRef: getUserRef,
+      getRef: getRef,
       addUser: addUser
     };
 
@@ -25,12 +25,13 @@
         return auth;
     }
 
-    function getUserRef() {
-      return new Firebase(FirebaseConfig.api + '/users/' + getAuth().uid);
+    function getRef(id) {
+      id = id ? id : getAuth().uid
+      return new Firebase(FirebaseConfig.api + '/users/' + id);
     }
 
     function getUser() {
-      return $firebaseObject(getUserRef());
+      return $firebaseObject(getRef());
     }
 
     function addUser() {

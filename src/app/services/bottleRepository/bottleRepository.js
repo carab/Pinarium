@@ -27,7 +27,7 @@
     }
 
     function getRef() {
-      return UserRepository.getUserRef().child('bottles');
+      return UserRepository.getRef().child('bottles');
     }
 
     function get(ref) {
