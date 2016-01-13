@@ -21,7 +21,7 @@
             <th md-column ng-if="vm.sort=='wine'" md-numeric md-order-by="vintage"><span translate>bottle.vintage</span></th>
             <th md-column md-order-by="appellation"><span translate>bottle.appellation</span></th>
             <th md-column ng-if="vm.sort=='wine'" md-order-by="cuvee"><span translate>bottle.cuvee</span></th>
-            <th md-column ng-if="vm.sort=='beer'" md-order-by="brewery"><span translate>bottle.brewery</span></th>
+            <th md-column ng-if="vm.sort=='beer'" md-order-by="producer"><span translate>bottle.brewery</span></th>
             <th md-column ng-if="vm.sort=='wine'" md-order-by="producer"><span translate>bottle.producer</span></th>
             <th md-column md-order-by="cave.name"><span translate>bottle.cave</span></th>
             <th md-column ng-if="vm.sort=='wine'" md-order-by="color" hide show-gt-md><span translate>bottle.color</span></th>
@@ -36,8 +36,7 @@
             <td md-cell ng-if="vm.sort=='wine'">{{bottle.vintage}}</td>
             <td md-cell>{{bottle.appellation}}</td>
             <td md-cell ng-if="vm.sort=='wine'">{{bottle.cuvee}}</td>
-            <td md-cell ng-if="vm.sort=='beer'">{{bottle.brewery}}</td>
-            <td md-cell ng-if="vm.sort=='wine'">{{bottle.producer}}</td>
+            <td md-cell>{{bottle.producer}}</td>
             <td md-cell>{{bottle.cave.name}}</td>
             <td md-cell ng-if="vm.sort=='wine'" hide show-gt-md><span ng-if="bottle.color">{{'bottle.color.'+bottle.color|translate}}</span></td>
             <td md-cell hide show-gt-md><span ng-if="bottle.type">{{'bottle.type.'+bottle.type|translate}}</span></td>
@@ -96,8 +95,7 @@
         <h3>{{bottle.appellation}}</h3>
         <p>
           <span ng-if="vm.sort=='wine'">{{bottle.cuvee}}</span>
-          <span ng-if="vm.sort=='wine'">{{bottle.producer}}</span>
-            <span ng-if="vm.sort=='beer'">{{bottle.brewery}}</span>
+          <span>{{bottle.producer}}</span>
         </p>
         <p>
           <small ng-if="vm.sort=='wine'">{{bottle.vintage}}</small>
