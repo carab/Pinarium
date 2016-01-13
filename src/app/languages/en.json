@@ -91,7 +91,11 @@
   },
   "bottle": {
     "bottle": "Bottle",
-    "my": "{count, plural, =0 {No bottle} =1 {My Bottle} other {My Bottles}}",
+    "my": {
+      "my": "{count, plural, =0 {No bottle} =1 {My Bottle} other {My Bottles}}",
+      "beers": "{count, plural, =0 {No beer} =1 {My Beer} other {My Beers}}",
+      "wines": "{count, plural, =0 {No wine} =1 {My Wine} other {My Wines}}"
+    },
     "add": {
       "add": "Add a bottle",
       "beer": "Add a beer",

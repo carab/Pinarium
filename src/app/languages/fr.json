@@ -82,7 +82,11 @@
   },
   "bottle": {
     "bottle": "Bouteille",
-    "my": "{count, plural, =0 {Aucune bouteille} =1 {Ma Bouteille} other {Mes Bouteilles}}",
+    "my": {
+      "my": "{count, plural, =0 {Aucune bouteille} =1 {Ma Bouteille} other {Mes Bouteilles}}",
+      "beers": "{count, plural, =0 {Aucune bière} =1 {Ma Bière} other {Mes Bières}}",
+      "wines": "{count, plural, =0 {Aucun vin} =1 {Mon Vin} other {Mes Vins}}"
+    },
     "add": {
       "add": "Ajouter une bouteille",
       "beer": "Ajouter une bière",

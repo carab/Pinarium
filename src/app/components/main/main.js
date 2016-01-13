@@ -23,6 +23,18 @@
     function activate() {
       vm.caves = CaveRepository.get();
       vm.bottles = BottleRepository.get();
+      vm.counts = {
+        wine: 0,
+        beer: 0
+      };
+
+      vm.bottles.$loaded(function () {
+        angular.forEach(vm.bottles, function (bottle) {
+          if (angular.isDefined(bottle.sort)) {
+            vm.counts[bottle.sort]++;
+          }
+        });
+      });
     }
   }
 

@@ -13,17 +13,17 @@
         </div>
       </md-toolbar>
       <md-list>
+      <md-list-item ng-click="main.go('app.caves')">
+        <md-icon>layers</md-icon>
+        <p translate translate-values="{count: main.caves.length}">cave.my</p>
+      </md-list-item>
         <md-list-item ng-click="main.go('app.bottles', { sort: 'wine' })">
           <md-icon>list</md-icon>
-          <p translate translate-values="{count: main.bottles.length}">bottle.my</p>
+          <p translate translate-values="{count: main.counts.wine}">bottle.my.wines</p>
         </md-list-item>
         <md-list-item ng-click="main.go('app.bottles', { sort: 'beer' })">
           <md-icon>list</md-icon>
-          <p translate translate-values="{count: main.bottles.length}">bottle.my</p>
-        </md-list-item>
-        <md-list-item ng-click="main.go('app.caves')">
-          <md-icon>layers</md-icon>
-          <p translate translate-values="{count: main.caves.length}">cave.my</p>
+          <p translate translate-values="{count: main.counts.beer}">bottle.my.beers</p>
         </md-list-item>
       </md-list>
     </md-sidenav>
