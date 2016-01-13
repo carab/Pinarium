@@ -9,8 +9,6 @@
   /** @ngInject */
   function enumRepository($q, $firebaseArray, $firebaseObject, FirebaseConfig) {
     var service = {
-      apiUrl: FirebaseConfig.api,
-      apiPath: '/enums',
       getEnums: getEnums,
       getEnum: getEnum
     };
@@ -18,7 +16,7 @@
     return service;
 
     function getRef() {
-      return new Firebase(service.apiUrl + service.apiPath);
+      return new Firebase(FirebaseConfig.api + '/enums');
     }
 
     function getEnums() {
