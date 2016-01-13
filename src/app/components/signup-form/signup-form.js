@@ -43,7 +43,7 @@
         password: user.password
       }).then(function() {
         UserRepository.addUser();
-        $state.go('app.bottles');
+        $state.go('app.caves');
       }).catch(function(error) {
         vm.error = error;
         vm.submitted = false;

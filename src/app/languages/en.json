@@ -94,10 +94,14 @@
     "my": "{count, plural, =0 {No bottle} =1 {My Bottle} other {My Bottles}}",
     "add": {
       "add": "Add a bottle",
+      "beer": "Add a beer",
+      "wine": "Add a wine",
       "success": "A new bottle has been added."
     },
     "edit": {
-      "edit": "Edit Bottle",
+      "edit": "Edit a bottle",
+      "beer": "Edit a beer",
+      "wine": "Edit a wine",
       "success": "Your bottle has been updated."
     },
     "stock": "Stock",
@@ -110,6 +114,9 @@
     "producer": "Domain",
     "region": "Region",
     "country": "Country",
+    "brewery": "Brewery",
+    "expirationDate": "Expiration date",
+    "bottlingDate": "Bottling date",
     "notes": "Notes",
     "reference": "Reference",
     "cave": {
@@ -155,10 +162,11 @@
       "size": "Size",
       "200": "Piccolo (20 cl)",
       "250": "Chopine (25 cl)",
+      "330": "Can (33 cl)",
       "375": "Demi (37.5 cl)",
       "500": "Medium (50 cl)",
       "750": "Standard (75 cl)",
-      "1000": "Litre (1 l)",
+      "1000": "Liter (1 l)",
       "1500": "Magnum (1.5 l)",
       "2250": "Marie jeanne (2.25 l)",
       "3000": "Jeroboam (3 l)",

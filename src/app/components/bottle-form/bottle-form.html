@@ -18,7 +18,7 @@
   </md-toolbar>
   <md-tabs md-border-bottom md-dynamic-height>
     <md-tab label="{{'bottle'|translate}}">
-      <md-content class="md-padding" layout="row" layout-wrap>
+      <md-content class="md-padding" layout="row" layout-wrap ng-if="vm.isSort('wine')">
         <md-input-container class="md-block" flex="100" flex-gt-xs="70" flex-gt-sm="70">
           <label translate>bottle.appellation</label>
           <input name="appellation" ng-model="vm.bottle.appellation" required>
@@ -83,6 +83,45 @@
           <input ng-model="vm.bottle.capsule" type="text" name="capsule">
         </md-input-container>
         <md-input-container class="md-block" flex="50" flex-gt-sm="25">
+          <label translate>bottle.alcohol</label>
+          <input ng-model="vm.bottle.alcohol" type="number" name="alcohol">
+        </md-input-container>
+      </md-content>
+      <md-content class="md-padding" layout="row" layout-wrap ng-if="vm.isSort('beer')">
+        <md-input-container class="md-block" flex="100" flex-gt-sm="33">
+          <label translate>bottle.appellation</label>
+          <input name="appellation" ng-model="vm.bottle.appellation" required>
+          <div ng-messages="vm.bottleForm.appellation.$error" role="alert">
+            <div ng-message="required"><translate>bottle.appellation.required</translate></div>
+          </div>
+        </md-input-container>
+        <md-input-container class="md-block" flex="50" flex-gt-sm="33">
+          <label translate>bottle.brewery</label>
+          <input ng-model="vm.bottle.brewery" type="text" name="brewery">
+        </md-input-container>
+        <md-input-container class="md-block" flex="50" flex-gt-sm="33">
+          <label translate>bottle.country</label>
+          <input ng-model="vm.bottle.country" type="text" name="country">
+        </md-input-container>
+        <md-datepicker class="md-block" flex="50" flex-gt-sm="50" ng-model="vm.bottle.bottlingDate" md-placeholder="{{'bottle.bottlingDate'|translate}}"></md-datepicker>
+        <md-datepicker class="md-block" flex="50" flex-gt-sm="50" ng-model="vm.bottle.expirationDate" md-placeholder="{{'bottle.expirationDate'|translate}}"></md-datepicker>
+        <md-input-container class="md-block" flex="50" flex-gt-sm="33">
+          <label translate>bottle.size</label>
+          <md-select ng-model="vm.bottle.size">
+            <md-option ng-repeat="size in vm.enums.sizes" value="{{size}}">
+              {{'bottle.size.'+size|translate}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container class="md-block" flex="50" flex-gt-sm="33">
+          <label translate>bottle.type</label>
+          <md-select ng-model="vm.bottle.type">
+            <md-option ng-repeat="type in vm.enums.types" value="{{type}}">
+              {{'bottle.type.'+type|translate}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container class="md-block" flex="50" flex-gt-sm="33">
           <label translate>bottle.alcohol</label>
           <input ng-model="vm.bottle.alcohol" type="number" name="alcohol">
         </md-input-container>

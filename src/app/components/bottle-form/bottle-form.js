@@ -10,6 +10,7 @@
       controllerAs: 'vm',
       bindings: {
         id: '=',
+        sort: '=',
         onSave: '&',
         onCancel: '&'
       }
@@ -19,14 +20,19 @@
   function BottleFormController($mdMedia, EnumRepository, BottleRepository, CaveRepository) {
     var vm = this;
 
-    vm.bottle = isNew() ? BottleRepository.getDefault() : BottleRepository.getOne(vm.id);
+    vm.bottle = isNew() ? BottleRepository.getDefault({ sort: vm.sort }) : BottleRepository.getOne(vm.id);
     vm.$mdMedia = $mdMedia;
     vm.enums = EnumRepository.getEnums();
     vm.caves = CaveRepository.getCaves();
 
-    vm.isNew = isNew;
     vm.save = save;
     vm.cancel = cancel;
+    vm.isNew = isNew;
+    vm.isSort = isSort;
+
+    function isSort(sort) {
+      return (vm.bottle.sort === sort);
+    }
 
     function isNew() {
       return !vm.id;

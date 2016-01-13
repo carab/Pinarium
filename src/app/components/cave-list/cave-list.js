@@ -28,14 +28,14 @@
     }
 
     function editCave(cave, event) {
-      $state.go('app.caves.edit', {
+      $state.go('app.edit.cave', {
         id: cave.$id,
         event: event
       });
     }
 
     function addCave(event) {
-      $state.go('app.caves.add', {
+      $state.go('app.add.cave', {
         event: event
       });
     }

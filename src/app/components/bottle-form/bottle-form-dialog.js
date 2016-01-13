@@ -12,21 +12,21 @@
       close: close
     };
 
-    function show(event, id) {
+    function show(options) {
       var deferred = $q.defer();
-
+      
       $translate(['bottle.add', 'bottle.edit']).then(function (translations) {
         var config = {
-          ariaLabel: id ? translations['bottle.edit'] : translations['bottle.add'],
+          ariaLabel: options.id ? translations['bottle.edit'] : translations['bottle.add'],
           controller: BottleFormDialogController,
           controllerAs: 'vm',
-          template: '<md-dialog flex flex-gt-sm="75" flex-gt-md="50"><bottle-form id="vm.id" on-save="vm.hide()" on-cancel="vm.cancel()"></bottle-form></md-dialog>',
+          template: '<md-dialog flex flex-gt-sm="75" flex-gt-md="50"><bottle-form id="vm.id" sort="vm.sort" on-save="vm.hide()" on-cancel="vm.cancel()"></bottle-form></md-dialog>',
           parent: angular.element($document.body),
           fullscreen: ($mdMedia('sm') || $mdMedia('xs'))
         }
 
-        if (event instanceof MouseEvent) {
-          config.targetEvent = event;
+        if (options.event instanceof MouseEvent) {
+          config.targetEvent = options.event;
         }
 
         $mdDialog.show(config).then(function(data) {
@@ -39,7 +39,8 @@
         function BottleFormDialogController($mdDialog) {
           var vm = this;
 
-          vm.id = id;
+          vm.id = options.id;
+          vm.sort = options.sort;
 
           vm.hide = hide;
           vm.cancel = cancel;

@@ -19,11 +19,15 @@
 
     return service;
 
-    function getDefault() {
-      return {
-        quantity: 1,
-        quantityDrank: 0
+    function getDefault(defaults) {
+      if (angular.isUndefined(defaults)) {
+        defaults = {};
       }
+      return angular.extend({
+        quantity: 1,
+        quantityDrank: 0,
+        sort: 'wine'
+      }, defaults);
     }
 
     function getRef() {
@@ -32,7 +36,16 @@
 
     function get(ref) {
       ref = ref ? ref : getRef();
-      return $firebaseArray(getRef());
+      var bottles = $firebaseArray(getRef());
+
+      bottles.$loaded(function () {
+        angular.forEach(bottles, function (bottle) {
+          angular.extend(bottle, getDefault(bottle));
+          bottles.$save(bottle); // how to save only if .extend() changed something ?
+        });
+      });
+
+      return bottles;
     }
 
     function getOne(id) {

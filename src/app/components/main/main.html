@@ -13,7 +13,11 @@
         </div>
       </md-toolbar>
       <md-list>
-        <md-list-item ng-click="main.go('app.bottles')">
+        <md-list-item ng-click="main.go('app.bottles', { sort: 'wine' })">
+          <md-icon>list</md-icon>
+          <p translate translate-values="{count: main.bottles.length}">bottle.my</p>
+        </md-list-item>
+        <md-list-item ng-click="main.go('app.bottles', { sort: 'beer' })">
           <md-icon>list</md-icon>
           <p translate translate-values="{count: main.bottles.length}">bottle.my</p>
         </md-list-item>

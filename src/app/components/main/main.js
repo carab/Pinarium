@@ -24,8 +24,8 @@
     this.$mdSidenav('sidebar').close();
   }
 
-  MainController.prototype.go = function(route) {
-    this.$state.go(route);
+  MainController.prototype.go = function(route, params) {
+    this.$state.go(route, params);
     this.$mdSidenav('sidebar').close();
   }
 

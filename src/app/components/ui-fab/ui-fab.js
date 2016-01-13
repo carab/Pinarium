@@ -15,8 +15,11 @@
     this.$state = $state;
   }
 
-  UiFabController.prototype.addBottle = function(event) {
-    this.$state.go('app.bottles.add', { event: event });
+  UiFabController.prototype.addBottle = function(sort, event) {
+    this.$state.go('app.add.bottle', {
+      sort: sort,
+      event: event
+    });
   }
 
 })();

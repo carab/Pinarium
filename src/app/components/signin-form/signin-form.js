@@ -29,7 +29,7 @@
         email: user.email,
         password: user.password
       }).then(function() {
-        $state.go('app.bottles');
+        $state.go('app.caves');
       }).catch(function(error) {
         vm.error = error;
         vm.submitted = false;

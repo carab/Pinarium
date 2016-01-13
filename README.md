@@ -39,6 +39,7 @@ Frontend :
 
 Backend :
 
+* Add a data copy in edit forms instead of editing FirebaseObject directly (to prevent overriding data not in the form)
 * Develop unit and e2e tests.
 * Document language add.
 * Use gulp-htmlmin and gulp-cssnano instead.

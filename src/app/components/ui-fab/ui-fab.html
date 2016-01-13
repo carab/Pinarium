@@ -1,3 +1,18 @@
-<md-button class="md-fab" aria-label="Add bottle" ng-click="vm.addBottle($event)">
-    <md-icon>add</md-icon>
-</md-button>
+<md-fab-speed-dial md-direction="up" md-open="vm.isOpen" ng-mouseenter="vm.isOpen=true" ng-mouseleave="vm.isOpen=false">
+  <md-fab-trigger>
+    <md-button aria-label="{{'bottle.add'|translate}}" class="md-fab">
+      <md-tooltip md-direction="left">{{'bottle.add'|translate}}</md-tooltip>
+      <md-icon>add</md-icon>
+    </md-button>
+  </md-fab-trigger>
+  <md-fab-actions>
+    <md-button aria-label="{{'bottle.add.wine'|translate}}" class="md-fab md-mini md-primary" ng-click="vm.addBottle('wine', $event)">
+      <md-tooltip md-direction="left">{{'bottle.add.wine'|translate}}</md-tooltip>
+      <md-icon>local_bar</md-icon>
+    </md-button>
+    <md-button aria-label="{{'bottle.add.beer'|translate}}" class="md-fab md-mini md-primary" ng-click="vm.addBottle('beer', $event)">
+      <md-tooltip md-direction="left">{{'bottle.add.beer'|translate}}</md-tooltip>
+      <md-icon>local_pizza</md-icon>
+    </md-button>
+  </md-fab-actions>
+</md-fab-speed-dial>

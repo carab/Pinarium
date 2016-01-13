@@ -7,13 +7,16 @@
       restrict: 'EA',
       templateUrl: 'app/components/bottle-list/bottle-list.html',
       controller: BottleListController,
-      controllerAs: 'vm'
+      controllerAs: 'vm',
+      bindings: {
+        sort: '='
+      }
     });
 
   /** @ngInject */
   function BottleListController($document, $mdDialog, $mdMedia, $state, $stateParams, $translate, BottleRepository, CaveRepository) {
     var vm = this;
-
+    
     vm.editBottle = editBottle;
     vm.removeBottle = removeBottle;
     vm.removeSelectedBottles = removeSelectedBottles;
@@ -39,7 +42,7 @@
     }
 
     function editBottle(bottle, event) {
-      $state.go('app.bottles.edit', {
+      $state.go('app.edit.bottle', {
         id: bottle.$id,
         event: event
       });

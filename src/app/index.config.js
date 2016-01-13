@@ -65,7 +65,7 @@
 
   /** @ngInject */
   function router($stateProvider, $urlRouterProvider, $transitionsProvider) {
-    $urlRouterProvider.otherwise('/app');
+    $urlRouterProvider.otherwise('/app/caves');
 
     $transitionsProvider.onStart({
       to: function(state) {
@@ -92,7 +92,7 @@
         .then(function (data) { deferred.reject(data) })
         .catch(function (data) { deferred.resolve(data) });
 
-      return deferred.promise.catch(function() { return $state.go('app.bottles'); });
+      return deferred.promise.catch(function() { return $state.go('app.caves'); });
     }
 
     $stateProvider
@@ -109,88 +109,105 @@
         template: '<main layout layout-fill></main>'
       })
 
-      .state('app.bottles', {
-        url: '',
-        requiresAuth: true,
-        template: '<bottle-list></bottle-list>'
+        .state('app.bottles', {
+          url: '/bottles/:sort',
+          requiresAuth: true,
+          template: '<bottle-list sort="vm.sort"></bottle-list>',
+          controllerAs: 'vm',
+          /** @ngInject */
+          controller: function ($stateParams) {
+            this.sort = $stateParams.sort;
+          }
+        })
+
+        .state('app.caves', {
+          url: '/caves',
+          requiresAuth: true,
+          template: '<cave-list></cave-list>'
+        })
+
+        .state('app.add', {
+          url: '/add',
+          abstract: true,
+          requiresAuth: true
+        })
+
+          .state('app.add.bottle', {
+            url: '/bottle/:sort',
+            requiresAuth: true,
+            params: {
+              event: null
+            },
+            /** @ngInject */
+            onEnter: function($state, $stateParams, BottleFormDialog) {
+              BottleFormDialog.show($stateParams).finally(function() {
+                $state.go('^');
+              });
+            },
+            /** @ngInject */
+            onExit: function(BottleFormDialog) {
+              BottleFormDialog.close();
+            }
+          })
+
+          .state('app.add.cave', {
+            url: '/cave',
+            requiresAuth: true,
+            params: {
+              event: null
+            },
+            /** @ngInject */
+            onEnter: function($state, $stateParams, CaveFormDialog) {
+              CaveFormDialog.show($stateParams.event).finally(function() {
+                $state.go('^');
+              });
+            },
+            /** @ngInject */
+            onExit: function(CaveFormDialog) {
+              CaveFormDialog.close();
+            }
+          })
+
+      .state('app.edit', {
+        url: '/edit',
+        abstract: true,
+        requiresAuth: true
       })
 
-      .state('app.bottles.add', {
-        url: '/add',
-        requiresAuth: true,
-        params: {
-          event: null
-        },
-        /** @ngInject */
-        onEnter: function($state, $stateParams, BottleFormDialog) {
-          BottleFormDialog.show($stateParams.event).finally(function() {
-            $state.go('^');
+          .state('app.edit.bottle', {
+            url: '/bottle/:id',
+            requiresAuth: true,
+            params: {
+              event: null
+            },
+            /** @ngInject */
+            onEnter: function($state, $stateParams, BottleFormDialog) {
+              BottleFormDialog.show($stateParams).finally(function() {
+                $state.go('^');
+              });
+            },
+            /** @ngInject */
+            onExit: function(BottleFormDialog) {
+              BottleFormDialog.close();
+            }
+          })
+
+          .state('app.edit.cave', {
+            url: '/cave/:id',
+            requiresAuth: true,
+            params: {
+              event: null
+            },
+            /** @ngInject */
+            onEnter: function($state, $stateParams, CaveFormDialog) {
+              CaveFormDialog.show($stateParams.event, $stateParams.id).finally(function() {
+                $state.go('^');
+              });
+            },
+            /** @ngInject */
+            onExit: function(CaveFormDialog) {
+              CaveFormDialog.close();
+            }
           });
-        },
-        /** @ngInject */
-        onExit: function(BottleFormDialog) {
-          BottleFormDialog.close();
-        }
-      })
-
-      .state('app.bottles.edit', {
-        url: '/edit/:id',
-        requiresAuth: true,
-        params: {
-          event: null
-        },
-        /** @ngInject */
-        onEnter: function($state, $stateParams, BottleFormDialog) {
-          BottleFormDialog.show($stateParams.event, $stateParams.id).finally(function() {
-            $state.go('^');
-          });
-        },
-        /** @ngInject */
-        onExit: function(BottleFormDialog) {
-          BottleFormDialog.close();
-        }
-      })
-
-      .state('app.caves', {
-        url: '/caves',
-        requiresAuth: true,
-        template: '<cave-list></cave-list>'
-      })
-
-      .state('app.caves.add', {
-        url: '/add',
-        requiresAuth: true,
-        params: {
-          event: null
-        },
-        /** @ngInject */
-        onEnter: function($state, $stateParams, CaveFormDialog) {
-          CaveFormDialog.show($stateParams.event).finally(function() {
-            $state.go('^');
-          });
-        },
-        /** @ngInject */
-        onExit: function(CaveFormDialog) {
-          CaveFormDialog.close();
-        }
-      })
-
-      .state('app.caves.edit', {
-        url: '/edit/:id',
-        requiresAuth: true,
-        params: {
-          event: null
-        },
-        /** @ngInject */
-        onEnter: function($state, $stateParams, CaveFormDialog) {
-          CaveFormDialog.show($stateParams.event, $stateParams.id).finally(function() {
-            $state.go('^');
-          });
-        },
-        /** @ngInject */
-        onExit: function(CaveFormDialog) {
-          CaveFormDialog.close();
-        }
-      });
   }
 })();

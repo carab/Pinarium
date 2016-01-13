@@ -30,7 +30,7 @@
           </tr>
         </thead>
         <tbody md-body>
-          <tr md-row md-select="bottle" ng-repeat="bottle in vm.bottles | orderBy: vm.order">
+          <tr md-row md-select="bottle" ng-repeat="bottle in vm.bottles | orderBy: vm.order" ng-if="bottle.sort==vm.sort">
             <td md-cell>{{bottle.quantity}}</td>
             <td md-cell>{{bottle.vintage}}</td>
             <td md-cell>{{bottle.appellation}}</td>
