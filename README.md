@@ -46,7 +46,7 @@ Backend :
 
 ## Known bugs
 
-* Dates aren't saved.
+* Add and Edit popins create a blank window behind them.
 
 ## How to contribute
 

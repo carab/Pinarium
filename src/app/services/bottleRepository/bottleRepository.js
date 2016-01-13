@@ -14,19 +14,59 @@
       getByCave: getByCave,
       add: add,
       save: save,
-      getDefault: getDefault
+      getDefault: getDefault,
+      afterLoad: afterLoad,
+      beforeSave: beforeSave
     };
 
     return service;
+
+    function afterLoad(bottle) {
+      if (bottle.addedDate) {
+        bottle.addedDate = new Date(bottle.addedDate);
+      }
+
+      if (bottle.obtainedDate) {
+        bottle.obtainedDate = new Date(bottle.obtainedDate);
+      }
+
+      if (bottle.expirationDate) {
+        bottle.expirationDate = new Date(bottle.expirationDate);
+      }
+
+      if (bottle.bottlingDate) {
+        bottle.bottlingDate = new Date(bottle.bottlingDate);
+      }
+    }
+
+    function beforeSave(bottle) {
+      if (bottle.addedDate) {
+        bottle.addedDate = bottle.addedDate.getTime();
+      }
+
+      if (bottle.obtainedDate) {
+        bottle.obtainedDate = bottle.obtainedDate.getTime();
+      }
+
+      if (bottle.expirationDate) {
+        bottle.expirationDate = bottle.expirationDate.getTime();
+      }
+
+      if (bottle.bottlingDate) {
+        bottle.bottlingDate = bottle.bottlingDate.getTime();
+      }
+    }
 
     function getDefault(defaults) {
       if (angular.isUndefined(defaults)) {
         defaults = {};
       }
+
       return angular.extend({
         quantity: 1,
         quantityDrank: 0,
-        sort: 'wine'
+        sort: 'wine',
+        addedDate: (new Date()).getTime()
       }, defaults);
     }
 

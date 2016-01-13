@@ -129,7 +129,7 @@
     </md-tab>
     <md-tab label="{{'bottle.stock'|translate}}">
       <md-content class="md-padding" layout="row" layout-wrap>
-        <md-datepicker class="md-block" flex="100" flex-gt-sm="33" ng-model="vm.bottle.addedOn" md-placeholder="{{'bottle.addedOn'|translate}}"></md-datepicker>
+        <md-datepicker class="md-block" flex="100" flex-gt-sm="33" ng-model="vm.bottle.addedDate" md-placeholder="{{'bottle.addedDate'|translate}}"></md-datepicker>
         <md-input-container class="md-block" flex="50" flex-gt-sm="33">
           <label translate>bottle.cave</label>
           <md-select ng-model="vm.bottle.cave" name="cave" required>
@@ -174,7 +174,7 @@
             </md-option>
           </md-select>
         </md-input-container>
-        <md-datepicker class="md-block" flex="50" flex-gt-sm="33" ng-model="vm.bottle.obtainedOn" md-placeholder="{{'bottle.obtainedOn'|translate}}"></md-datepicker>
+        <md-datepicker class="md-block" flex="50" flex-gt-sm="33" ng-model="vm.bottle.obtainedDate" md-placeholder="{{'bottle.obtainedDate'|translate}}"></md-datepicker>
         <md-input-container class="md-block" flex="50" flex-gt-sm="33">
           <label translate>bottle.obtainedAt</label>
           <input ng-model="vm.bottle.obtainedAt" type="text" name="obtainedAt">

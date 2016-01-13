@@ -181,10 +181,10 @@
     "value": "Valeur",
     "alcohol": "Degré alcoolique",
     "capsule": "Capsule",
-    "addedOn": "Ajoutée le",
+    "addedDate": "Ajoutée le",
     "obtainedFrom": "Obtenue par",
     "obtainedTo": "Obtenue pour",
-    "obtainedOn": "Obtenue le",
+    "obtainedDate": "Obtenue le",
     "obtainedAt": "Obtenue à",
     "obtainedBy": {
       "obtainedBy": "Obtention",
@@ -204,7 +204,7 @@
       "appellationAndCuvee": "{appellation}, {cuvee}",
       "appellationAndVintageAndCuvee": "{appellation} {vintage}, cuvée {cuvee}",
       "producer": ", {producer}",
-      "addedOn": "Ajoutée le {date}",
+      "addedDate": "Ajoutée le {date}",
       "quantityLeft": "{quantityLeft}x"
     },
     "selected": "{count, plural, =0 {Aucune bouteille sélectionnée} =1 {1 bouteille sélectionnée} other {# bouteilles sélectionnées}}",

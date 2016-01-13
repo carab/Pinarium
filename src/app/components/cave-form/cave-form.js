@@ -21,13 +21,6 @@
 
     vm.cave = isNew() ? {} : CaveRepository.find(vm.id);
     vm.$mdMedia = $mdMedia;
-    vm.enums = {
-      colors: EnumRepository.getEnum('colors'),
-      effervescences: EnumRepository.getEnum('effervescences'),
-      sizes: EnumRepository.getEnum('sizes'),
-      types: EnumRepository.getEnum('types'),
-      procurements: EnumRepository.getEnum('procurements')
-    };
 
     vm.isNew = isNew;
     vm.save = save;
