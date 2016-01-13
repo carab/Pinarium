@@ -9,6 +9,7 @@
       'ngMessages',
       'ngAria',
       'ngMaterial',
+      'angularMoment',
       'ui.router',
       'md.data.table',
       'firebase',
