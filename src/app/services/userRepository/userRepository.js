@@ -26,7 +26,7 @@
     }
 
     function getRef(id) {
-      id = id ? id : getAuth().uid
+      id = id ? id : getAuth().uid;
       return new Firebase(FirebaseConfig.api + '/users/' + id);
     }
 
