@@ -36,7 +36,7 @@
     function loadBottlesCave(bottles) {
       angular.forEach(bottles, function(bottle) {
         if (angular.isString(bottle.cave)) {
-          bottle.cave = CaveRepository.getCave(bottle.cave);
+          bottle.cave = CaveRepository.find(bottle.cave);
         }
       });
     }

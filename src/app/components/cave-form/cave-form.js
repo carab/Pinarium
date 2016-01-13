@@ -19,7 +19,7 @@
   function CaveFormController($mdMedia, EnumRepository, CaveRepository) {
     var vm = this;
 
-    vm.cave = isNew() ? {} : CaveRepository.getCave(vm.id);
+    vm.cave = isNew() ? {} : CaveRepository.find(vm.id);
     vm.$mdMedia = $mdMedia;
     vm.enums = {
       colors: EnumRepository.getEnum('colors'),

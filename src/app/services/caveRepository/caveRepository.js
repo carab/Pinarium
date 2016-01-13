@@ -8,28 +8,28 @@
   /** @ngInject */
   function caveRepository($q, $firebaseArray, $firebaseObject, UserRepository) {
     var service = {
-      getCavesRef: getCavesRef,
-      getCaves: getCaves,
-      getCave: getCave,
+      getRef: getRef,
+      get: get,
+      find: find,
       addCave: addCave
     };
 
     return service;
 
-    function getCavesRef() {
+    function getRef() {
       return UserRepository.getRef().child('caves');
     }
 
-    function getCaves() {
-      return $firebaseArray(getCavesRef());
+    function get() {
+      return $firebaseArray(getRef());
     }
 
-    function getCave(id) {
-      return $firebaseObject(getCavesRef().child(id));
+    function find(id) {
+      return $firebaseObject(getRef().child(id));
     }
 
     function addCave(cave) {
-      var ref = getCavesRef();
+      var ref = getRef();
 
       return $q(function(resolve, reject) {
         ref.push(cave, function(error) {

@@ -10,7 +10,7 @@
     var service = {
       getRef: getRef,
       get: get,
-      getOne: getOne,
+      find: find,
       getByCave: getByCave,
       add: add,
       save: save,
@@ -48,7 +48,7 @@
       return bottles;
     }
 
-    function getOne(id) {
+    function find(id) {
       return $firebaseObject(getRef().child(id));
     }
 

@@ -20,10 +20,10 @@
   function BottleFormController($mdMedia, EnumRepository, BottleRepository, CaveRepository) {
     var vm = this;
 
-    vm.bottle = isNew() ? BottleRepository.getDefault({ sort: vm.sort }) : BottleRepository.getOne(vm.id);
+    vm.bottle = isNew() ? BottleRepository.getDefault({ sort: vm.sort }) : BottleRepository.find(vm.id);
     vm.$mdMedia = $mdMedia;
     vm.enums = EnumRepository.getEnums();
-    vm.caves = CaveRepository.getCaves();
+    vm.caves = CaveRepository.get();
 
     vm.save = save;
     vm.cancel = cancel;

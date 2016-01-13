@@ -20,7 +20,7 @@
     activate();
 
     function activate() {
-      vm.caves = CaveRepository.getCaves();
+      vm.caves = CaveRepository.get();
 
       vm.caves.$loaded(function (caves) {
         loadCavesQuantity(caves);

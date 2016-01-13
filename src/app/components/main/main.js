@@ -12,12 +12,18 @@
 
   /** @ngInject */
   function MainController($mdSidenav, $state, Auth, BottleRepository, CaveRepository) {
-    this.$mdSidenav = $mdSidenav;
-    this.$state = $state;
-    this.Auth = Auth;
+    var vm = this;
 
-    this.bottles = BottleRepository.get();
-    this.caves = CaveRepository.getCaves();
+    vm.$mdSidenav = $mdSidenav;
+    vm.$state = $state;
+    vm.Auth = Auth;
+
+    activate();
+
+    function activate() {
+      vm.caves = CaveRepository.get();
+      vm.bottles = BottleRepository.get();
+    }
   }
 
   MainController.prototype.closeSidebar = function() {
