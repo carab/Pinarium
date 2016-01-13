@@ -21,13 +21,7 @@
 
     vm.bottle = isNew() ? BottleRepository.getDefault() : BottleRepository.getOne(vm.id);
     vm.$mdMedia = $mdMedia;
-    vm.enums = {
-      colors: EnumRepository.getEnum('colors'),
-      effervescences: EnumRepository.getEnum('effervescences'),
-      sizes: EnumRepository.getEnum('sizes'),
-      types: EnumRepository.getEnum('types'),
-      procurements: EnumRepository.getEnum('procurements')
-    };
+    vm.enums = EnumRepository.getEnums();
     vm.caves = CaveRepository.getCaves();
 
     vm.isNew = isNew;

@@ -1,7 +1,7 @@
 {
-  "colors" : [ null, "white", "red", "rose" ],
-  "effervescences" : [ null, "still", "semisparkling", "sparkling", "verysparkling" ],
-  "procurements" : [ null, "purchase", "gift", "prize", "steal" ],
-  "sizes" : [ null, 200, 250, 375, 500, 750, 1000, 1500, 2250, 3000, 4500, 6000, 9000, 12000, 15000, 18000, "18000b", 20000, 25000, 26250, 27000, 30000 ],
-  "types" : [ null, "raw", "dry", "semidry", "sweet", "mellow", "liquorous", "alcohol" ]
+  "colors" : [ "white", "red", "rose" ],
+  "effervescences" : [ "still", "semisparkling", "sparkling", "verysparkling" ],
+  "procurements" : [ "purchase", "gift", "prize", "steal" ],
+  "sizes" : [ 200, 250, 375, 500, 750, 1000, 1500, 2250, 3000, 4500, 6000, 9000, 12000, 15000, 18000, "18000b", 20000, 25000, 26250, 27000, 30000 ],
+  "types" : [ "raw", "dry", "semidry", "sweet", "mellow", "liquorous", "alcohol" ]
 }
