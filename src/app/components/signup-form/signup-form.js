@@ -14,7 +14,7 @@
     });
 
   /** @ngInject */
-  function SignupFormController($state, Auth, UserRepository) {
+  function SignupFormController($state, Auth, UserRepository, CaveRepository) {
     var vm = this;
 
     vm.submit = submit;
@@ -38,16 +38,33 @@
     }
 
     function signin(user) {
-      Auth.$authWithPassword({
+      return Auth.$authWithPassword({
         email: user.email,
         password: user.password
       }).then(function() {
-        UserRepository.addUser();
-        $state.go('app.caves');
-      }).catch(function(error) {
-        vm.error = error;
+        UserRepository.addUser().then(function() {
+          // Create default cave and add it to the settings if no cave set
+          UserRepository.getSettings().$loaded().then(function(settings) {
+            if (angular.isUndefined(settings.defaultCave)) {
+              CaveRepository.getDefault().then(function(cave) {
+                CaveRepository.addCave(cave).then(function(cave) {
+                  settings.defaultCave = cave.$id;
+                  UserRepository.saveSettings(settings).finally(goDashboard);
+                }).catch(goDashboard);
+              }).catch(goDashboard);
+            } else {
+              goDashboard();
+            }
+          }).catch(goDashboard);
+        }).catch(goDashboard);
+      }).catch(function(err) {
+        vm.error = err;
         vm.submitted = false;
       });
+    }
+
+    function goDashboard(data) {
+      $state.go('app.caves');
     }
   }
 

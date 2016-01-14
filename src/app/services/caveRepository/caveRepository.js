@@ -6,13 +6,42 @@
     .factory('CaveRepository', caveRepository);
 
   /** @ngInject */
-  function caveRepository($q, $firebaseArray, $firebaseObject, UserRepository) {
+  function caveRepository($q, $firebaseArray, $firebaseObject, $translate, UserRepository) {
     var service = {
       getRef: getRef,
       get: get,
       find: find,
-      addCave: addCave
+      addCave: addCave,
+      addDefaults: addDefaults,
+      getDefault: getDefault
     };
+
+    function addDefaults(cave) {
+      var defaults = {};
+
+      // Those 2 lines are to preserve the cave object and
+      // its values, as .extend() override properties
+      angular.extend(defaults, cave);
+      angular.extend(cave, defaults);
+
+      var translatePromise = $translate(['cave.name.default']).then(function (translations) {
+        cave.name = translations['cave.name.default'];
+      });
+
+      return $q.all([translatePromise]);
+    }
+
+    function getDefault(cave) {
+      cave = cave ? cave : {};
+
+      return $q(function(resolve, reject) {
+        addDefaults(cave).then(function(data) {
+          resolve(cave);
+        }).catch(function (err) {
+          reject(err);
+        });
+      });
+    }
 
     return service;
 
@@ -29,14 +58,16 @@
     }
 
     function addCave(cave) {
-      var ref = getRef();
-
       return $q(function(resolve, reject) {
-        ref.push(cave, function(error) {
-          if (null === error) {
-            resolve();
+        var ref = getRef().push(cave, function(err) {
+          if (null === err) {
+            $firebaseObject(ref).$loaded().then(function(cave) {
+              resolve(cave);
+            }).catch(function(err) {
+              reject(err);
+            });
           } else {
-            reject(error);
+            reject(err);
           }
         });
       });
