@@ -61,8 +61,18 @@
     },
     "menu": "User menu",
     "signout": "Signout",
-    "settings": "Settings",
     "switchLanguage": "Switch language"
+  },
+  "settings": {
+    "settings": "Settings",
+    "edit": "Edit Settings",
+    "defaults": {
+      "defaults": "Defaults",
+      "cave": {
+        "cave": "Default cellar",
+        "required": "This value is required"
+      }
+    }
   },
   "cave": {
     "my": "{count, plural, =0 {No cellar} =1 {My Cellar} other {My Cellars}}",

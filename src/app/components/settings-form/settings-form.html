@@ -1,0 +1,36 @@
+<form novalidate name="vm.settingsForm" ng-submit="vm.settingsForm.$valid && vm.save()" layout="column" layout-fill class="md-inline-form">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <md-button aria-label="{{'label.cancel'|translate}}" class="md-icon-button" ng-click="vm.cancel()" ng-if="!vm.$mdMedia('gt-sm')">
+        <md-icon>keyboard_backspace</md-icon>
+      </md-button>
+      <md-button aria-label="{{'label.cancel'|translate}}" class="md-icon-button" ng-click="vm.cancel()" ng-if="vm.$mdMedia('gt-sm')">
+        <md-icon>clear</md-icon>
+      </md-button>
+      <h2 translate>settings.edit</h2>
+      <span flex></span>
+      <md-button type="submit" aria-label="{{'label.save'|translate}}" class="md-icon-button" ng-if="!vm.$mdMedia('gt-sm')">
+        <md-icon>done</md-icon>
+      </md-button>
+      <md-button type="submit" ng-if="vm.$mdMedia('gt-sm')" class="md-raised"><translate>label.save</translate></md-button>
+    </div>
+  </md-toolbar>
+  <md-tabs md-border-bottom md-dynamic-height>
+    <md-tab label="{{'settings.defaults'|translate}}">
+      <md-content class="md-padding" layout="row" layout-wrap>
+        <md-input-container class="md-block" flex="50" flex-gt-sm="33">
+          <md-icon>layers</md-icon>
+          <label translate>settings.defaults.cave</label>
+          <md-select ng-model="vm.settings.defaultCave" name="defaultCave" required>
+            <md-option ng-repeat="cave in vm.caves" value="{{cave.$id}}">
+              {{cave.name}}
+            </md-option>
+          </md-select>
+          <div ng-messages="vm.settingsForm.defaultCave.$error">
+            <div ng-message="required"><translate>settings.defaults.cave.required</translate></div>
+          </div>
+        </md-input-container>
+      </md-content>
+    </md-tab>
+  </md-tabs>
+</form>

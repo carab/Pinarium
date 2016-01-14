@@ -14,6 +14,7 @@
       getByCave: getByCave,
       add: add,
       save: save,
+      addDefaults: addDefaults,
       getDefault: getDefault,
       afterLoad: afterLoad,
       beforeSave: beforeSave
@@ -57,17 +58,32 @@
       }
     }
 
-    function getDefault(defaults) {
-      if (angular.isUndefined(defaults)) {
-        defaults = {};
-      }
+    function addDefaults(bottle) {
+      var deferred = $q,
+          defaults = {
+            quantity: 1,
+            quantityDrank: 0,
+            sort: 'wine',
+            addedDate: (new Date()).getTime()
+          };
 
-      return angular.extend({
-        quantity: 1,
-        quantityDrank: 0,
-        sort: 'wine',
-        addedDate: (new Date()).getTime()
-      }, defaults);
+      // Those 2 lines are to preserve the bottle object and
+      // its values, as .extend() override properties
+      angular.extend(defaults, bottle);
+      angular.extend(bottle, defaults);
+
+      UserRepository.getSettings().$loaded(function (settings) {
+        bottle.cave = settings.defaultCave;
+      });
+
+      return deferred.promise;
+    }
+
+    function getDefault(bottle) {
+      addDefaults(bottle);
+      afterLoad(bottle);
+
+      return bottle;
     }
 
     function getRef() {
@@ -80,7 +96,7 @@
 
       bottles.$loaded(function () {
         angular.forEach(bottles, function (bottle) {
-          angular.extend(bottle, getDefault(bottle));
+          addDefaults(bottle);
           bottles.$save(bottle); // how to save only if .extend() changed something ?
         });
       });
@@ -95,6 +111,11 @@
 
     function find(id) {
       var bottle = $firebaseObject(getRef().child(id));
+      
+      bottle.$loaded(function () {
+        afterLoad(bottle);
+      });
+
       return bottle;
     }
 

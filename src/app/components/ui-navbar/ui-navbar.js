@@ -21,10 +21,15 @@
     vm.signout = signout;
     vm.switchLanguage = switchLanguage;
     vm.toggleSidebar = toggleSidebar;
+    vm.go = go;
 
     function signout() {
       Auth.$unauth();
       $state.go('auth');
+    }
+
+    function go(name, params) {
+      $state.go(name, params);
     }
 
     function switchLanguage(ev) {

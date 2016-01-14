@@ -32,14 +32,6 @@
       vm.bottle = isNew() ? BottleRepository.getDefault({ sort: vm.sort }) : BottleRepository.find(vm.id);
       vm.enums = EnumRepository.get();
       vm.caves = CaveRepository.get();
-
-      if (!isNew()) {
-        vm.bottle.$loaded(function () {
-          BottleRepository.afterLoad(vm.bottle);
-        });
-      } else {
-        BottleRepository.afterLoad(vm.bottle);
-      }
     }
 
     function isSort(sort) {

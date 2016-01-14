@@ -109,6 +109,24 @@
         template: '<main layout layout-fill></main>'
       })
 
+        .state('app.settings', {
+          url: '/settings',
+          requiresAuth: true,
+          params: {
+            event: null
+          },
+          /** @ngInject */
+          onEnter: function($state, $stateParams, SettingsFormDialog) {
+            SettingsFormDialog.show($stateParams).finally(function() {
+              $state.go('^');
+            });
+          },
+          /** @ngInject */
+          onExit: function(SettingsFormDialog) {
+            SettingsFormDialog.close();
+          }
+        })
+
         .state('app.bottles', {
           url: '/bottles/:sort',
           requiresAuth: true,

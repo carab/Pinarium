@@ -10,7 +10,9 @@
   function userRepository($q, $firebaseArray, $firebaseObject, Auth, FirebaseConfig) {
     var service = {
       getRef: getRef,
-      addUser: addUser
+      addUser: addUser,
+      getSettings: getSettings,
+      saveSettings: saveSettings
     };
 
     return service;
@@ -32,6 +34,14 @@
 
     function getUser() {
       return $firebaseObject(getRef());
+    }
+
+    function getSettings() {
+      return $firebaseObject(getRef().child('/settings'));
+    }
+
+    function saveSettings(settings) {
+      return settings.$save();
     }
 
     function addUser() {
