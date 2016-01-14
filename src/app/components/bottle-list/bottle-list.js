@@ -16,7 +16,7 @@
   /** @ngInject */
   function BottleListController($document, $mdDialog, $mdMedia, $state, $stateParams, $translate, BottleRepository, CaveRepository) {
     var vm = this;
-    
+
     vm.editBottle = editBottle;
     vm.removeBottle = removeBottle;
     vm.removeSelectedBottles = removeSelectedBottles;
@@ -25,6 +25,7 @@
 
     function activate() {
       vm.loaded = false;
+      vm.order = '-addedDate';
       vm.selectedBottles = [];
       vm.bottles = BottleRepository.get();
       vm.promise = vm.bottles.$loaded(function (bottles) {

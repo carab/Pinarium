@@ -2,7 +2,7 @@
   <md-card ng-if="!vm.loaded || vm.bottles.length" hide show-gt-sm>
     <md-toolbar ng-hide="vm.selectedBottles.length" class="md-default">
       <div class="md-toolbar-tools">
-        <span ng-if="vm.loaded" translate translate-values="{count: vm.bottles.length}">bottle.my</span>
+        <span ng-if="vm.loaded" translate translate-values="{count: (vm.bottles | filter:{sort: vm.sort}).length}">bottle.my</span>
         <span ng-if="!vm.loaded" translate>label.loading</span>
       </div>
     </md-toolbar>
@@ -41,8 +41,8 @@
             <td md-cell>{{bottle.producer}}</td>
             <td md-cell>{{bottle.cave.name}}</td>
             <td md-cell ng-if="vm.sort=='wine'" hide show-gt-md><span ng-if="bottle.color">{{'bottle.color.'+bottle.color|translate}}</span></td>
-            <td md-cell ng-if="vm.sort=='beer'" hide show-gt-md>{{bottle.bottlingDate|amDateFormat:'L'}}</span></td>
-            <td md-cell ng-if="vm.sort=='beer'" hide show-gt-md>{{bottle.expirationDate|amDateFormat:'L'}}</span></td>
+            <td md-cell ng-if="vm.sort=='beer'" hide show-gt-md><span nf-if="bottle.bottlingDate">{{bottle.bottlingDate|amDateFormat:'L'}}</span></td>
+            <td md-cell ng-if="vm.sort=='beer'" hide show-gt-md><span nf-if="bottle.expirationDate">{{bottle.expirationDate|amDateFormat:'L'}}</span></td>
             <td md-cell hide show-gt-md><span ng-if="bottle.type">{{'bottle.type.'+bottle.type|translate}}</span></td>
             <td md-cell hide show-gt-md><span ng-if="bottle.size">{{'bottle.size.'+bottle.size|translate}}</span></td>
             <td md-cell>
@@ -89,7 +89,7 @@
   </div>
   <md-list ng-if="vm.loaded && vm.bottles.length" hide-gt-sm>
     <md-subheader class="md-no-sticky">
-      <span translate translate-values="{count: vm.bottles.length}">bottle.my</span>
+      <span translate translate-values="{count: (vm.bottles | filter:{sort: vm.sort}).length}">bottle.my</span>
     </md-subheader>
     <md-list-item class="md-2-line" ng-repeat="bottle in vm.bottles | filter:{sort: vm.sort}">
       <div class="ui-bottle-quantity">

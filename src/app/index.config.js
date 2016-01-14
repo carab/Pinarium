@@ -79,6 +79,23 @@
       }
     }, requiresUnauth);
 
+    $transitionsProvider.onBefore({}, savePrevious);
+
+    /** @ngInject */
+    function savePrevious(Navigation, $stateParams, $state, $transition$) {
+      var $from = $transition$.$from();
+
+      Navigation.previous = {
+        name: $from.name,
+        params: Navigation.current.params
+      };
+
+      Navigation.current = {
+        name: $state.$current.name,
+        params: $stateParams
+      };
+    }
+
     /** @ngInject */
     function requiresAuth($state, Auth) {
       return Auth.$requireAuth().catch(function() { return $state.go('auth'); });
@@ -116,9 +133,15 @@
             event: null
           },
           /** @ngInject */
-          onEnter: function($state, $stateParams, SettingsFormDialog) {
-            SettingsFormDialog.show($stateParams).finally(function() {
-              $state.go('^');
+          onEnter: function($state, $stateParams, Navigation, SettingsFormDialog) {
+            SettingsFormDialog.show($stateParams).then(function() {
+              $state.go('app.caves');
+            }).catch(function() {
+              if (Navigation.previous && Navigation.previous.name) {
+                $state.go(Navigation.previous.name, Navigation.previous.params || {});
+              } else {
+                $state.go('app.caves');
+              }
             });
           },
           /** @ngInject */
@@ -157,9 +180,15 @@
               event: null
             },
             /** @ngInject */
-            onEnter: function($state, $stateParams, BottleFormDialog) {
-              BottleFormDialog.show($stateParams).finally(function() {
-                $state.go('^');
+            onEnter: function($state, $stateParams, Navigation, BottleFormDialog) {
+              BottleFormDialog.show($stateParams).then(function() {
+                $state.go('app.bottles', $stateParams);
+              }).catch(function() {
+                if (Navigation.previous && Navigation.previous.name) {
+                  $state.go(Navigation.previous.name, Navigation.previous.params || {});
+                } else {
+                  $state.go('app.bottles', $stateParams);
+                }
               });
             },
             /** @ngInject */
@@ -175,9 +204,15 @@
               event: null
             },
             /** @ngInject */
-            onEnter: function($state, $stateParams, CaveFormDialog) {
-              CaveFormDialog.show($stateParams.event).finally(function() {
-                $state.go('^');
+            onEnter: function($state, $stateParams, Navigation, CaveFormDialog) {
+              CaveFormDialog.show($stateParams.event).then(function() {
+                $state.go('app.caves');
+              }).catch(function() {
+                if (Navigation.previous && Navigation.previous.name) {
+                  $state.go(Navigation.previous.name, Navigation.previous.params || {});
+                } else {
+                  $state.go('app.caves');
+                }
               });
             },
             /** @ngInject */
@@ -199,9 +234,15 @@
               event: null
             },
             /** @ngInject */
-            onEnter: function($state, $stateParams, BottleFormDialog) {
-              BottleFormDialog.show($stateParams).finally(function() {
-                $state.go('^');
+            onEnter: function($state, $stateParams, Navigation, BottleFormDialog) {
+              BottleFormDialog.show($stateParams).then(function() {
+                $state.go('app.bottles', $stateParams);
+              }).catch(function() {
+                if (Navigation.previous && Navigation.previous.name) {
+                  $state.go(Navigation.previous.name, Navigation.previous.params || {});
+                } else {
+                  $state.go('app.bottles', $stateParams);
+                }
               });
             },
             /** @ngInject */
@@ -217,9 +258,15 @@
               event: null
             },
             /** @ngInject */
-            onEnter: function($state, $stateParams, CaveFormDialog) {
-              CaveFormDialog.show($stateParams.event, $stateParams.id).finally(function() {
-                $state.go('^');
+            onEnter: function($state, $stateParams, Navigation, CaveFormDialog) {
+              CaveFormDialog.show($stateParams.event, $stateParams.id).then(function() {
+                $state.go('app.caves');
+              }).catch(function() {
+                if (Navigation.previous && Navigation.previous.name) {
+                  $state.go(Navigation.previous.name, Navigation.previous.params || {});
+                } else {
+                  $state.go('app.caves');
+                }
               });
             },
             /** @ngInject */
