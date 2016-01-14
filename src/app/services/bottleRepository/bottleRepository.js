@@ -88,13 +88,14 @@
       return bottles;
     }
 
-    function find(id) {
-      return $firebaseObject(getRef().child(id));
-    }
-
     function getByCave(cave) {
       var ref = getRef();
       return $firebaseArray(ref.orderByChild('cave').equalTo(cave));
+    }
+
+    function find(id) {
+      var bottle = $firebaseObject(getRef().child(id));
+      return bottle;
     }
 
     function save(bottle) {
