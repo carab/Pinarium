@@ -63,6 +63,10 @@
         "cave": "Cave par défaut",
         "required": "Cette valeur est requise"
       }
+    },
+    "actions": {
+      "actions": "Actions",
+      "process": "Traiter les bouteilles"
     }
   },
   "cave": {

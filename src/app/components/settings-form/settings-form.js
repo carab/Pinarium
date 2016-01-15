@@ -15,11 +15,13 @@
     });
 
   /** @ngInject */
-  function SettingsFormController(UserRepository, CaveRepository) {
+  function SettingsFormController(UserRepository, CaveRepository, BottleRepository, AutocompleteRepository) {
     var vm = this;
 
     vm.save = save;
     vm.cancel = cancel;
+
+    vm.processBottles = processBottles;
 
     activate();
 
@@ -36,6 +38,16 @@
 
     function cancel() {
       vm.onCancel();
+    }
+
+    function processBottles() {
+      AutocompleteRepository.remove().then(function() {
+        BottleRepository.get().$loaded().then(function(bottles) {
+          angular.forEach(bottles, function(bottle) {
+            BottleRepository.afterSave(bottle);
+          });
+        });
+      });
     }
   }
 

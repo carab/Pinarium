@@ -1,0 +1,13 @@
+
+<md-autocomplete class="md-block"
+    md-input-name="{{vm.field}}"
+    md-selected-item="vm.model[vm.field]"
+    md-search-text-change="vm.model[vm.field]=vm.search"
+    md-search-text="vm.search"
+    md-items="item in vm.queryAutocompletes()"
+    md-item-text="item"
+    md-floating-label="{{vm.label}}">
+  <md-item-template>
+    <span md-highlight-text="vm.search" md-highlight-flags="i">{{item}}</span>
+  </md-item-template>
+</md-autocomplete>

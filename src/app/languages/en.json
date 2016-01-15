@@ -72,6 +72,10 @@
         "cave": "Default cellar",
         "required": "This value is required"
       }
+    },
+    "actions": {
+      "actions": "Actions",
+      "process": "Process bottles"
     }
   },
   "cave": {

@@ -17,7 +17,7 @@
     });
 
   /** @ngInject */
-  function BottleFormController($mdMedia, EnumRepository, BottleRepository, CaveRepository) {
+  function BottleFormController($mdMedia, EnumRepository, BottleRepository, CaveRepository, AutocompleteRepository) {
     var vm = this;
 
     vm.save = save;
@@ -32,6 +32,7 @@
       vm.bottle = isNew() ? BottleRepository.getDefault({ sort: vm.sort }) : BottleRepository.find(vm.id);
       vm.enums = EnumRepository.get();
       vm.caves = CaveRepository.get();
+      vm.autocompletes = AutocompleteRepository.get();
     }
 
     function isSort(sort) {
@@ -44,8 +45,6 @@
 
     function save() {
       var promise;
-
-      BottleRepository.beforeSave(vm.bottle);
 
       if (isNew()) {
         promise = BottleRepository.add(vm.bottle);

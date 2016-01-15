@@ -32,5 +32,10 @@
         </md-input-container>
       </md-content>
     </md-tab>
+      <md-tab label="{{'settings.actions'|translate}}">
+        <md-content class="md-padding" layout="row" layout-wrap>
+          <md-button ng-click="vm.processBottles()"><translate>settings.actions.process</translate></md-button>
+        </md-content>
+      </md-tab>
   </md-tabs>
 </form>
