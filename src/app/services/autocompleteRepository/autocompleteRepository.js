@@ -1,4 +1,3 @@
-/* global Firebase:false */
 (function() {
   'use strict';
 
@@ -32,11 +31,7 @@
     function add(value, field) {
       if (value && field) {
         var ref = getRef().child(field).child(value);
-        ref.set(true, function(err) {
-          if (err) {
-            console.log(err);
-          }
-        });
+        ref.set(true);
       }
     }
 

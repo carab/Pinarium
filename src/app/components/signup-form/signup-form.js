@@ -63,7 +63,7 @@
       });
     }
 
-    function goDashboard(data) {
+    function goDashboard() {
       $state.go('app.caves');
     }
   }

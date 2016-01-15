@@ -55,7 +55,7 @@
       return UserRepository.getRef().child('bottles');
     }
 
-    function get(ref) {
+    function get() {
       return $firebaseArray(getRef());
     }
 

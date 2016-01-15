@@ -35,7 +35,7 @@
       cave = cave ? cave : {};
 
       return $q(function(resolve, reject) {
-        addDefaults(cave).then(function(data) {
+        addDefaults(cave).then(function() {
           resolve(cave);
         }).catch(function (err) {
           reject(err);
