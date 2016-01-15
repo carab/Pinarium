@@ -56,17 +56,7 @@
     }
 
     function get(ref) {
-      ref = ref ? ref : getRef();
-      var bottles = $firebaseArray(getRef());
-
-      bottles.$loaded(function () {
-        angular.forEach(bottles, function (bottle) {
-          addDefaults(bottle);
-          bottles.$save(bottle); // how to save only if .extend() changed something ?
-        });
-      });
-
-      return bottles;
+      return $firebaseArray(getRef());
     }
 
     function getByCave(cave) {
