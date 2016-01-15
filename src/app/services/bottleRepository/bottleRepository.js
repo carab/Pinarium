@@ -75,13 +75,7 @@
     }
 
     function find(id) {
-      var bottle = $firebaseObject(getRef().child(id));
-
-      bottle.$loaded(function () {
-        afterLoad(bottle);
-      });
-
-      return bottle;
+      return $firebaseObject(getRef().child(id));
     }
 
     function save(bottle) {

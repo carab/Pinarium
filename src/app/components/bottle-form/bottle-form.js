@@ -29,10 +29,21 @@
 
     function activate() {
       vm.$mdMedia = $mdMedia;
-      vm.bottle = isNew() ? BottleRepository.getDefault({ sort: vm.sort }) : BottleRepository.find(vm.id);
       vm.enums = EnumRepository.get();
       vm.caves = CaveRepository.get();
       vm.autocompletes = AutocompleteRepository.get();
+
+      if (isNew()) {
+        vm.bottle = BottleRepository.getDefault({ sort: vm.sort });
+      } else {
+        vm.bottle = {};
+        vm.originalBottle = BottleRepository.find(vm.id);
+        
+        vm.originalBottle.$loaded().then(function(bottle) {
+          vm.bottle = angular.extend({}, bottle);
+          BottleRepository.afterLoad(vm.bottle);
+        });
+      }
     }
 
     function isSort(sort) {
@@ -47,9 +58,11 @@
       var promise;
 
       if (isNew()) {
-        promise = BottleRepository.add(vm.bottle);
+        var bottle = angular.extend({}, vm.bottle);
+        promise = BottleRepository.add(bottle);
       } else {
-        promise = BottleRepository.save(vm.bottle);
+        angular.extend(vm.originalBottle, vm.bottle);
+        promise = BottleRepository.save(vm.originalBottle);
       }
 
       promise.then(function() {

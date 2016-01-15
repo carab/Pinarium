@@ -25,8 +25,7 @@ Backend :
 
 Frontend :
 
-* Add a settings page to set default values for forms.
-* Improve bottle form : add autocomplete, add medals data, add degustations, add plates, add photo.
+* Improve bottle form : add medals data, add degustations, add plates, add photo.
 * Fast button to set a bottle as "dranked" and add "dranked" date.
 * Add search filters.
 * Automatically fetch bottle data from a photo.
@@ -39,7 +38,6 @@ Frontend :
 
 Backend :
 
-* Add a data copy in edit forms instead of editing FirebaseObject directly (to prevent overriding data not in the form)
 * Develop unit and e2e tests.
 * Document language add.
 * Use gulp-htmlmin and gulp-cssnano instead.
