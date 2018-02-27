@@ -1,0 +1,1 @@
+export default ['white', 'red', 'rose']
