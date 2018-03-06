@@ -1,7 +1,7 @@
 import {store} from 'react-easy-state'
 
 const initialCellars = {
-  data: [],
+  all: [],
 }
 
 export {initialCellars}

@@ -1,22 +1,20 @@
-import db from './db'
+import database from './database'
 import {getUser} from './authApi'
 
-export function onFetch(callback) {
-  const unsubscribe = db
-    .collection('users')
-    .doc(getUser().uid)
-    .collection('cellars')
-    .onSnapshot(callback)
-
-  return unsubscribe
-}
-
-export async function createCellar(cellar) {
+function getCollection(db) {
   return db
     .collection('users')
     .doc(getUser().uid)
     .collection('cellars')
-    .add(cellar)
+}
+
+export async function onRefreshCellars(callback) {
+  const unsubscribe = getCollection(await database).onSnapshot(callback)
+  return unsubscribe
+}
+
+export async function createCellar(cellar) {
+  return getCollection(await database).add(cellar)
 }
 
 export async function fetchCellar(ref) {

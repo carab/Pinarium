@@ -16,27 +16,11 @@ export function signOut() {
   return auth.signOut()
 }
 
+export function onAuth(callback) {
+  const unsubscribe = auth.onAuthStateChanged(callback)
+  return unsubscribe
+}
+
 export function getUser() {
   return auth.currentUser
-}
-
-const authCallbacks = []
-
-function executeCallbacks(user) {
-  for (const index in authCallbacks) {
-    authCallbacks[index](user)
-  }
-}
-
-auth.onAuthStateChanged(executeCallbacks)
-
-export function onAuth(callback) {
-  authCallbacks.push(callback)
-}
-
-export function offAuth(callback) {
-  const index = authCallbacks.indexOf(authCallbacks)
-  if (-1 !== index) {
-    delete authCallbacks[index]
-  }
 }

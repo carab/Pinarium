@@ -63,14 +63,13 @@ export default class CrateList extends Component {
       <Paper>
         <Toolbar>
           <Typography variant="subheading">
-            {crates.data.length} crates
+            {crates.all.length} crates
           </Typography>
         </Toolbar>
         <Table>
           <TableHead>
             <TableRow>
               <TableCell numeric>Quantity</TableCell>
-              <TableCell>Cellar</TableCell>
               <TableCell>Appellation</TableCell>
               <TableCell numeric>Vintage</TableCell>
               <TableCell>Producer</TableCell>
@@ -78,7 +77,7 @@ export default class CrateList extends Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {crates.data.map(crate => (
+            {crates.all.map(crate => (
               <TableRow
                 key={crate.$ref.id}
                 hover
@@ -91,11 +90,6 @@ export default class CrateList extends Component {
                 }
               >
                 <TableCell numeric>{crate.quantity}</TableCell>
-                <TableCell>
-                  <CellarProvider id={crate.cellar.id}>
-                    {cellar => cellar && cellar.title}
-                  </CellarProvider>
-                </TableCell>
                 <TableCell>{crate.appellation}</TableCell>
                 <TableCell numeric>{crate.vintage}</TableCell>
                 <TableCell>{crate.producer}</TableCell>
@@ -116,7 +110,7 @@ export default class CrateList extends Component {
     return (
       <Paper className={classes.root}>
         <List>
-          {crates.data.map(crate => (
+          {crates.all.map(crate => (
             <ListItem key={crate.$ref.id}>
               <ListItemText
                 primary={`${crate.appellation} ${crate.vintage} ${
@@ -202,7 +196,7 @@ class CrateMenu extends Component {
 class CellarProvider extends Component {
   render() {
     const {children, id} = this.props
-    const cellar = cellars.data.find(cellar => cellar.$ref.id === id)
+    const cellar = cellars.all.find(cellar => cellar.$ref.id === id)
     return children(cellar) || null
   }
 }

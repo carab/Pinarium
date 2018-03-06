@@ -41,30 +41,28 @@ export default class Main extends Component {
     }
 
     return (
-      <CellarsProvider>
-        <CratesProvider>
-          <Switch location={isModal ? previousLocation : location}>
+      <CratesProvider>
+        <Switch location={isModal ? previousLocation : location}>
+          <Route
+            path="/crates/edit/:id"
+            render={props => <CrateForm id={props.match.params.id} />}
+          />
+          <Route path="/crates/new" component={CrateForm} />
+          <Route path="/crates" component={CrateList} />
+          <Route path="/profile" component={Profile} />
+          <Route path="/" component={CellarList} />
+        </Switch>
+        {isModal ? (
+          <Switch>
             <Route
               path="/crates/edit/:id"
               render={props => <CrateForm id={props.match.params.id} />}
             />
             <Route path="/crates/new" component={CrateForm} />
-            <Route path="/crates" component={CrateList} />
-            <Route path="/profile" component={Profile} />
-            <Route path="/" component={CellarList} />
           </Switch>
-          {isModal ? (
-            <Switch>
-              <Route
-                path="/crates/edit/:id"
-                render={props => <CrateForm id={props.match.params.id} />}
-              />
-              <Route path="/crates/new" component={CrateForm} />
-            </Switch>
-          ) : null}
-          <Fab />
-        </CratesProvider>
-      </CellarsProvider>
+        ) : null}
+        <Fab />
+      </CratesProvider>
     )
   }
 }

@@ -4,8 +4,10 @@ import List, {ListItem, ListItemText} from 'material-ui/List'
 
 import CellarForm from './CellarForm'
 
+import provideCellars from '../providers/provideCellars'
 import cellars from '../stores/cellars'
 
+@provideCellars
 @view
 export default class CellarList extends Component {
   render() {
@@ -13,7 +15,7 @@ export default class CellarList extends Component {
       <Fragment>
         <CellarForm />
         <List>
-          {cellars.data.map((cellar) => (
+          {cellars.all.map((cellar) => (
             <ListItem key={cellar.$ref.id}>
               <ListItemText primary={cellar.title} secondary={cellar.description} />
             </ListItem>

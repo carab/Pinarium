@@ -1,8 +1,11 @@
 import React, {Component} from 'react'
 
-import {onAuth, offAuth} from '../api/authApi'
+import {onAuth} from '../api/authApi'
+import {onStatusChange} from '../api/statusApi'
 import {fetchUser} from '../api/userApi'
+
 import user, {initialUser} from '../stores/user'
+import status, {initialStatus} from '../stores/status'
 
 export default class UserProvider extends Component {
   state = {
@@ -10,11 +13,13 @@ export default class UserProvider extends Component {
   }
 
   componentDidMount() {
-    onAuth(this.handleAuth)
+    this.unsubscribeAuth = onAuth(this.handleAuth)
+    this.unsubscribeStatus = onStatusChange(this.handleStatusChange)
   }
 
   componentWillUnmount() {
-    offAuth(this.handleAuth)
+    this.unsubscribeAuth()
+    this.unsubscribeStatus()
   }
 
   render() {
@@ -42,5 +47,9 @@ export default class UserProvider extends Component {
     this.setState({
       fetched: true,
     })
+  }
+
+  handleStatusChange = connected => {
+    status.connected = connected
   }
 }

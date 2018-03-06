@@ -34,7 +34,7 @@ const initialCrate = {
 const initialEntry = {
   quantity: null,
   cellar: null,
-  when: null,
+  when: new Date(),
 }
 
 export {initialCrate, initialEntry}

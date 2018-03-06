@@ -18,16 +18,28 @@ import Dialog, {
 import Menu, {MenuItem} from 'material-ui/Menu'
 import {ListItemIcon, ListItemText} from 'material-ui/List'
 import Divider from 'material-ui/Divider'
+import {InputAdornment} from 'material-ui/Input'
 import DeleteIcon from 'material-ui-icons/Delete'
 import RemoveCircleOutlineIcon from 'material-ui-icons/RemoveCircleOutline'
 import AddCircleOutlineIcon from 'material-ui-icons/AddCircleOutline'
+import ShoppingCartIcon from 'material-ui-icons/ShoppingCart'
+import RoomIcon from 'material-ui-icons/Room'
+import PersonIcon from 'material-ui-icons/Person'
+import StarIcon from 'material-ui-icons/Star'
+import AttachMoneyIcon from 'material-ui-icons/AttachMoney'
+import CommentIcon from 'material-ui-icons/Comment'
+import SwapHorizIcon from 'material-ui-icons/SwapHoriz'
+import LayersIcon from 'material-ui-icons/Layers'
+import GridOnIcon from 'material-ui-icons/GridOn'
 
 import DateField from '../form/DateField'
 import SelectField from '../form/SelectField'
 import TextField from '../form/TextField'
+import ArrayField from '../form/ArrayField'
 
 import {fetchCrate, saveCrate} from '../api/crateApi'
 import cellars from '../stores/cellars'
+import status from '../stores/status'
 import {initialCrate, initialEntry} from '../stores/crate'
 
 import colors from '../enums/colors'
@@ -39,31 +51,46 @@ import sorts from '../enums/sorts'
 
 @withMobileDialog()
 @withStyles(theme => ({
-  input: {
+  inputXS: {
     margin: theme.spacing.unit,
-  },
-  inputSmall: {
     flexBasis: '75px',
   },
-  inputNormal: {
+  inputMD: {
+    margin: theme.spacing.unit,
     flexBasis: '150px',
     flexGrow: '1',
   },
-  inputLarge: {
+  inputLG: {
+    margin: theme.spacing.unit,
     flexBasis: '250px',
     flexGrow: '1',
   },
-  inputFull: {
+  inputXL: {
+    margin: theme.spacing.unit,
     width: '100%',
   },
   button: {
     margin: theme.spacing.unit,
+  },
+  saveButtonWrapper: {
+    position: 'relative',
+    display: 'inline-block',
+  },
+  saveButtonLoader: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
   },
   content: {
     padding: 0,
   },
   title: {
     padding: 0,
+  },
+  form: {
+    display: 'flex',
+    flexDirection: 'column',
   },
   progress: {
     margin: theme.spacing.unit * 2,
@@ -87,12 +114,10 @@ export default class CrateForm extends Component {
     errors: {
       sort: null,
       appellation: null,
-      cellar: null,
     },
     validation: {
       sort: false,
       appellation: false,
-      cellar: false,
       form: false,
     },
   }
@@ -109,7 +134,6 @@ export default class CrateForm extends Component {
   render() {
     const {tab, open, exit, loading, saving, validation, errors} = this.state
     const {classes, fullScreen, id} = this.props
-    const {crate} = this.store
 
     if (exit) {
       return <Redirect to="/crates" />
@@ -123,210 +147,242 @@ export default class CrateForm extends Component {
         onClose={this.handleClose}
         onExited={this.handleExit}
       >
-        <form onSubmit={this.handleSubmit} noValidate autoComplete="off">
+        <form
+          className={classes.form}
+          onSubmit={this.handleSubmit}
+          noValidate
+          autoComplete="off"
+        >
           <DialogTitle id="form-dialog-title" className={classes.title}>
             <AppBar position="static">
               <Toolbar>{id ? 'Edit a crate' : 'Add a crate'}</Toolbar>
             </AppBar>
+            {loading ? null : (
+              <AppBar position="static" color="default">
+                <Tabs
+                  value={tab}
+                  onChange={this.handleTabChange}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  fullWidth
+                >
+                  <Tab label="Etiquette" />
+                  <Tab label="History" />
+                </Tabs>
+              </AppBar>
+            )}
           </DialogTitle>
           <DialogContent className={classes.content}>
             <Typography align="center" color="error">
               {errors.form}
             </Typography>
-            <AppBar position="static" color="default">
-              <Tabs
-                value={tab}
-                onChange={this.handleTabChange}
-                indicatorColor="primary"
-                textColor="primary"
-                fullWidth
-              >
-                <Tab label="Etiquette" />
-                <Tab label="History" />
-              </Tabs>
-            </AppBar>
             {loading ? (
               <CircularProgress className={classes.progress} />
             ) : (
-              tab === 0 && (
-                <TabContainer>
-                  <FormRow>
-                    <SelectField
-                      label="Sort"
-                      value={crate.sort}
-                      onChange={this.handleFieldChange('sort')}
-                      className={classes.input + ' ' + classes.inputNormal}
-                      error={null !== errors.sort}
-                      helperText={errors.sort}
-                      options={Object.keys(sorts).map(sort => ({
-                        value: sort,
-                        label: sort,
-                      }))}
-                    />
-                    <TextField
-                      label="Appellation"
-                      name="appellation"
-                      value={crate.appellation}
-                      onChange={this.handleFieldChange('appellation')}
-                      className={classes.input + ' ' + classes.inputLarge}
-                      error={null !== errors.appellation}
-                      helperText={errors.appellation}
-                    />
-                    <TextField
-                      label="Vintage"
-                      name="vintage"
-                      value={crate.vintage}
-                      onChange={this.handleFieldChange('vintage')}
-                      className={classes.input + ' ' + classes.inputSmall}
-                    />
-                    <TextField
-                      label="Cuvée"
-                      name="cuvee"
-                      value={crate.cuvee}
-                      onChange={this.handleFieldChange('cuvee')}
-                      className={classes.input + ' ' + classes.inputNormal}
-                    />
-                  </FormRow>
-                  <FormRow>
-                    <TextField
-                      label="Producer"
-                      name="producer"
-                      value={crate.producer}
-                      onChange={this.handleFieldChange('producer')}
-                      className={classes.input + ' ' + classes.inputNormal}
-                    />
-                    <TextField
-                      label="Region"
-                      name="region"
-                      value={crate.region}
-                      onChange={this.handleFieldChange('region')}
-                      className={classes.input + ' ' + classes.inputNormal}
-                    />
-                    <TextField
-                      label="Country"
-                      name="country"
-                      value={crate.country}
-                      onChange={this.handleFieldChange('country')}
-                      className={classes.input + ' ' + classes.inputNormal}
-                    />
-                  </FormRow>
-                  <FormRow>
-                    <SelectField
-                      label="Color"
-                      value={crate.color}
-                      onChange={this.handleFieldChange('color')}
-                      className={classes.input + ' ' + classes.inputNormal}
-                      emptyLabel={<em>None</em>}
-                      options={colors.map(color => ({
-                        value: color,
-                        label: color,
-                      }))}
-                    />
-                    <SelectField
-                      label="Effervescence"
-                      value={crate.effervescence}
-                      onChange={this.handleFieldChange('effervescence')}
-                      className={classes.input + ' ' + classes.inputNormal}
-                      emptyLabel={<em>None</em>}
-                      options={effervescences.map(effervescence => ({
-                        value: effervescence,
-                        label: effervescence,
-                      }))}
-                    />
-                    {crate.sort && sorts[crate.sort] ? (
-                      <SelectField
-                        label="Type"
-                        value={crate.type}
-                        onChange={this.handleFieldChange('type')}
-                        className={classes.input + ' ' + classes.inputNormal}
-                        emptyLabel={<em>None</em>}
-                        options={sorts[crate.sort].types.map(type => ({
-                          value: type,
-                          label: type,
-                        }))}
-                      />
-                    ) : null}
-                    <SelectField
-                      label="Size"
-                      value={crate.size}
-                      onChange={this.handleFieldChange('size')}
-                      className={classes.input + ' ' + classes.inputNormal}
-                      emptyLabel={<em>None</em>}
-                      options={sizes.map(size => ({value: size, label: size}))}
-                    />
-                  </FormRow>
-                  <FormRow>
-                    <TextField
-                      label="Capsule"
-                      name="capsule"
-                      value={crate.capsule}
-                      onChange={this.handleFieldChange('capsule')}
-                      className={classes.input + ' ' + classes.inputSmall}
-                    />
-                    <TextField
-                      type="number"
-                      label="Alcohol"
-                      name="alcohol"
-                      value={crate.alcohol}
-                      onChange={this.handleFieldChange('alcohol')}
-                      className={classes.input + ' ' + classes.inputSmall}
-                    />
-                    <TextField
-                      label="Medal/Prize"
-                      name="medal"
-                      value={crate.medal}
-                      onChange={this.handleFieldChange('medal')}
-                      className={classes.input + ' ' + classes.inputNormal}
-                    />
-                  </FormRow>
-                </TabContainer>
-              )
-            )}
-            {tab === 1 && (
-              <TabContainer>
-                <div style={{textAlign: 'center'}}>
-                  <Button
-                    className={classes.button}
-                    onClick={this.handleAddEntry}
-                  >
-                    Add an entry
-                  </Button>
-                </div>
-                {Array.isArray(crate.history)
-                  ? crate.history.map((entry, i) => (
-                      <Fragment key={i}>
-                        <Divider />
-                        <EntryForm
-                          entry={entry}
-                          onDelete={this.handleDeleteEntry(i)}
-                        />
-                      </Fragment>
-                    ))
-                  : null}
-              </TabContainer>
+              <Fragment>
+                {tab === 0 && this.renderEtiquette()}
+                {tab === 1 && this.renderHistory()}
+              </Fragment>
             )}
           </DialogContent>
-          {saving ? (
+          {loading ? null : (
             <DialogActions>
-              <CircularProgress className={classes.button} />
-            </DialogActions>
-          ) : (
-            <DialogActions>
-              <Button className={classes.button} onClick={this.handleClose}>
-                Cancel
-              </Button>
-              <Button
-                color="primary"
-                type="submit"
-                className={classes.button}
-                disabled={!validation.form}
-              >
-                Save
-              </Button>
+              <Fragment>
+                <Button className={classes.button} onClick={this.handleClose}>
+                  Cancel
+                </Button>
+                <div className={classes.saveButtonWrapper}>
+                  <Button
+                    color="primary"
+                    type="submit"
+                    className={classes.button}
+                    disabled={!validation.form || saving}
+                  >
+                    {saving ? '' : 'Save'}
+                  </Button>
+                  {saving ? (
+                    <CircularProgress
+                      size={24}
+                      className={classes.saveButtonLoader}
+                    />
+                  ) : null}
+                </div>
+              </Fragment>
             </DialogActions>
           )}
         </form>
       </Dialog>
+    )
+  }
+
+  renderEtiquette() {
+    const {classes} = this.props
+    const {errors} = this.state
+    const {crate} = this.store
+
+    return (
+      <TabContainer>
+        <FormRow>
+          <SelectField
+            label="Sort"
+            value={crate.sort}
+            onChange={this.handleFieldChange('sort')}
+            className={classes.inputMD}
+            error={null !== errors.sort}
+            helperText={errors.sort}
+            options={Object.keys(sorts).map(sort => ({
+              value: sort,
+              label: sort,
+            }))}
+          />
+          <TextField
+            label="Appellation"
+            name="appellation"
+            value={crate.appellation}
+            onChange={this.handleFieldChange('appellation')}
+            className={classes.inputLG}
+            error={null !== errors.appellation}
+            helperText={errors.appellation}
+          />
+          <TextField
+            label="Vintage"
+            name="vintage"
+            value={crate.vintage}
+            onChange={this.handleFieldChange('vintage')}
+            className={classes.inputXS}
+          />
+          <TextField
+            label="Cuvée"
+            name="cuvee"
+            value={crate.cuvee}
+            onChange={this.handleFieldChange('cuvee')}
+            className={classes.inputMD}
+          />
+        </FormRow>
+        <FormRow>
+          <TextField
+            label="Producer"
+            name="producer"
+            value={crate.producer}
+            onChange={this.handleFieldChange('producer')}
+            className={classes.inputMD}
+          />
+          <TextField
+            label="Region"
+            name="region"
+            value={crate.region}
+            onChange={this.handleFieldChange('region')}
+            className={classes.inputMD}
+          />
+          <TextField
+            label="Country"
+            name="country"
+            value={crate.country}
+            onChange={this.handleFieldChange('country')}
+            className={classes.inputMD}
+          />
+        </FormRow>
+        <FormRow>
+          <SelectField
+            label="Color"
+            value={crate.color}
+            onChange={this.handleFieldChange('color')}
+            className={classes.inputMD}
+            emptyLabel={<em>None</em>}
+            options={colors.map(color => ({
+              value: color,
+              label: color,
+            }))}
+          />
+          <SelectField
+            label="Effervescence"
+            value={crate.effervescence}
+            onChange={this.handleFieldChange('effervescence')}
+            className={classes.inputMD}
+            emptyLabel={<em>None</em>}
+            options={effervescences.map(effervescence => ({
+              value: effervescence,
+              label: effervescence,
+            }))}
+          />
+          {crate.sort && sorts[crate.sort] ? (
+            <SelectField
+              label="Type"
+              value={crate.type}
+              onChange={this.handleFieldChange('type')}
+              className={classes.inputMD}
+              emptyLabel={<em>None</em>}
+              options={sorts[crate.sort].types.map(type => ({
+                value: type,
+                label: type,
+              }))}
+            />
+          ) : null}
+          <SelectField
+            label="Size"
+            value={crate.size}
+            onChange={this.handleFieldChange('size')}
+            className={classes.inputMD}
+            emptyLabel={<em>None</em>}
+            options={sizes.map(size => ({value: size, label: size}))}
+          />
+        </FormRow>
+        <FormRow>
+          <TextField
+            label="Capsule"
+            name="capsule"
+            value={crate.capsule}
+            onChange={this.handleFieldChange('capsule')}
+            className={classes.inputXS}
+          />
+          <TextField
+            type="number"
+            label="Alcohol"
+            name="alcohol"
+            value={crate.alcohol}
+            onChange={this.handleFieldChange('alcohol')}
+            className={classes.inputXS}
+          />
+          <TextField
+            label="Medal/Prize"
+            name="medal"
+            value={crate.medal}
+            onChange={this.handleFieldChange('medal')}
+            className={classes.inputMD}
+          />
+        </FormRow>
+      </TabContainer>
+    )
+  }
+
+  renderHistory() {
+    const {classes} = this.props
+    const {crate} = this.store
+
+    const history = Array.isArray(crate.history) ? crate.history : []
+
+    history.sort((a, b) => {
+      const A = a.when.getTime()
+      const B = b.when.getTime()
+      if (A > B) return 1
+      if (A < B) return -1
+      return 0
+    })
+
+    return (
+      <TabContainer>
+        <div style={{textAlign: 'center'}}>
+          <Button className={classes.button} onClick={this.handleAddEntry}>
+            New entry
+          </Button>
+        </div>
+        {history.map((entry, i) => (
+          <Fragment key={i}>
+            <Divider />
+            <EntryForm entry={entry} onDelete={this.handleDeleteEntry(i)} />
+          </Fragment>
+        ))}
+      </TabContainer>
     )
   }
 
@@ -373,19 +429,22 @@ export default class CrateForm extends Component {
     if (validation.form) {
       this.setState({saving: true})
       const {crate} = this.store
-
-      try {
-        const {id} = this.props
-        console.log(crate)
-        await saveCrate(crate, id)
-
+      const {id} = this.props
+      
+      if (status.connected) {
+        try {
+          await saveCrate(crate, id)
+          this.handleClose()
+        } catch (error) {
+          errors.form = error.message
+          this.setState({
+            errors,
+            saving: false,
+          })
+        }
+      } else {
+        saveCrate(crate, id)
         this.handleClose()
-      } catch (error) {
-        errors.form = error.message
-        this.setState({
-          errors,
-          saving: false,
-        })
       }
     }
   }
@@ -412,10 +471,6 @@ export default class CrateForm extends Component {
       case 'sort':
         error = value.length > 0 ? null : 'Please select a sort'
         break
-      case 'cellar':
-        error =
-          value && typeof value === 'object' ? null : 'Please select a cellar'
-        break
       default:
         break
     }
@@ -434,8 +489,7 @@ export default class CrateForm extends Component {
 
   validateForm() {
     const {validation} = this.state
-    validation.form =
-      validation.sort && validation.appellation && validation.cellar
+    validation.form = validation.sort && validation.appellation
 
     this.setState({
       validation,
@@ -469,6 +523,50 @@ class FormRow extends Component {
   }
 }
 
+@withStyles(theme => ({
+  root: {
+    padding: theme.spacing.unit / 2,
+  },
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  fields: {
+    paddingLeft: theme.spacing.unit * 4,
+  },
+  field: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    margin: theme.spacing.unit / 2,
+  },
+  icon: {
+    marginBottom: theme.spacing.unit / 2,
+    marginRight: theme.spacing.unit,
+    marginTop: theme.spacing.unit * 2 / 3,
+  },
+  adornment: {
+    width: 'auto',
+    height: 'auto',
+    padding: theme.spacing.unit / 2,
+    marginRight: theme.spacing.unit,
+    marginTop: theme.spacing.unit / 3,
+  },
+  inputXS: {
+    width: '50px',
+  },
+  inputSM: {
+    flexBasis: '125px',
+  },
+  inputMD: {
+    flexBasis: '150px',
+  },
+  inputLG: {
+    flexBasis: '250px',
+  },
+  inputXL: {
+    flexGrow: 1,
+  },
+}))
 @view
 class EntryForm extends Component {
   state = {
@@ -477,6 +575,7 @@ class EntryForm extends Component {
 
   handleChange = name => value => {
     const {entry} = this.props
+    console.log('handleChange', value)
     entry[name] = value
   }
 
@@ -499,50 +598,69 @@ class EntryForm extends Component {
     this.setState({anchorEl: null})
   }
 
+  handleDelete = () => {
+    const {onDelete} = this.props
+    this.handleClose()
+    onDelete()
+  }
+
   render() {
-    const {entry, onDelete} = this.props
+    const {classes, entry} = this.props
     const {anchorEl} = this.state
     const open = Boolean(anchorEl)
 
+    const fields = this.constructor.fields
+    const names = Object.keys(fields)
+
+    const availableFields = names.filter(name => undefined === entry[name])
+    const requiredFields = names.filter(name => fields[name].required)
+    const presentFields = names.filter(
+      name => !fields[name].required && undefined !== entry[name]
+    )
+
     return (
-      <div>
-        <IconButton onClick={onDelete}>
-          <DeleteIcon />
-        </IconButton>
-        <IconButton
-          aria-owns={open ? 'crate-history-entry-fields-menu' : null}
-          aria-haspopup="true"
-          onClick={this.handleOpen}
-        >
-          <AddCircleOutlineIcon />
-        </IconButton>
-        <Menu
-          id="crate-history-entry-fields-menu"
-          anchorEl={anchorEl}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          open={open}
-          onClose={this.handleClose}
-        >
-          {Object.keys(this.constructor.fields).map(
-            name =>
-              undefined === entry[name] ? (
+      <div className={classes.root}>
+        <div className={classes.header}>
+          <IconButton
+            aria-owns={open ? 'crate-history-entry-fields-menu' : null}
+            aria-haspopup="true"
+            onClick={this.handleOpen}
+          >
+            <AddCircleOutlineIcon />
+          </IconButton>
+          <Menu
+            id="crate-history-entry-fields-menu"
+            anchorEl={anchorEl}
+            open={open}
+            onClose={this.handleClose}
+          >
+            {availableFields.map(name => {
+              const field = fields[name]
+
+              return (
                 <MenuItem key={name} onClick={this.handleAdd(name)}>
-                  <ListItemIcon>
-                    <DeleteIcon />
-                  </ListItemIcon>
+                  {field.icon ? (
+                    <ListItemIcon>
+                      <field.icon />
+                    </ListItemIcon>
+                  ) : null}
                   <ListItemText primary={name} />
                 </MenuItem>
-              ) : null
-          )}
-        </Menu>
-        {Object.keys(entry).map(name => this.renderField(name, entry[name]))}
+              )
+            })}
+            <Divider />
+            <MenuItem onClick={this.handleDelete}>
+              <ListItemIcon>
+                <DeleteIcon />
+              </ListItemIcon>
+              <ListItemText primary="Delete entry" />
+            </MenuItem>
+          </Menu>
+          {requiredFields.map(name => this.renderField(name, entry[name]))}
+        </div>
+        <div className={classes.fields}>
+          {presentFields.map(name => this.renderField(name, entry[name]))}
+        </div>
       </div>
     )
   }
@@ -551,50 +669,90 @@ class EntryForm extends Component {
     quantity: {
       required: true,
       component: TextField,
-      props: () => ({type: 'number'}),
+      icon: SwapHorizIcon,
+      props: props => ({
+        type: 'number',
+        className: props.classes.inputXS,
+      }),
     },
     cellar: {
       required: true,
       component: SelectField,
-      props: () => ({
-        options: cellars.data,
+      icon: LayersIcon,
+      props: props => ({
+        options: cellars.all,
         labelAccessor: 'title',
         keyAccessor: 'id',
         valueAccessor: '$ref',
+        className: props.classes.inputMD,
       }),
     },
     when: {
       required: true,
       component: DateField,
+      props: props => ({
+        className: props.classes.inputMD,
+      }),
     },
     how: {
       component: SelectField,
+      icon: ShoppingCartIcon,
+      props: props => ({
+        className: props.classes.inputMD,
+        options: procurements.map(procurement => ({
+          value: procurement,
+          label: procurement,
+        })),
+      }),
     },
     where: {
       component: TextField,
+      icon: RoomIcon,
+      props: props => ({
+        className: props.classes.inputLG,
+      }),
     },
     who: {
       component: TextField,
+      icon: PersonIcon,
+      props: props => ({
+        className: props.classes.inputLG,
+      }),
     },
-    reference: {
-      component: TextField,
+    references: {
+      component: ArrayField,
+      icon: GridOnIcon,
+      props: props => ({
+        element: <TextField label="Ref" />,
+        className: props.classes.inputMD,
+      }),
     },
     rate: {
       component: SelectField,
-      props: () => ({
+      icon: StarIcon,
+      props: props => ({
+        className: props.classes.inputXS,
         options: ratings.map(rating => ({
           value: rating,
           label: rating,
         })),
       }),
     },
-    comment: {
-      component: TextField,
-      props: () => ({multiLine: true}),
-    },
     value: {
       component: TextField,
-      props: () => ({type: 'number'}),
+      icon: AttachMoneyIcon,
+      props: props => ({
+        className: props.classes.inputXS,
+        type: 'number',
+      }),
+    },
+    comment: {
+      component: TextField,
+      icon: CommentIcon,
+      props: props => ({
+        className: props.classes.inputXL,
+        multiline: true,
+      }),
     },
   }
 
@@ -605,21 +763,25 @@ class EntryForm extends Component {
       return null
     }
 
-    const props = field.props ? field.props() : undefined
+    const {classes} = this.props
+    const props = field.props ? field.props(this.props) : {}
 
     return (
-      <div key={name} className="">
-        <field.component
-          {...props}
-          label={name}
-          value={value}
-          onChange={this.handleChange(name)}
-        />
+      <div key={name} className={classes.field}>
         {field.required ? null : (
-          <IconButton onClick={this.handleRemove(name)}>
+          <IconButton
+            onClick={this.handleRemove(name)}
+            className={classes.adornment}
+          >
             <RemoveCircleOutlineIcon />
           </IconButton>
         )}
+        {field.icon ? <field.icon className={classes.icon} /> : null}
+        <field.component
+          {...props}
+          value={value}
+          onChange={this.handleChange(name)}
+        />
       </div>
     )
   }

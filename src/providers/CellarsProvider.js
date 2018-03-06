@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 
-import {onFetch} from '../api/cellarApi'
+import {onRefreshCellars} from '../api/cellarApi'
 import cellars, {initialCellars} from '../stores/cellars'
 
 export default class CellarsProvider extends Component {
   componentDidMount() {
-    this.unsubscribe = onFetch(this.handleFetch)
+    this.unsubscribe = onRefreshCellars(this.handleFetch)
   }
 
   componentWillUnmount() {
@@ -18,13 +18,13 @@ export default class CellarsProvider extends Component {
   }
 
   handleFetch = snapshot => {
-    const data = []
+    const all = []
     snapshot.forEach(function(doc) {
       const cellar = doc.data()
       cellar.$ref = doc.ref
-      data.push(cellar)
+      all.push(cellar)
     })
 
-    cellars.data = data
+    cellars.all = all
   }
 }

@@ -54,6 +54,7 @@ export default class CellarForm extends Component {
           onChange={this.handleChange}
           className={classes.input}
           fullWidth
+          multiline
         />
         <Button
           color="primary"
