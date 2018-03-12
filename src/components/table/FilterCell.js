@@ -24,7 +24,7 @@ class RangeFilterCell extends React.Component {
           className={classes.input}
           type="number"
           name="min"
-          value={filter?.value?.min || ''}
+          value={filter && filter.value && filter.value.min ? filter.value.min : ''}
           onChange={this.handleFilter}
           placeholder="Min"
         />
@@ -32,7 +32,7 @@ class RangeFilterCell extends React.Component {
           className={classes.input}
           type="number"
           name="max"
-          value={filter && filter.value ? filter.value.max : ''}
+          value={filter && filter.value && filter.value.max ? filter.value.max : ''}
           onChange={this.handleFilter}
           placeholder="Max"
         />
@@ -42,7 +42,7 @@ class RangeFilterCell extends React.Component {
 
   handleFilter = event => {
     const {onFilter, filter} = this.props
-    const value = filter?.value || {}
+    const value = (filter && filter.value) ? filter.value : {}
     const name = event.target.name
     const fieldValue = event.target.value ? event.target.value : null
 
