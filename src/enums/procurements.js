@@ -1,1 +1,1 @@
-export default ['purchase', 'gift', 'prize', 'steal']
+export default ['purchase', 'gift', 'prize', 'steal', 'drink', 'sale']

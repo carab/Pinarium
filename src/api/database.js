@@ -1,4 +1,5 @@
 import firebase from './firebase'
+import {getUser} from './authApi'
 
 async function initialize() {
   try {
@@ -13,4 +14,13 @@ async function initialize() {
   }
 }
 
-export default initialize()
+const database = initialize()
+
+export default database
+
+export async function getUserCollection(collection) {
+  return (await database)
+    .collection('users')
+    .doc(getUser().uid)
+    .collection(collection)
+}

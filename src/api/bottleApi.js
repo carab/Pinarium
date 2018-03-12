@@ -1,45 +1,45 @@
 import database, {getUserCollection} from './database'
 
-const COLLECTION = 'cellars'
+const COLLECTION = 'bottles'
 
-export async function onCellarsRefresh(callback) {
+export async function onBottlesRefresh(callback) {
   const collection = await getUserCollection(COLLECTION)
   const unsubscribe = collection.onSnapshot(callback)
   return unsubscribe
 }
 
-export async function saveCellar(cellar, id) {
+export async function saveBottle(bottle, id) {
   const collection = await getUserCollection(COLLECTION)
 
   if (id) {
-    return collection.doc(id).set(cellar)
+    return collection.doc(id).set(bottle)
   }
 
-  return collection.add(cellar)
+  return collection.add(bottle)
 }
 
-export async function onCellarRefresh(id, callback) {
+export async function onBottleRefresh(id, callback) {
   const collection = await getUserCollection(COLLECTION)
   const unsubscribe = collection.doc(id).onSnapshot(callback)
   return unsubscribe
 }
 
-export async function fetchCellar(id) {
+export async function fetchBottle(id) {
   const collection = await getUserCollection(COLLECTION)
   const snapshot = await collection.doc(id).get()
   return snapshot.data()
 }
 
-export async function deleteCellar(id) {
+export async function deleteBottle(id) {
   const collection = await getUserCollection(COLLECTION)
   return collection.doc(id).delete()
 }
 
-export async function updateCellars(cellars, data) {
+export async function updateBottles(bottles, data) {
   const batch = (await database).batch()
 
-  cellars.forEach(cellar => {
-    batch.update(cellar, data)
+  bottles.forEach(bottle => {
+    batch.update(bottle, data)
   })
 
   return batch.commit()
