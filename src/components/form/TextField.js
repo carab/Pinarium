@@ -4,11 +4,11 @@ import BaseTextField from 'material-ui/TextField'
 export default class TextField extends Component {
   handleChange = event => {
     const {value} = event.target
-    const {onChange} = this.props
+    const {onChange, name} = this.props
 
     if (onChange instanceof Function) {
       const realValue = (value.length) ? value : null
-      onChange(realValue)
+      onChange(realValue, name)
     }
   }
 

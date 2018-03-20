@@ -20,9 +20,9 @@ export default class SelectField extends Component {
   }
 
   handleChange = event => {
-    const {onChange, options, value} = this.props
+    const {onChange, options, value, name} = this.props
     const {value: key} = event.target
-    
+
     if (undefined === value) {
       this.setState({
         key,
@@ -30,7 +30,7 @@ export default class SelectField extends Component {
     }
 
     if (onChange instanceof Function) {
-      let newValue = undefined
+      let newValue = null
 
       for (const i in options) {
         const tempValue = this.getValue(options[i])
@@ -39,14 +39,15 @@ export default class SelectField extends Component {
           break
         }
       }
-      
-      onChange(newValue)
+
+      onChange(newValue, name)
     }
   }
 
   render() {
     const {
       multiple,
+      required,
       options,
       onChange,
       keyAccessor,
@@ -69,12 +70,13 @@ export default class SelectField extends Component {
     return (
       <TextField
         select
+        required
         value={key || defaultValue}
         onChange={this.handleChange}
         SelectProps={selectProps}
         {...props}
       >
-        {emptyLabel ? <MenuItem value="">{emptyLabel}</MenuItem> : null}
+        {!required ? <MenuItem value=""><em>{emptyLabel ? emptyLabel : 'None'}</em></MenuItem> : null}
         {options.map((option, i) => (
           <MenuItem key={i} value={this.getKey(this.getValue(option))}>
             {this.getLabel(option)}

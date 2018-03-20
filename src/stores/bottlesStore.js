@@ -18,6 +18,8 @@ const bottlesStore = store({
       etiquette: null,
       cellar: null,
       shelve: null,
+      inLog: null,
+      outLog: null,
       logs: {},
       picked: false,
       drank: false,

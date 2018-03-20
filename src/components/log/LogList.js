@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react'
-import formatDate from 'date-fns/format'
 import {view, store} from 'react-easy-state'
 import {withRouter} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import List, {
   ListItem,
   ListItemSecondaryAction,
@@ -9,26 +9,17 @@ import List, {
 } from 'material-ui/List'
 import Hidden from 'material-ui/Hidden'
 import {withStyles} from 'material-ui/styles'
-import {
-  DataTypeProvider,
-  SortingState,
-  IntegratedSorting,
-  FilteringState,
-  IntegratedFiltering,
-} from '@devexpress/dx-react-grid'
-import {
-  Grid,
-  Table,
-  TableHeaderRow,
-  TableFilterRow,
-} from '@devexpress/dx-react-grid-material-ui'
+import IconButton from 'material-ui/IconButton'
 
-import FilterCell from '../table/FilterCell'
 import Container from '../ui/Container'
+import {EditIcon} from '../ui/Icons'
+import Table from '../table/Table'
+
+import directions from '../../enums/directions'
+import procurements from '../../enums/procurements'
+import ratings from '../../enums/ratings'
 
 import logsStore from '../../stores/logsStore'
-
-const DateFormatter = ({value}) => formatDate(value, 'L')
 
 @withRouter
 @withStyles(theme => ({
@@ -41,17 +32,48 @@ export default class LogList extends Component {
   store = store({
     table: {
       columns: [
-        {name: 'direction', title: 'Direction'},
-        {name: 'when', title: 'When'},
-        {name: 'how', title: 'How'},
+        {
+          name: 'direction',
+          title: 'Direction',
+          type: 'enum',
+          options: directions.map(direction => ({
+            value: direction,
+            label: direction,
+          })),
+        },
+        {name: 'when', title: 'When', type: 'date'},
+        {
+          name: 'how',
+          title: 'How',
+          type: 'enum',
+          options: procurements.map(procurement => ({
+            value: procurement,
+            label: procurement,
+          })),
+        },
         {name: 'where', title: 'Where'},
         {name: 'who', title: 'Who'},
         {name: 'value', title: 'Value'},
         {name: 'rate', title: 'Rate', type: 'number'},
+        {
+          name: '',
+          title: '',
+          actions: ({row}) => (
+            <IconButton
+              aria-label="Edit a log"
+              component={Link}
+              to={{
+                pathname: `/logs/${row.$doc.id}`,
+                state: {modal: true},
+              }}
+            >
+              <EditIcon />
+            </IconButton>
+          ),
+        },
       ],
-      dateColumns: ['when'],
       sorting: [{columnName: 'when', direction: 'desc'}],
-      filters: [],
+      filtering: [],
     },
   })
 
@@ -77,25 +99,14 @@ export default class LogList extends Component {
 
     return (
       <Container full title="Logs">
-        <Grid rows={logsStore.list} columns={table.columns}>
-          <DataTypeProvider
-            formatterComponent={DateFormatter}
-            for={table.dateColumns}
-          />
-          <FilteringState
-            filters={table.filters}
-            onFiltersChange={this.handleFiltering}
-          />
-          <IntegratedFiltering />
-          <SortingState
-            sorting={table.sorting}
-            onSortingChange={this.handleSorting}
-          />
-          <IntegratedSorting />
-          <Table />
-          <TableHeaderRow showSortingControls />
-          <TableFilterRow cellComponent={FilterCell} />
-        </Grid>
+        <Table
+          rows={logsStore.list}
+          columns={table.columns}
+          filtering={table.filtering}
+          sorting={table.sorting}
+          onFiltering={this.handleFiltering}
+          onSorting={this.handleSorting}
+        />
       </Container>
     )
   }
@@ -120,8 +131,8 @@ export default class LogList extends Component {
     )
   }
 
-  handleFiltering = filters => {
-    this.store.table.filters = filters
+  handleFiltering = filtering => {
+    this.store.table.filtering = filtering
   }
 
   handleSorting = sorting => {

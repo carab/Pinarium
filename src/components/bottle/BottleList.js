@@ -25,6 +25,7 @@ import {
   EditIcon,
 } from '../ui/Icons'
 import Container from '../ui/Container'
+import BigTable from '../table/Table'
 
 import bottlesStore from '../../stores/bottlesStore'
 import etiquettesStore from '../../stores/etiquettesStore'
@@ -51,10 +52,40 @@ import logsStore from '../../stores/logsStore'
 @view
 export default class BottleList extends Component {
   store = store({
-    expanded: null,
+    table: {
+      columns: [
+        {name: 'etiquette', title: 'Etiquette', getCellValue: row => (row.etiquette ? row.etiquette.$doc.id : undefined)},
+        {name: 'size', title: 'Size', getCellValue: row => (row.etiquette ? row.etiquette.size : undefined)},
+        {name: 'vintage', title: 'Vintage', getCellValue: row => (row.etiquette ? row.etiquette.vintage : undefined)},
+        {name: 'appellation', title: 'Appellation', getCellValue: row => (row.etiquette ? row.etiquette.appellation : undefined)},
+        {name: 'cuvee', title: 'Cuvée', getCellValue: row => (row.etiquette ? row.etiquette.cuvee : undefined)},
+        {name: 'producer', title: 'Producer', getCellValue: row => (row.etiquette ? row.etiquette.producer : undefined)},
+        {name: 'date', title: 'Date added'},
+      ],
+      sorting: [{columnName: 'date', direction: 'desc'}],
+      grouping: [{columnName: 'etiquette'}],
+      filtering: [],
+    },
   })
 
   render() {
+    const {table} = this.store
+    const rows = this.buildRows()
+
+    return (
+      <Container full title="Bottles">
+        <BigTable
+          rows={rows}
+          columns={table.columns}
+          filtering={table.filtering}
+          grouping={table.grouping}
+          sorting={table.sorting}
+          onFiltering={this.handleFiltering}
+          onSorting={this.handleSorting}
+        />
+      </Container>
+    )
+
     const groups = this.compute(bottlesStore.list)
 
     return (
@@ -63,6 +94,35 @@ export default class BottleList extends Component {
         <Hidden smDown>{this.renderLarge(groups)}</Hidden>
       </Fragment>
     )
+  }
+
+  buildRows() {
+    const rows = []
+
+    bottlesStore.list.forEach(bottle => {
+      const etiquette = etiquettesStore.find(bottle.etiquette.id)
+
+      if (!etiquette) {
+        return
+      }
+
+      const row = {
+        bottle: bottle,
+        etiquette: etiquette,
+      }
+
+      rows.push(row)
+    })
+
+    return rows
+  }
+
+  handleFiltering = filtering => {
+    this.store.table.filtering = filtering
+  }
+
+  handleSorting = sorting => {
+    this.store.table.sorting = sorting
   }
 
   renderLarge({drank, picked, stocked}) {
@@ -148,8 +208,9 @@ export default class BottleList extends Component {
       const group = bottle.drank ? drank : bottle.picked ? picked : stocked
       const key = [bottle.etiquette.id, bottle.picked, bottle.drank].join('|')
       const etiquette = etiquettesStore.find(bottle.etiquette.id)
+      const cellar = cellarsStore.find(bottle.cellar.id)
 
-      if (!etiquette) {
+      if (!etiquette || !cellar) {
         return
       }
 

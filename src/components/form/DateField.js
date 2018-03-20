@@ -6,11 +6,10 @@ import EventIcon from 'material-ui-icons/Event'
 
 export default class DateField extends Component {
   handleChange = date => {
-    const {onChange} = this.props
-
+    const {onChange, name} = this.props
+    
     if (onChange instanceof Function) {
-      const realDate = date.toDate()
-      onChange(realDate)
+      onChange(date, name)
     }
   }
 

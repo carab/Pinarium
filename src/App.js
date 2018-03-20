@@ -1,3 +1,4 @@
+import '@babel/polyfill'
 import React, {Component, Fragment} from 'react'
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import Reboot from 'material-ui/Reboot'
