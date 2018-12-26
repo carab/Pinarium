@@ -1,40 +1,18 @@
-import {observable, action} from 'mobx'
-import {useObservable} from 'mobx-react-lite'
+import {extendObservable} from 'mobx'
 import deburr from 'lodash/deburr'
 
 import database from '../api/database'
+import {makeStore, useCollection, useDocument} from './utils'
 import authStore from './auth'
+import Autocomplete from '../models/autocomplete'
 
-const autocompletesStore = observable.object(
+const autocompletesStore = extendObservable(
+  makeStore(Autocomplete, 'autocompletes'),
   {
-    suggestions: {},
-    getSuggestions(value, namespace) {
-      const inputValue = clean(value)
-      const inputLength = inputValue ? inputValue.length : 0
-      let count = 0
-
-      return inputLength === 0 || !this.suggestions[namespace]
-        ? []
-        : this.suggestions[namespace].filter(suggestion => {
-            const keep =
-              count < 5 &&
-              clean(suggestion.label.slice(0, inputLength)) === inputValue
-
-            if (keep) {
-              count += 1
-            }
-
-            return keep
-          })
-    },
     async updateFrom(document, namespaces) {
       if (namespaces.length && authStore.user) {
-        const db = await database
-        const collection = db
-          .collection('users')
-          .doc(authStore.user.uid)
-          .collection('autocompletes')
-        const batch = db.batch()
+        const collection = await this.collection()
+        const batch = (await database).batch()
 
         const promises = namespaces
           .map(namespace => ({namespace, value: document[namespace]}))
@@ -64,48 +42,55 @@ const autocompletesStore = observable.object(
         return batch.commit()
       }
     },
-    async loadSuggestions(namespace) {
-      const suggestions = []
-
-      const db = await database
-      const snapshot = await db
-        .collection('users')
-        .doc(authStore.user.uid)
-        .collection('autocompletes')
-        .where('namespace', '==', namespace)
-        .get()
-
-      snapshot.forEach(doc => {
-        suggestions.push({label: doc.data().value})
-      })
-
-      this.suggestions[namespace] = suggestions
-    },
   },
-  {
-    loadSuggestions: action,
-  }
+  {}
 )
 
 export default autocompletesStore
 
-export async function useSuggestions(namespace) {
-  const suggestions = useObservable([])
+export function useAutocompletes(namespace) {
+  const suggestions = useCollection(autocompletesStore, collectionRef =>
+    collectionRef.where('namespace', '==', namespace)
+  )
 
-  const db = await database
-  const snapshot = await db
-    .collection('users')
-    .doc(authStore.user.uid)
-    .collection('autocompletes')
-    .where('namespace', '==', namespace)
-    .get()
+  return value => {
+    const inputValue = clean(value)
+    const inputLength = inputValue ? inputValue.length : 0
+    let count = 0
 
-  snapshot.forEach(doc => {
-    suggestions.push(doc.data())
-  })
+    return inputLength === 0 || !suggestions
+      ? []
+      : suggestions.filter(suggestion => {
+          const keep =
+            count < 5 &&
+            clean(suggestion.value.slice(0, inputLength)) === inputValue
 
-  return suggestions
+          if (keep) {
+            count += 1
+          }
+
+          return keep
+        })
+  }
 }
+
+// export async function useSuggestions(namespace) {
+//   const suggestions = useObservable([])
+
+//   const db = await database
+//   const snapshot = await db
+//     .collection('users')
+//     .doc(authStore.user.uid)
+//     .collection('autocompletes')
+//     .where('namespace', '==', namespace)
+//     .get()
+
+//   snapshot.forEach(doc => {
+//     suggestions.push(doc.data())
+//   })
+
+//   return suggestions
+// }
 
 function clean(value) {
   if (value) {

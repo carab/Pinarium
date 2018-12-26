@@ -83,13 +83,9 @@ export function makeStore(model, subcollection = null, autocompletes = []) {
 
         return collection
       },
-      async listenCollection(
-        target,
-        addFilter = collectionRef => collectionRef
-      ) {
-        return addFilter(await store.collection()).onSnapshot(
-          store.observe(target)
-        )
+      async listenCollection(target, filter = collectionRef => collectionRef) {
+        const collectionRef = await this.collection()
+        return filter(collectionRef).onSnapshot(this.observe(target))
       },
       async listenDocument($ref, target) {
         if (!($ref instanceof firebase.firestore.DocumentReference)) {
@@ -105,7 +101,7 @@ export function makeStore(model, subcollection = null, autocompletes = []) {
       },
       async save({$ref, ...document}) {
         const collection = await this.collection()
-        
+
         if ($ref) {
           document.updateDate = firebase.firestore.FieldValue.serverTimestamp()
           await $ref.set(document)
@@ -173,13 +169,13 @@ export function makeStore(model, subcollection = null, autocompletes = []) {
   return store
 }
 
-export function useCollection(store, $refs) {
-  const collection = useObservable($refs ? [] : store.all)
+export function useCollection(store, filter) {
+  const collection = useObservable(filter ? [] : store.all)
 
   useEffect(
     () => {
-      if ($refs) {
-        const filter = collectionRef => collectionRef // @todo how to filter in $refs ?
+      if (filter) {
+        //const filter = collectionRef => collectionRef // @todo how to filter in $refs ?
         const promise = store.listenCollection(collection, filter)
         return () => {
           promise.then(unsubscribe => unsubscribe())
@@ -189,7 +185,7 @@ export function useCollection(store, $refs) {
       const unsubscribe = store.subscribe()
       return unsubscribe
     },
-    [auth.user, $refs]
+    [auth.user, filter]
   )
 
   return collection

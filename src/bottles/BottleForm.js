@@ -17,7 +17,6 @@ import DateField from '../form/DateFieldPicker'
 import SelectField from '../form/SelectField'
 import TextField from '../form/TextField'
 import AutocompleteField from '../form/AutocompleteField'
-import AutocompleteSuggestions from '../form/AutocompleteSuggestions'
 import LogDialog from '../logs/LogDialog'
 import BottleMenu from './BottleMenu'
 import {SaveIcon} from '../ui/Icons'
@@ -195,9 +194,7 @@ const Form = observer(function({title, bottle, onSave}) {
                 //error={null !== errors.appellation}
                 helperText={errors.appellation}
                 className={classes.lg}
-                children={props => (
-                  <AutocompleteSuggestions namespace="appellation" {...props} />
-                )}
+                namespace="appellation"
               />
               <AutocompleteField
                 label="Cuvée"
@@ -205,9 +202,7 @@ const Form = observer(function({title, bottle, onSave}) {
                 value={bottle.cuvee}
                 onChange={handleChange}
                 className={classes.md}
-                children={props => (
-                  <AutocompleteSuggestions namespace="cuvee" {...props} />
-                )}
+                namespace="cuvee"
               />
               {sortDef && sortDef.vintage ? (
                 <TextField
@@ -246,9 +241,7 @@ const Form = observer(function({title, bottle, onSave}) {
                 value={bottle.producer}
                 onChange={handleChange}
                 className={classes.md}
-                children={props => (
-                  <AutocompleteSuggestions namespace="producer" {...props} />
-                )}
+                namespace="producer"
               />
               <AutocompleteField
                 label="Region"
@@ -256,9 +249,7 @@ const Form = observer(function({title, bottle, onSave}) {
                 value={bottle.region}
                 onChange={handleChange}
                 className={classes.md}
-                children={props => (
-                  <AutocompleteSuggestions namespace="region" {...props} />
-                )}
+                namespace="region"
               />
               <AutocompleteField
                 label="Country"
@@ -266,9 +257,7 @@ const Form = observer(function({title, bottle, onSave}) {
                 value={bottle.country}
                 onChange={handleChange}
                 className={classes.md}
-                children={props => (
-                  <AutocompleteSuggestions namespace="country" {...props} />
-                )}
+                namespace="country"
               />
             </FieldRow>
             <FieldRow>

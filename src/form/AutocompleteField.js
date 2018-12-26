@@ -1,10 +1,18 @@
 import React from 'react'
-import TextField from './TextField'
-import deburr from 'lodash/deburr'
+import {observer} from 'mobx-react-lite'
 import Downshift from 'downshift'
 import {makeStyles} from '@material-ui/styles'
 import Paper from '@material-ui/core/Paper'
 import MenuItem from '@material-ui/core/MenuItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import IconButton from '@material-ui/core/IconButton'
+import MenuList from '@material-ui/core/MenuList'
+
+import TextField from './TextField'
+import {DeleteIcon} from '../ui/Icons'
+
+import {useAutocompletes} from '../stores/autocompletesStore'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -40,13 +48,15 @@ const useStyles = makeStyles(theme => ({
 export default function AutocompleteField({
   value,
   name,
-  renderSuggestions,
+  namespace,
   onChange,
   InputProps,
   children,
   ...props
 }) {
   const classes = useStyles()
+
+  const getSuggestions = useAutocompletes(namespace)
 
   const handleChange = selectedItem => {
     const value = selectedItem === '' ? null : selectedItem
@@ -85,19 +95,25 @@ export default function AutocompleteField({
           })}
           <div {...getMenuProps()}>
             {isOpen ? (
-              <Paper className={classes.paper} square>
-                {children({
-                  search: inputValue,
-                  renderSuggestion: (suggestion, index) =>
-                    renderSuggestion({
+              <SuggestionsRenderer
+                getSuggestions={getSuggestions}
+                value={inputValue}
+              >
+                {(suggestion, index) => (
+                  <SuggestionRenderer
+                    key={suggestion.$ref.id}
+                    {...{
                       suggestion,
                       index,
-                      itemProps: getItemProps({item: suggestion.label}),
-                      highlightedIndex,
-                      selectedItem,
-                    }),
-                })}
-              </Paper>
+                      highlighted: highlightedIndex === index,
+                      selected:
+                        (selectedItem || '').indexOf(suggestion.value) > -1,
+                      onDelete: () => suggestion.$ref.delete(),
+                      itemProps: getItemProps({item: suggestion.value}),
+                    }}
+                  />
+                )}
+              </SuggestionsRenderer>
             ) : null}
           </div>
         </div>
@@ -106,27 +122,48 @@ export default function AutocompleteField({
   )
 }
 
-function renderSuggestion({
-  suggestion,
-  index,
-  itemProps,
-  highlightedIndex,
-  selectedItem,
+const SuggestionsRenderer = observer(function({
+  getSuggestions,
+  value,
+  children,
 }) {
-  const isHighlighted = highlightedIndex === index
-  const isSelected = (selectedItem || '').indexOf(suggestion.label) > -1
+  const classes = useStyles()
 
+  const suggestions = getSuggestions(value)
+
+  if (suggestions.length === 0) {
+    return null
+  }
+
+  return (
+    <Paper className={classes.paper} square>
+      <MenuList>{suggestions.map(children)}</MenuList>
+    </Paper>
+  )
+})
+
+function SuggestionRenderer({
+  suggestion,
+  itemProps,
+  highlighted,
+  selected,
+  onDelete,
+}) {
   return (
     <MenuItem
       {...itemProps}
-      key={suggestion.label}
-      selected={isHighlighted}
+      selected={highlighted}
       component="div"
       style={{
-        fontWeight: isSelected ? 500 : 400,
+        fontWeight: selected ? 500 : 400,
       }}
     >
-      {suggestion.label}
+      <ListItemText primary={suggestion.value} />
+      <ListItemSecondaryAction>
+        <IconButton size="small" aria-label="Delete" onClick={onDelete}>
+          <DeleteIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
     </MenuItem>
   )
 }

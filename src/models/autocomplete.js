@@ -6,5 +6,5 @@ export default {
   // Log data
   namespace: null,
   value: null,
-  occurences: 0,
+  occurrences: 0,
 }

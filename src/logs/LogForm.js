@@ -6,7 +6,6 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import FieldRow from '../form/FieldRow'
 import TextField from '../form/TextField'
 import AutocompleteField from '../form/AutocompleteField'
-import AutocompleteSuggestions from '../form/AutocompleteSuggestions'
 import DateField from '../form/DateFieldPicker'
 import CellarField from '../form/CellarField'
 import SelectField from '../form/SelectField'
@@ -21,6 +20,7 @@ import {
   CommentIcon,
 } from '../ui/Icons'
 
+import ratings from '../enums/ratings'
 import statusesDef from '../enums/statuses'
 
 const useStyles = makeStyles(theme => ({
@@ -62,6 +62,7 @@ export default observer(function LogForm({log, statuses, onSave}) {
         key="where"
         label="Where"
         name="where"
+        namespace="where"
         value={log.where}
         onChange={handleChange}
         className={classes.md}
@@ -72,9 +73,6 @@ export default observer(function LogForm({log, statuses, onSave}) {
             </InputAdornment>
           ),
         }}
-        children={props => (
-          <AutocompleteSuggestions namespace="where" {...props} />
-        )}
       />
     ),
     who: (
@@ -82,6 +80,7 @@ export default observer(function LogForm({log, statuses, onSave}) {
         key="who"
         label="Who"
         name="who"
+        namespace="who"
         value={log.who}
         onChange={handleChange}
         className={classes.md}
@@ -92,9 +91,6 @@ export default observer(function LogForm({log, statuses, onSave}) {
             </InputAdornment>
           ),
         }}
-        children={props => (
-          <AutocompleteSuggestions namespace="who" {...props} />
-        )}
       />
     ),
     value: (
@@ -115,12 +111,17 @@ export default observer(function LogForm({log, statuses, onSave}) {
       />
     ),
     rate: (
-      <TextField
+      <SelectField
         key="rate"
         label="Rate"
         name="rate"
         value={log.rate}
         onChange={handleChange}
+        empty={<em>None</em>}
+        options={ratings.map(rating => ({
+          value: rating,
+          label: rating,
+        }))}
         className={classes.sm}
         InputProps={{
           startAdornment: (
@@ -154,6 +155,7 @@ export default observer(function LogForm({log, statuses, onSave}) {
         key="why"
         label="Why"
         name="why"
+        namespace="why"
         value={log.why}
         onChange={handleChange}
         className={classes.md}
@@ -164,9 +166,6 @@ export default observer(function LogForm({log, statuses, onSave}) {
             </InputAdornment>
           ),
         }}
-        children={props => (
-          <AutocompleteSuggestions namespace="why" {...props} />
-        )}
       />
     ),
     comment: (
