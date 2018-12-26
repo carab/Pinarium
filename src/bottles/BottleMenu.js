@@ -33,7 +33,7 @@ import LogDialog from '../logs/LogDialog'
 import logs from '../stores/logs'
 import bottlesStore from '../stores/bottles'
 import {useUser} from '../stores/userStore'
-import statusesDef from '../enums/statuses'
+import statusesDef, {defaultStatuses} from '../enums/statuses'
 
 const useStyles = makeStyles(theme => ({
   delete: {
@@ -72,19 +72,23 @@ export default observer(function BottleMenu({bottles, showEdit}) {
   const handleCreateLog = status => event => {
     handleClose(event)
 
+    const filteredBottles = bottles
+      .filter(bottle => bottle.$ref)
+      .filter(bottle => {
+        const statusDef = statusesDef.find(
+          statusDef => statusDef.name === bottle.status
+        )
+        const nextStatuses = statusDef ? statusDef.next : defaultStatuses
+        return nextStatuses.indexOf(status) !== -1
+      })
+      .map(bottle => bottle.$ref)
+    console.log(filteredBottles)
+
     const log = logs.createFrom(
       {
         status,
         // Only keep bottles on which the new status is a possible next status
-        bottles: bottles
-          .filter(bottle => bottle.$ref)
-          .filter(bottle => {
-            const statusDef = statusesDef.find(
-              statusDef => statusDef.name === bottle.status
-            )
-            return statusDef && statusDef.next.indexOf(status) !== -1
-          })
-          .map(bottle => bottle.$ref),
+        bottles: filteredBottles,
       },
       user
     )
@@ -105,7 +109,7 @@ export default observer(function BottleMenu({bottles, showEdit}) {
   const allNextStatuses = bottles
     .map(bottle => bottle.status)
     .map(status => statusesDef.find(statusDef => statusDef.name === status))
-    .map(statusDef => (statusDef ? statusDef.next : ['bought', 'received']))
+    .map(statusDef => (statusDef ? statusDef.next : defaultStatuses))
     .reduce(
       (accumulator, nextStatuses) => [...accumulator, ...nextStatuses],
       []

@@ -41,6 +41,8 @@ export default [
   },
 ]
 
+export const defaultStatuses = ['bought', 'received']
+
 // Gift from [Jules] on [02/01/2018] in [Lyon] for [Camille's birthday]
 // Gift to [Jules] on [02/01/2018] in [Lyon] for [Camille's birthday]
 // Bought on [02/01/2018] in [Lyon] for [10 €]

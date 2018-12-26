@@ -8,6 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 
 import LogForm from './LogForm'
 
+import {defaultStatuses} from '../enums/statuses'
 import logs from '../stores/logs'
 import bottles from '../stores/bottles'
 import firebase from '../api/firebase'
@@ -64,10 +65,7 @@ const LogDialogContent = observer(function({log, create, onSave, onCancel}) {
           : `${log.status} ${log.bottles.length} bottles`}
       </DialogTitle>
       <DialogContent>
-        <LogForm
-          log={log}
-          statuses={create ? ['bought', 'received'] : undefined}
-        />
+        <LogForm log={log} statuses={create ? defaultStatuses : undefined} />
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancel}>Cancel</Button>
