@@ -1,7 +1,7 @@
 import {extendObservable, action} from 'mobx'
 import itemsjs from 'itemsjs'
 
-import Bottle from '../models/bottle'
+import Bottle, {autocompletes} from '../models/bottle'
 import {useCollection, useDocument, makeStore} from './utils'
 
 const configuration = {
@@ -58,7 +58,7 @@ const Index = itemsjs([], configuration)
 let reindexes = 0
 
 const bottles = extendObservable(
-  makeStore(Bottle, 'bottles'),
+  makeStore(Bottle, 'bottles', autocompletes),
   {
     // Selection
     selected: {},

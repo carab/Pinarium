@@ -29,7 +29,7 @@ export default class ArrayField extends Component {
   handleChangeElement = i => elementValue => {
     const value = copyArray(this.state.value)
     value[i] = elementValue
-    console.log('handleChangeElement', value)
+
     this.handleChange(value)
   }
 

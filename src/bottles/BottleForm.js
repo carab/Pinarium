@@ -1,4 +1,4 @@
-import React, {useState, useCallback} from 'react'
+import React, {useState} from 'react'
 import {observer, useObservable} from 'mobx-react-lite'
 import {navigate} from '@reach/router'
 import SwipeableViews from 'react-swipeable-views'
@@ -16,6 +16,8 @@ import FieldRow from '../form/FieldRow'
 import DateField from '../form/DateFieldPicker'
 import SelectField from '../form/SelectField'
 import TextField from '../form/TextField'
+import AutocompleteField from '../form/AutocompleteField'
+import AutocompleteSuggestions from '../form/AutocompleteSuggestions'
 import LogDialog from '../logs/LogDialog'
 import BottleMenu from './BottleMenu'
 import {SaveIcon} from '../ui/Icons'
@@ -26,6 +28,7 @@ import {useUser} from '../stores/userStore'
 import sorts from '../enums/sorts'
 import sizes from '../enums/sizes'
 import colors from '../enums/colors'
+import capsules from '../enums/capsules'
 import effervescences from '../enums/effervescences'
 
 export default observer(function BottleForm({id}) {
@@ -94,10 +97,13 @@ const Form = observer(function({title, bottle, onSave}) {
 
       const $refs = await Promise.all(promises)
       if (bottle.logs.length === 0) {
-        const log = logsStore.createFrom({
-          status: 'bought',
-          bottles: $refs,
-        }, user)
+        const log = logsStore.createFrom(
+          {
+            status: 'bought',
+            bottles: $refs,
+          },
+          user
+        )
 
         setLog(log)
       } else {
@@ -133,6 +139,7 @@ const Form = observer(function({title, bottle, onSave}) {
         component="form"
         onSubmit={handleSubmit}
         noValidate
+        autoComplete="off"
       >
         {edit ? (
           <Tabs
@@ -179,7 +186,7 @@ const Form = observer(function({title, bottle, onSave}) {
               />
             </FieldRow>
             <FieldRow>
-              <TextField
+              <AutocompleteField
                 label="Appellation"
                 name="appellation"
                 required={true}
@@ -188,18 +195,26 @@ const Form = observer(function({title, bottle, onSave}) {
                 //error={null !== errors.appellation}
                 helperText={errors.appellation}
                 className={classes.lg}
+                children={props => (
+                  <AutocompleteSuggestions namespace="appellation" {...props} />
+                )}
               />
-              <TextField
+              <AutocompleteField
                 label="Cuvée"
                 name="cuvee"
                 value={bottle.cuvee}
                 onChange={handleChange}
                 className={classes.md}
+                children={props => (
+                  <AutocompleteSuggestions namespace="cuvee" {...props} />
+                )}
               />
               {sortDef && sortDef.vintage ? (
                 <TextField
                   label="Vintage"
                   name="vintage"
+                  type="number"
+                  inputProps={{pattern: '[0-9]{4}'}}
                   value={bottle.vintage}
                   onChange={handleChange}
                   className={classes.xs}
@@ -225,26 +240,35 @@ const Form = observer(function({title, bottle, onSave}) {
               ) : null}
             </FieldRow>
             <FieldRow>
-              <TextField
+              <AutocompleteField
                 label="Producer"
                 name="producer"
                 value={bottle.producer}
                 onChange={handleChange}
                 className={classes.md}
+                children={props => (
+                  <AutocompleteSuggestions namespace="producer" {...props} />
+                )}
               />
-              <TextField
+              <AutocompleteField
                 label="Region"
                 name="region"
                 value={bottle.region}
                 onChange={handleChange}
                 className={classes.md}
+                children={props => (
+                  <AutocompleteSuggestions namespace="region" {...props} />
+                )}
               />
-              <TextField
+              <AutocompleteField
                 label="Country"
                 name="country"
                 value={bottle.country}
                 onChange={handleChange}
                 className={classes.md}
+                children={props => (
+                  <AutocompleteSuggestions namespace="country" {...props} />
+                )}
               />
             </FieldRow>
             <FieldRow>
@@ -300,11 +324,16 @@ const Form = observer(function({title, bottle, onSave}) {
               ) : null}
             </FieldRow>
             <FieldRow>
-              <TextField
+              <SelectField
                 label="Capsule"
                 name="capsule"
                 value={bottle.capsule}
                 onChange={handleChange}
+                empty={<em>None</em>}
+                options={capsules.map(capsule => ({
+                  value: capsule,
+                  label: capsule.toUpperCase(),
+                }))}
                 className={classes.sm}
               />
               <TextField

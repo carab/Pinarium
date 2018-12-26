@@ -1,10 +1,10 @@
 import {extendObservable} from 'mobx'
 
-import Log from '../models/log'
+import Log, {autocompletes} from '../models/log'
 import {makeStore, useCollection, useDocument} from './utils'
 import statusesDef from '../enums/statuses'
 
-const logs = extendObservable(makeStore(Log, 'logs'), {
+const logs = extendObservable(makeStore(Log, 'logs', autocompletes), {
   createFrom(template, user) {
     const log = this.create()
 
@@ -12,7 +12,9 @@ const logs = extendObservable(makeStore(Log, 'logs'), {
     log.status = template.status
 
     // Specific status behavior
-    const statusDef = statusesDef.find(statusDef => statusDef.name === log.status)
+    const statusDef = statusesDef.find(
+      statusDef => statusDef.name === log.status
+    )
 
     if (user && statusDef && statusDef.fields.indexOf('cellar') > -1) {
       log.cellar = user.defaultCellar

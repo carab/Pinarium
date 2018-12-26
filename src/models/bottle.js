@@ -33,3 +33,11 @@ export default {
   // History data
   logs: [],
 }
+
+export const autocompletes = [
+  'appellation',
+  'cuvee',
+  'producer',
+  'region',
+  'country',
+]

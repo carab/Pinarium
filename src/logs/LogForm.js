@@ -5,6 +5,8 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 
 import FieldRow from '../form/FieldRow'
 import TextField from '../form/TextField'
+import AutocompleteField from '../form/AutocompleteField'
+import AutocompleteSuggestions from '../form/AutocompleteSuggestions'
 import DateField from '../form/DateFieldPicker'
 import CellarField from '../form/CellarField'
 import SelectField from '../form/SelectField'
@@ -56,7 +58,7 @@ export default observer(function LogForm({log, statuses, onSave}) {
       />
     ),
     where: (
-      <TextField
+      <AutocompleteField
         key="where"
         label="Where"
         name="where"
@@ -70,10 +72,13 @@ export default observer(function LogForm({log, statuses, onSave}) {
             </InputAdornment>
           ),
         }}
+        children={props => (
+          <AutocompleteSuggestions namespace="where" {...props} />
+        )}
       />
     ),
     who: (
-      <TextField
+      <AutocompleteField
         key="who"
         label="Who"
         name="who"
@@ -87,6 +92,9 @@ export default observer(function LogForm({log, statuses, onSave}) {
             </InputAdornment>
           ),
         }}
+        children={props => (
+          <AutocompleteSuggestions namespace="who" {...props} />
+        )}
       />
     ),
     value: (
@@ -142,7 +150,7 @@ export default observer(function LogForm({log, statuses, onSave}) {
       />
     ),
     why: (
-      <TextField
+      <AutocompleteField
         key="why"
         label="Why"
         name="why"
@@ -156,6 +164,9 @@ export default observer(function LogForm({log, statuses, onSave}) {
             </InputAdornment>
           ),
         }}
+        children={props => (
+          <AutocompleteSuggestions namespace="why" {...props} />
+        )}
       />
     ),
     comment: (

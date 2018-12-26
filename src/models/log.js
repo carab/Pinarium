@@ -12,9 +12,11 @@ export default {
   why: null,
   value: null,
   rate: null,
-  to: null,
+  cellar: null,
   comment: null,
 
   // Stock data
   bottles: [],
 }
+
+export const autocompletes = ['where', 'who', 'why']

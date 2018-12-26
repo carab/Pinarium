@@ -1,11 +1,9 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
 import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 
 import LogForm from './LogForm'
@@ -57,11 +55,13 @@ const LogDialogContent = observer(function({log, create, onSave, onCancel}) {
   if (null === log) {
     return null
   }
-console.log(log)
+
   return (
     <form onSubmit={onSave} noValidate autoComplete="off">
       <DialogTitle id="form-dialog-title">
-        {create ? 'New history entry' : `${log.status} ${log.bottles.length} bottles`}
+        {create
+          ? 'New history entry'
+          : `${log.status} ${log.bottles.length} bottles`}
       </DialogTitle>
       <DialogContent>
         <LogForm

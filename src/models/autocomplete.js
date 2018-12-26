@@ -3,7 +3,8 @@ export default {
   updateDate: null,
   creationDate: null,
 
-  // Settings
-  defaultCellar: null,
-  locale: null,
+  // Log data
+  namespace: null,
+  value: null,
+  occurences: 0,
 }

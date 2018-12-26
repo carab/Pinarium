@@ -1,10 +1,11 @@
-import {observable, action, autorun} from 'mobx'
 import {useEffect} from 'react'
+import {observable, action, autorun} from 'mobx'
 import {useObservable} from 'mobx-react-lite'
 
 import firebase from '../api/firebase'
 import database from '../api/database'
 import auth from './auth'
+import autocompletesStore from './autocompletesStore'
 
 export function createDocument(model, data) {
   const document = {...model, ...data}
@@ -18,7 +19,7 @@ export function createDocument(model, data) {
   return document
 }
 
-export function makeStore(model, subcollection) {
+export function makeStore(model, subcollection = null, autocompletes = []) {
   const store = observable.object(
     {
       all: [],
@@ -102,16 +103,20 @@ export function makeStore(model, subcollection) {
           target.document = document
         })
       },
-      async save({$ref, ...document}, id) {
+      async save({$ref, ...document}) {
         const collection = await this.collection()
-
-        if (id || $ref) {
+        
+        if ($ref) {
           document.updateDate = firebase.firestore.FieldValue.serverTimestamp()
-          return collection.doc(id || $ref.id).set(document)
+          await $ref.set(document)
+        } else {
+          document.creationDate = firebase.firestore.FieldValue.serverTimestamp()
+          $ref = await collection.add(document)
         }
 
-        document.creationDate = firebase.firestore.FieldValue.serverTimestamp()
-        return collection.add(document)
+        autocompletesStore.updateFrom(document, autocompletes)
+
+        return $ref
       },
       async update($refs, data) {
         const batch = (await database).batch()

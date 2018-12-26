@@ -67,6 +67,7 @@ const Form = observer(function({title, cellar, onSave}) {
       component="form"
       onSubmit={handleSubmit}
       noValidate
+      autoComplete="off"
     >
       <FieldRow>
         <TextField
