@@ -1,12 +1,18 @@
 import React, {useState} from 'react'
 import _groupBy from 'lodash/groupBy'
-import {observer} from 'mobx-react-lite'
+import {observer, useObservable} from 'mobx-react-lite'
 import {navigate} from '@reach/router'
 import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
-import {Divider} from '@material-ui/core'
+import Button from '@material-ui/core/Button'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Divider from '@material-ui/core/Divider'
 import {makeStyles} from '@material-ui/styles'
 
 import {
@@ -47,6 +53,7 @@ const ICONS = {
 }
 
 export default observer(function BottleMenu({bottles, showEdit}) {
+  const ui = useObservable({delete: {open: false}})
   const user = useUser()
   const [log, setLog] = useState(null)
   const [anchorEl, setAnchorEl] = useState(null)
@@ -94,11 +101,6 @@ export default observer(function BottleMenu({bottles, showEdit}) {
     bottles.forEach(bottle => navigate(`/bottle/${bottle.$ref.id}`))
   }
 
-  const handleDelete = event => {
-    bottlesStore.delete(bottles.map(bottle => bottle.$ref))
-    handleClose(event)
-  }
-
   // Build status change items from all bottles current status
   const allNextStatuses = bottles
     .map(bottle => bottle.status)
@@ -116,9 +118,29 @@ export default observer(function BottleMenu({bottles, showEdit}) {
 
   const showCount = bottles.length > 1
 
+  const handleAskDelete = event => {
+    handleClose(event)
+    ui.delete.open = true
+  }
+
+  const handleCancelDelete = event => {
+    ui.delete.open = false
+  }
+
+  const handleConfirmDelete = event => {
+    handleCancelDelete(event)
+    bottlesStore.delete(bottles.map(bottle => bottle.$ref))
+  }
+
   return (
     <>
       <LogDialog log={log} onClose={handleCloseLog} />
+      <DeleteBottleDialog
+        count={bottles.length}
+        open={ui.delete.open}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
       <IconButton
         aria-owns={open ? 'menu-appbar' : undefined}
         aria-haspopup="true"
@@ -175,7 +197,7 @@ export default observer(function BottleMenu({bottles, showEdit}) {
             Duplicate
           </MenuItem>
         ) : null}
-        <MenuItem onClick={handleDelete} className={classes.delete}>
+        <MenuItem onClick={handleAskDelete} className={classes.delete}>
           <ListItemIcon>
             <DeleteIcon className={classes.delete} />
           </ListItemIcon>
@@ -185,3 +207,23 @@ export default observer(function BottleMenu({bottles, showEdit}) {
     </>
   )
 })
+
+function DeleteBottleDialog({count, open, onConfirm, onCancel}) {
+  return (
+    <Dialog
+      open={open}
+      onClose={onCancel}
+      aria-labelledby="delete-dialog-title"
+    >
+      <DialogTitle id="delete-dialog-title">
+        {`Delete ${count} bottles ?`}
+      </DialogTitle>
+      <DialogActions>
+        <Button onClick={onCancel}>Cancel</Button>
+        <Button onClick={onConfirm} color="primary" autoFocus>
+          Yes
+        </Button>
+      </DialogActions>
+    </Dialog>
+  )
+}

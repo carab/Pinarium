@@ -1,11 +1,13 @@
 import React, {useState} from 'react'
-import {observer} from 'mobx-react-lite'
+import {observer, useObservable} from 'mobx-react-lite'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
-import Menu from '@material-ui/core/Menu'
+import MenuList from '@material-ui/core/MenuList'
 import MenuItem from '@material-ui/core/MenuItem'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
 
 import Container from '../ui/Container'
 import {EmailIcon, LocaleIcon, CellarIcon} from '../ui/Icons'
@@ -17,24 +19,24 @@ import {useCellars, useCellar} from '../stores/cellars'
 export default observer(function UserSettings() {
   const cellars = useCellars()
   const user = useUser()
-  
-  const [anchorEl, setAnchorEl] = useState(null)
+
+  const ui = useObservable({
+    cellar: {
+      open: false,
+    },
+  })
 
   if (null === user) {
     return null
   }
 
-  const handleOpenCellars = event => {
-    setAnchorEl(event.currentTarget)
+  const handleOpenCellar = event => {
+    ui.cellar.open = true
   }
 
-  const handleSelectCellar = (event, cellar) => {
+  const handleCloseCellar = cellar => event => {
+    ui.cellar.open = false
     userStore.update([user], {defaultCellar: cellar})
-    setAnchorEl(null)
-  }
-
-  const handleCloseCellars = () => {
-    setAnchorEl(null)
   }
 
   return (
@@ -54,10 +56,8 @@ export default observer(function UserSettings() {
         </ListItem>
         <ListItem
           button
-          aria-haspopup="true"
-          aria-controls="default-cellar-menu"
-          aria-label="Default cellar"
-          onClick={handleOpenCellars}
+          aria-label="Select default cellar"
+          onClick={handleOpenCellar}
         >
           <ListItemIcon>
             <CellarIcon />
@@ -92,27 +92,41 @@ export default observer(function UserSettings() {
           <ListItemText primary="Account type" secondary={auth.user.providerData.providerId} />
         </ListItem> */}
       </List>
-      <Menu
+      <CellarDialog
         id="default-cellar-menu"
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleCloseCellars}
-      >
+        open={ui.cellar.open}
+        cellars={cellars}
+        selected={user.defaultCellar}
+        onClose={handleCloseCellar}
+      />
+    </Container>
+  )
+})
+
+function CellarDialog({cellars, selected, onClose, ...props}) {
+  return (
+    <Dialog
+      onClose={onClose(selected)}
+      aria-labelledby="cellar-dialog-title"
+      {...props}
+    >
+      <DialogTitle id="cellar-dialog-title">
+        Select the default cellar
+      </DialogTitle>
+      <MenuList>
         {cellars.map(cellar => (
           <MenuItem
             key={cellar.$ref.id}
-            selected={
-              cellar.$ref.id === (user.defaultCellar && user.defaultCellar.id)
-            }
-            onClick={event => handleSelectCellar(event, cellar.$ref)}
+            selected={cellar.$ref.id === (selected && selected.id)}
+            onClick={onClose(cellar.$ref)}
           >
             {cellar.name}
           </MenuItem>
         ))}
-      </Menu>
-    </Container>
+      </MenuList>
+    </Dialog>
   )
-})
+}
 
 const CellarRenderer = observer(function({$ref}) {
   const cellar = useCellar($ref)
