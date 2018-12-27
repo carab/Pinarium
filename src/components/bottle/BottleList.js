@@ -54,12 +54,45 @@ export default class BottleList extends Component {
   store = store({
     table: {
       columns: [
-        {name: 'etiquette', title: 'Etiquette', getCellValue: row => (row.etiquette ? row.etiquette.$doc.id : undefined)},
-        {name: 'size', title: 'Size', getCellValue: row => (row.etiquette ? row.etiquette.size : undefined)},
-        {name: 'vintage', title: 'Vintage', getCellValue: row => (row.etiquette ? row.etiquette.vintage : undefined)},
-        {name: 'appellation', title: 'Appellation', getCellValue: row => (row.etiquette ? row.etiquette.appellation : undefined)},
-        {name: 'cuvee', title: 'Cuvée', getCellValue: row => (row.etiquette ? row.etiquette.cuvee : undefined)},
-        {name: 'producer', title: 'Producer', getCellValue: row => (row.etiquette ? row.etiquette.producer : undefined)},
+        {
+          name: 'etiquette',
+          title: 'Etiquette',
+          getCellValue: row => (row.etiquette ? row.etiquette.id : undefined),
+        },
+        {
+          name: 'cellar',
+          title: 'Cellar',
+          getCellValue: row => (row.cellar ? row.cellar.id : undefined),
+        },
+        {
+          name: 'size',
+          title: 'Size',
+          getCellValue: row => (row.etiquette ? row.etiquette.size : undefined),
+        },
+        {
+          name: 'vintage',
+          title: 'Vintage',
+          getCellValue: row =>
+            row.etiquette ? row.etiquette.vintage : undefined,
+        },
+        {
+          name: 'appellation',
+          title: 'Appellation',
+          getCellValue: row =>
+            row.etiquette ? row.etiquette.appellation : undefined,
+        },
+        {
+          name: 'cuvee',
+          title: 'Cuvée',
+          getCellValue: row =>
+            row.etiquette ? row.etiquette.cuvee : undefined,
+        },
+        {
+          name: 'producer',
+          title: 'Producer',
+          getCellValue: row =>
+            row.etiquette ? row.etiquette.producer : undefined,
+        },
         {name: 'date', title: 'Date added'},
       ],
       sorting: [{columnName: 'date', direction: 'desc'}],
@@ -69,24 +102,7 @@ export default class BottleList extends Component {
   })
 
   render() {
-    const {table} = this.store
-    const rows = this.buildRows()
-
-    return (
-      <Container full title="Bottles">
-        <BigTable
-          rows={rows}
-          columns={table.columns}
-          filtering={table.filtering}
-          grouping={table.grouping}
-          sorting={table.sorting}
-          onFiltering={this.handleFiltering}
-          onSorting={this.handleSorting}
-        />
-      </Container>
-    )
-
-    const groups = this.compute(bottlesStore.list)
+    const groups = this.compute()
 
     return (
       <Fragment>
@@ -166,67 +182,40 @@ export default class BottleList extends Component {
   }
 
   renderTable(group) {
+    const {table} = this.store
+
     return (
-      <Container full title={group.quantity + ' ' + group.title}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell numeric>Quantity</TableCell>
-              <TableCell numeric>Size</TableCell>
-              <TableCell numeric>Vintage</TableCell>
-              <TableCell>Appellation</TableCell>
-              <TableCell>Cuvée</TableCell>
-              <TableCell>Producer</TableCell>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>{Object.values(group.rows).map(this.renderRow)}</TableBody>
-        </Table>
+      <Container full title={group.rows.length + ' ' + group.title}>
+        <BigTable
+          rows={group.rows}
+          columns={table.columns}
+          filtering={table.filtering}
+          grouping={table.grouping}
+          sorting={table.sorting}
+          onFiltering={this.handleFiltering}
+          onSorting={this.handleSorting}
+        />
       </Container>
     )
   }
 
-  compute(bottles) {
+  compute() {
     const picked = {
       title: 'picked',
-      quantity: 0,
-      rows: {},
+      rows: [],
     }
     const stocked = {
       title: 'stocked',
-      quantity: 0,
-      rows: {},
+      rows: [],
     }
     const drank = {
       title: 'drank',
-      quantity: 0,
-      rows: {},
+      rows: [],
     }
 
-    bottles.forEach(bottle => {
+    bottlesStore.list.forEach(bottle => {
       const group = bottle.drank ? drank : bottle.picked ? picked : stocked
-      const key = [bottle.etiquette.id, bottle.picked, bottle.drank].join('|')
-      const etiquette = etiquettesStore.find(bottle.etiquette.id)
-      const cellar = cellarsStore.find(bottle.cellar.id)
-
-      if (!etiquette || !cellar) {
-        return
-      }
-
-      if (!group.rows[key]) {
-        group.rows[key] = {
-          key,
-          etiquette,
-          picked: bottle.picked,
-          drank: bottle.drank,
-          bottle: bottle,
-          bottles: [],
-        }
-      }
-
-      group.rows[key].bottles.push(bottle)
-      group.quantity++
+      group.rows.push(bottle)
     })
 
     return {picked, stocked, drank}
@@ -284,7 +273,7 @@ export default class BottleList extends Component {
                 onClick={this.handleStopPropagation}
                 component={Link}
                 to={{
-                  pathname: `/bottles/${row.bottle.$doc.id}`,
+                  pathname: `/bottles/${row.bottle.$ref.id}`,
                   state: {modal: true},
                 }}
               >
@@ -298,7 +287,7 @@ export default class BottleList extends Component {
             <TableCell colSpan={8} padding="dense">
               <List dense>
                 {row.bottles.map(bottle => (
-                  <ListItem key={bottle.$doc.id}>
+                  <ListItem key={bottle.$ref.id}>
                     {row.drank ? null : (
                       <IconButton
                         aria-owns={false ? 'bottle-pick' : null}
@@ -317,7 +306,7 @@ export default class BottleList extends Component {
                     >
                       {bottle.drank ? <UndrinkIcon /> : <DrinkIcon />}
                     </IconButton>
-                    <ListItemText primary={bottle.$doc.id} />
+                    <ListItemText primary={bottle.$ref.id} />
                     <ListItemSecondaryAction>
                       <IconButton
                         aria-owns={false ? 'bottle-pick' : null}
@@ -326,7 +315,7 @@ export default class BottleList extends Component {
                         onClick={this.handleStopPropagation}
                         component={Link}
                         to={{
-                          pathname: `/bottles/${bottle.$doc.id}`,
+                          pathname: `/bottles/${bottle.$ref.id}`,
                           state: {modal: true},
                         }}
                       >

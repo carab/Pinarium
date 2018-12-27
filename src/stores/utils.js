@@ -7,7 +7,7 @@ export async function subscribe(emitter, store) {
           case 'added':
           case 'modified':
             const document = change.doc.data()
-            document.$doc = change.doc.ref
+            document.$ref = change.doc.ref
             store.all[change.doc.ref.id] = document
             break
 
@@ -35,14 +35,14 @@ export function unsubscribe(store) {
 }
 
 export function save(saveData, data, id) {
-  const {$doc, ...cleanedData} = data
+  const {$ref, ...cleanedData} = data
 
   if (id) {
     return saveData(cleanedData, id)
   }
 
-  if ($doc) {
-    return saveData(cleanedData, $doc.id)
+  if ($ref) {
+    return saveData(cleanedData, $ref.id)
   }
 
   return saveData(cleanedData)

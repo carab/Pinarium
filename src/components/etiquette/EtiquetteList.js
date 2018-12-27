@@ -62,7 +62,7 @@ export default class CrateList extends Component {
 
     return (
       <TableRow
-        key={etiquette.$doc.id}
+        key={etiquette.$ref.id}
         hover
         className={classes.row}
         onClick={this.handleClick(etiquette)}
@@ -86,7 +86,7 @@ export default class CrateList extends Component {
 
   renderEtiquetteItem = etiquette => {
     return (
-      <ListItem key={etiquette.$doc.id} onClick={this.handleClick(etiquette)}>
+      <ListItem key={etiquette.$ref.id} onClick={this.handleClick(etiquette)}>
         <ListItemText
           primary={`${etiquette.appellation} ${etiquette.vintage} ${
             etiquette.producer
@@ -102,7 +102,7 @@ export default class CrateList extends Component {
     const {history} = this.props
 
     history.push({
-      pathname: `/etiquettes/${etiquette.$doc.id}`,
+      pathname: `/etiquettes/${etiquette.$ref.id}`,
       state: {modal: true},
     })
   }

@@ -21,11 +21,11 @@ export default class CellarList extends Component {
         <List>
           {cellarsStore.list.map(cellar => (
             <ListItem
-              key={cellar.$doc.id}
+              key={cellar.$ref.id}
               button
               component={Link}
               to={{
-                pathname: `/cellars/${cellar.$doc.id}`,
+                pathname: `/cellars/${cellar.$ref.id}`,
                 state: {modal: true},
               }}
             >

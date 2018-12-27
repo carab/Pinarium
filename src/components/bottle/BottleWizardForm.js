@@ -116,7 +116,7 @@ export default class BottleWizardForm extends Component {
               `${etiquette.sort} ${etiquette.appellation}`
             }
             keyAccessor="id"
-            valueAccessor="$doc"
+            valueAccessor="$ref"
           />
         </FormRow>
       </FormContainer>

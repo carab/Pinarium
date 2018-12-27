@@ -35,7 +35,7 @@ const bottlesStore = store({
     return save(saveBottle, bottle, id)
   },
   update(bottles, data) {
-    updateBottles(bottles.map(bottle => bottle.$doc), data)
+    updateBottles(bottles.map(bottle => bottle.$ref), data)
   },
   on() {
     subscribe(onBottlesRefresh, bottlesStore)

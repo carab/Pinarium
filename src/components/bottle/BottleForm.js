@@ -13,7 +13,6 @@ import FormDialog, {FormContainer, FormRow} from '../ui/FormDialog'
 import {RemoveIcon} from '../ui/Icons'
 
 import bottlesStore from '../../stores/bottlesStore'
-import etiquettesStore from '../../stores/etiquettesStore'
 import cellarsStore from '../../stores/cellarsStore'
 import logsStore from '../../stores/logsStore'
 import status from '../../stores/status'
@@ -136,7 +135,7 @@ export default class BottleForm extends Component {
               `${etiquette.sort} ${etiquette.appellation}`
             }
             keyAccessor="id"
-            valueAccessor="$doc"
+            valueAccessor="$ref"
           />
           <SelectField
             label="Cellar"
@@ -146,7 +145,7 @@ export default class BottleForm extends Component {
             options={cellarsStore.list}
             labelAccessor={cellar => cellar.title}
             keyAccessor="id"
-            valueAccessor="$doc"
+            valueAccessor="$ref"
           />
         </FormRow>
         <FormRow>
@@ -157,7 +156,7 @@ export default class BottleForm extends Component {
                 log
                   ? this.renderLog(
                       log,
-                      Boolean(bottle.logs[log.$doc.id]),
+                      Boolean(bottle.logs[log.$ref.id]),
                       false
                     )
                   : null
@@ -168,7 +167,7 @@ export default class BottleForm extends Component {
             {availableLogs.map(
               log =>
                 log
-                  ? this.renderLog(log, Boolean(bottle.logs[log.$doc.id]), true)
+                  ? this.renderLog(log, Boolean(bottle.logs[log.$ref.id]), true)
                   : null
             )}
           </List>
@@ -182,7 +181,7 @@ export default class BottleForm extends Component {
 
     return (
       <ListItem
-        key={log.$doc.id}
+        key={log.$ref.id}
         dense
         button
         onClick={this.handleToggleLog(log)}
@@ -205,12 +204,12 @@ export default class BottleForm extends Component {
 
   handleToggleLog = log => () => {
     const {bottle} = this.store
-    const {id} = log.$doc
+    const {id} = log.$ref
 
     if (bottle.logs[id]) {
       delete bottle.logs[id]
     } else {
-      bottle.logs[id] = log.$doc
+      bottle.logs[id] = log.$ref
     }
   }
 

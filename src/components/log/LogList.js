@@ -63,7 +63,7 @@ export default class LogList extends Component {
               aria-label="Edit a log"
               component={Link}
               to={{
-                pathname: `/logs/${row.$doc.id}`,
+                pathname: `/logs/${row.$ref.id}`,
                 state: {modal: true},
               }}
             >
@@ -121,7 +121,7 @@ export default class LogList extends Component {
 
   renderLogItem = log => {
     return (
-      <ListItem key={log.$doc.id} onClick={this.handleClick(log)}>
+      <ListItem key={log.$ref.id} onClick={this.handleClick(log)}>
         <ListItemText
           primary={`${log.appellation} ${log.vintage} ${log.producer}`}
           secondary={''}
@@ -143,7 +143,7 @@ export default class LogList extends Component {
     const {history} = this.props
 
     history.push({
-      pathname: `/logs/${log.$doc.id}`,
+      pathname: `/logs/${log.$ref.id}`,
       state: {modal: true},
     })
   }
