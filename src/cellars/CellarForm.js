@@ -14,7 +14,7 @@ export default observer(function CellarForm({id}) {
   const [cellar, ready] = useCellar(id)
 
   if (!ready) {
-    return 'loading'
+    return null
   }
 
   const handleSave = () => {

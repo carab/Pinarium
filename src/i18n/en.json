@@ -14,6 +14,7 @@
   },
   "topbar": {
     "title": "Pinarium",
+    "home": "Go to home",
     "open_sidebar": "Open the sidebar",
     "toggle_searchbar": "Toggle the searchbar"
   },
@@ -97,6 +98,28 @@
       "open": "Open bottle menu",
       "delete_dialog": "Delete {{count}} bottle?",
       "delete_dialog_plural": "Delete {{count}} bottles?"
+    },
+    "print": {
+      "primary": "{{appellation}}{{vintage}}{{cuvee}}",
+      "secondary": "{{color}}{{type}}{{size}}",
+      "tertiary": "{{producer}}{{region}}{{country}}",
+      "cellar": "{{cellar}}",
+      "sort": "{{sort}}",
+      "appellation": "{{appellation}}",
+      "vintage": " {{vintage}}",
+      "cuvee": ", {{cuvee}}",
+      "producer": "{{producer}}",
+      "bottlingDate": "{{bottlingDate}}",
+      "expirationDate": "{{expirationDate}}",
+      "region": ", {{region}}",
+      "country": ", {{country}}",
+      "color": "{{color}}",
+      "size": ", {{size}}",
+      "type": " {{type}}",
+      "effervescence": "{{effervescence}}",
+      "capsule": "{{capsule}}",
+      "alcohol": "{{alcohol}}",
+      "medal": "{{medal}}"
     },
     "cellar": "Cellar",
     "sort": "Sort",

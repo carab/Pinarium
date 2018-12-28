@@ -1,4 +1,5 @@
 import React from 'react'
+import {format} from 'date-fns'
 import {observer} from 'mobx-react-lite'
 import {Trans, useTranslation} from 'react-i18next/hooks'
 import classnames from 'classnames'
@@ -11,13 +12,18 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import Checkbox from '@material-ui/core/Checkbox'
 import IconButton from '@material-ui/core/IconButton'
+import Hidden from '@material-ui/core/Hidden'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 
 import Container from '../ui/Container'
 import {CloseIcon} from '../ui/Icons'
+import BottleMenu from './BottleMenu'
 
 import bottlesStore, {useBottles} from '../stores/bottles'
 import {useCellar} from '../stores/cellars'
-import BottleMenu from './BottleMenu'
 
 const useStyle = makeStyles(theme => ({
   tableContainer: {
@@ -123,40 +129,59 @@ export default observer(function BottleList() {
       }
     >
       {bottlesStore.all.length ? (
-        <div className={classes.tableContainer}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    indeterminate={
-                      countSelected > 0 && countSelected < countAll
-                    }
-                    checked={countSelected === countAll}
-                    onChange={handleSelectAll}
+        <>
+          <Hidden mdUp>
+            <div className={classes.demo}>
+              <List dense>
+                {bottlesStore.search.data.items.map(bottle => (
+                  <BottleItem
+                    key={bottle.$ref.id}
+                    bottle={bottle}
+                    columns={columns}
+                    selected={bottlesStore.isSelected(bottle)}
+                    onSelect={handleSelect(bottle)}
                   />
-                </TableCell>
-                {columns.map(column => (
-                  <TableCell key={column.name} {...column.props}>
-                    {t(`bottle.${column.name}`)}
-                  </TableCell>
                 ))}
-                <TableCell />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {bottlesStore.search.data.items.map(bottle => (
-                <BottleRow
-                  key={bottle.$ref.id}
-                  bottle={bottle}
-                  columns={columns}
-                  selected={bottlesStore.isSelected(bottle)}
-                  onSelect={handleSelect(bottle)}
-                />
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+              </List>
+            </div>
+          </Hidden>
+          <Hidden smDown>
+            <div className={classes.tableContainer}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        indeterminate={
+                          countSelected > 0 && countSelected < countAll
+                        }
+                        checked={countSelected === countAll}
+                        onChange={handleSelectAll}
+                      />
+                    </TableCell>
+                    {columns.map(column => (
+                      <TableCell key={column.name} {...column.props}>
+                        {t(`bottle.${column.name}`)}
+                      </TableCell>
+                    ))}
+                    <TableCell />
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {bottlesStore.search.data.items.map(bottle => (
+                    <BottleRow
+                      key={bottle.$ref.id}
+                      bottle={bottle}
+                      columns={columns}
+                      selected={bottlesStore.isSelected(bottle)}
+                      onSelect={handleSelect(bottle)}
+                    />
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </Hidden>
+        </>
       ) : (
         <Typography className={classes.empty}>
           {t('bottle.list.empty')}
@@ -205,6 +230,40 @@ const BottleRow = observer(function({bottle, columns, selected, onSelect}) {
   )
 })
 
+const BottleItem = observer(function({bottle, columns, selected, onSelect}) {
+  const classes = useStyles()
+  const [t] = useTranslation()
+  const [cellar] = useCellar(bottle.cellar)
+
+  const className = classnames({
+    [classes.picked]: bottle.status === 'picked',
+    [classes.disabled]:
+      ['drank', 'sold', 'given'].indexOf(bottle.status) !== -1,
+  })
+
+  const [primary, secondary, tertiary] = bottleRenderer(bottle, cellar, t)
+
+  return (
+    <ListItem>
+      <Checkbox checked={selected} onChange={onSelect} />
+      <ListItemText
+        className={className}
+        primary={primary}
+        secondary={
+          <>
+            {secondary}
+            <br />
+            {tertiary}
+          </>
+        }
+      />
+      <ListItemSecondaryAction>
+        <BottleMenu bottles={[bottle]} showEdit />
+      </ListItemSecondaryAction>
+    </ListItem>
+  )
+})
+
 const CellarRenderer = observer(function({row, column}) {
   const [cellar, ready] = useCellar(row[column.name])
 
@@ -233,4 +292,48 @@ const DateRenderer = function({row, column}) {
   }
 
   return null
+}
+
+export function bottleRenderer(bottle, cellar, t) {
+  const values = {
+    bottlingDate: bottle.bottlingDate
+      ? t('bottle.print.bottlingDate', {
+          bottlingDate: format(bottle.bottlingDate, 'P'),
+        })
+      : '',
+    expirationDate: bottle.expirationDate
+      ? t('bottle.print.expirationDate', {
+          expirationDate: format(bottle.expirationDate, 'P'),
+        })
+      : '',
+    appellation: bottle.appellation
+      ? t('bottle.print.appellation', {appellation: bottle.appellation})
+      : '',
+    vintage: bottle.vintage
+      ? t('bottle.print.vintage', {vintage: bottle.vintage})
+      : '',
+    cuvee: bottle.cuvee ? t('bottle.print.cuvee', {cuvee: bottle.cuvee}) : '',
+    producer: bottle.producer
+      ? t('bottle.print.producer', {producer: bottle.producer})
+      : '',
+    region: bottle.region
+      ? t('bottle.print.region', {region: bottle.region})
+      : '',
+    country: bottle.country
+      ? t('bottle.print.country', {country: bottle.country})
+      : '',
+    size: bottle.size ? t('bottle.print.size', {size: bottle.size}) : '',
+    color: bottle.color ? t('bottle.print.color', {color: bottle.color}) : '',
+    type: bottle.type ? t('bottle.print.type', {type: bottle.type}) : '',
+    cellar:
+      bottle.cellar && cellar
+        ? t('bottle.print.cellar', {cellar: cellar.name})
+        : '',
+  }
+
+  return [
+    t('bottle.print.primary', values),
+    t('bottle.print.secondary', values),
+    t('bottle.print.tertiary', values),
+  ]
 }

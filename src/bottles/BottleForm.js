@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
+import {format} from 'date-fns'
 import {observer, useObservable} from 'mobx-react-lite'
 import {useTranslation} from 'react-i18next/hooks'
-import {format} from 'date-fns'
 import {navigate} from '@reach/router'
 import SwipeableViews from 'react-swipeable-views'
 import {makeStyles, useTheme} from '@material-ui/styles'
@@ -37,7 +37,7 @@ export default observer(function BottleForm({id}) {
   const [bottle, ready] = useBottle(id)
 
   if (!ready) {
-    return 'loading'
+    return null
   }
 
   const handleSave = () => {
@@ -384,7 +384,7 @@ const LogItem = observer(function({id}) {
   )
 })
 
-function LogRenderer({log}) {
+export function LogRenderer({log}) {
   const [t] = useTranslation()
   const [cellar] = useCellar(log.cellar)
 

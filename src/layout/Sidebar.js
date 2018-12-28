@@ -1,7 +1,7 @@
 import React from 'react'
 import {Link, Match} from '@reach/router'
 import {observer} from 'mobx-react-lite'
-import {Trans, useTranslation} from 'react-i18next/hooks'
+import {useTranslation} from 'react-i18next/hooks'
 import classnames from 'classnames'
 import {makeStyles} from '@material-ui/styles'
 import Drawer from '@material-ui/core/Drawer'
@@ -13,6 +13,8 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
+import Hidden from '@material-ui/core/Hidden'
+import Typography from '@material-ui/core/Typography'
 
 import {
   ChevronLeftIcon,
@@ -27,64 +29,81 @@ import {
 
 import ui from '../stores/ui'
 
-const drawerWidth = 240
-
 const useStyles = makeStyles(theme => ({
-  toolbarIcon: {
+  root: {
+    height: '100%',
+  },
+  paper: {
+    position: 'static',
+    display: 'flex',
+    height: '100%',
+    flexGrow: '0',
+    flexDirection: 'column',
+    width: theme.spacing.unit * 32,
+    maxWidth: `calc(100vw - ${theme.spacing.unit * 8}px)`,
+  },
+  toolbar: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    padding: '0 8px',
+    paddingRight: theme.spacing.unit,
     ...theme.mixins.toolbar,
   },
-  drawerPaper: {
-    position: 'relative',
-    whiteSpace: 'nowrap',
-    width: drawerWidth,
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
+  title: {
+    marginRight: 'auto',
   },
-  drawerPaperClose: {
-    overflowX: 'hidden',
-    transition: theme.transitions.create('width', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    width: theme.spacing.unit * 7,
-    [theme.breakpoints.up('sm')]: {
-      width: theme.spacing.unit * 9,
-    },
-  },
-  listBottom: {
+  bottom: {
     flexGrow: 0,
     marginTop: 'auto',
   },
 }))
 
-export default observer(function Sidebar() {
-  const classes = useStyles()
-  const [t] = useTranslation()
-
+export default function Sidebar() {
   const handleClose = () => {
     ui.toggleSidebar(false)
   }
 
+  return (
+    <>
+      <Hidden mdUp>
+        <SidebarDrawer
+          variant="temporary"
+          anchor="left"
+          onClose={handleClose}
+          ModalProps={{
+            keepMounted: true, // Better open performance on mobile.
+          }}
+        />
+      </Hidden>
+      <Hidden smDown implementation="css">
+        <SidebarDrawer
+          variant="permanent"
+          anchor="left"
+          onClose={handleClose}
+        />
+      </Hidden>
+    </>
+  )
+}
+
+export const SidebarDrawer = observer(function({onClose, ...props}) {
+  const classes = useStyles()
+  const [t] = useTranslation()
+
   const routes = [
     {
       to: '/',
-      title: <Trans i18nKey="sidebar.bottles" />,
+      title: t('sidebar.bottles'),
       icon: <BottleIcon />,
     },
     {
       to: '/cellars',
-      title: <Trans i18nKey="sidebar.cellars" />,
+      title: t('sidebar.cellars'),
       icon: <CellarIcon />,
     },
     {
       to: '/history',
-      title: <Trans i18nKey="sidebar.history" />,
+      title: t('sidebar.history'),
       icon: <LogIcon />,
     },
     // {
@@ -94,23 +113,42 @@ export default observer(function Sidebar() {
     // },
     {
       to: '/settings',
-      title: <Trans i18nKey="sidebar.settings" />,
+      title: t('sidebar.settings'),
       icon: <SettingsIcon />,
     },
   ]
 
   return (
     <Drawer
-      variant="permanent"
-      classes={{
-        paper: classnames(classes.drawerPaper, {
-          [classes.drawerPaperClose]: !ui.sidebar.open,
-        }),
-      }}
+      onClose={onClose}
       open={ui.sidebar.open}
+      {...props}
+      className={classes.root}
+      classes={{
+        paper: classes.paper,
+      }}
     >
-      <div className={classes.toolbarIcon}>
-        <IconButton onClick={handleClose} title={t('sidebar.close')}>
+      <div className={classes.toolbar}>
+        <IconButton
+          color="inherit"
+          aria-label={t('topbar.home')}
+          title={t('topbar.home')}
+          className={classes.button}
+          component={Link}
+          to="/"
+        >
+          <LogoIcon />
+        </IconButton>
+        <Typography
+          component="h1"
+          variant="h6"
+          color="inherit"
+          noWrap
+          className={classes.title}
+        >
+          {t('topbar.title')}
+        </Typography>
+        <IconButton onClick={onClose} title={t('sidebar.close')}>
           <ChevronLeftIcon />
         </IconButton>
       </div>
@@ -123,7 +161,7 @@ export default observer(function Sidebar() {
                 selected={null !== match}
                 component={Link}
                 to={route.to}
-                //onClick={handleClose}
+                onClick={onClose}
               >
                 <ListItemIcon>{route.icon}</ListItemIcon>
                 <ListItemText primary={route.title} />
@@ -133,12 +171,12 @@ export default observer(function Sidebar() {
         ))}
       </MenuList>
       <Divider />
-      <List className={classes.listBottom}>
+      <List className={classes.bottom}>
         <ListItem button component="a" href="https://github.com/carab/Pinarium">
           <ListItemIcon>
             <BugIcon />
           </ListItemIcon>
-          <ListItemText primary={<Trans i18nKey="sidebar.report" />} />
+          <ListItemText primary={t('sidebar.report')} />
         </ListItem>
       </List>
     </Drawer>

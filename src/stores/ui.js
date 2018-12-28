@@ -3,7 +3,7 @@ import {observable, action} from 'mobx'
 const ui = observable(
   {
     sidebar: {
-      open: true,
+      open: false,
     },
     searchbar: {
       open: false,
