@@ -1,5 +1,6 @@
 import React from 'react'
 import {Link, Match} from '@reach/router'
+import {useTranslation} from 'react-i18next/hooks'
 import {observer} from 'mobx-react-lite'
 import Zoom from '@material-ui/core/Zoom'
 import Fab from '@material-ui/core/Fab'
@@ -25,6 +26,7 @@ const useStyles = makeStyles(theme => ({
 export default observer(function Bouh() {
   const classes = useStyles()
   const theme = useTheme()
+  const [t] = useTranslation()
 
   const transitionDuration = {
     enter: theme.transitions.duration.enteringScreen,
@@ -35,6 +37,7 @@ export default observer(function Bouh() {
     {
       path: '/bottles',
       to: '/bottle',
+      title: t('fab.add_bottle'),
       color: 'primary',
       className: classes.fab,
       icon: <AddIcon />,
@@ -42,6 +45,7 @@ export default observer(function Bouh() {
     {
       path: '/cellars',
       to: '/cellar',
+      title: t('fab.add_cellar'),
       color: 'secondary',
       className: classes.fab,
       icon: <AddIcon />,
@@ -64,6 +68,8 @@ export default observer(function Bouh() {
             color={fab.color}
             component={Link}
             to={fab.to}
+            title={fab.title}
+            aria-label={fab.title}
           >
             {fab.icon}
           </Fab>

@@ -1,0 +1,217 @@
+{
+  "locale": {
+    "en": "English",
+    "fr": "Français"
+  },
+  "label": {
+    "yes": "Yes",
+    "no": "No",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "duplicate": "Duplicate",
+    "delete": "Delete"
+  },
+  "topbar": {
+    "title": "Pinarium",
+    "open_sidebar": "Open the sidebar",
+    "toggle_searchbar": "Toggle the searchbar"
+  },
+  "sidebar": {
+    "bottles": "My Bottles",
+    "cellars": "My Cellars",
+    "history": "History",
+    "settings": "Settings",
+    "report": "Report a bug",
+    "close": "Close the sidebar"
+  },
+  "searchbar": {
+    "title": "Enter your search"
+  },
+  "fab": {
+    "add_bottle": "Add a bottle",
+    "add_cellar": "Add a cellar"
+  },
+  "form": {
+    "autocomplete": {
+      "delete": "Delete this suggestion"
+    },
+    "date": {
+      "invalid": "Unknown",
+      "empty": "",
+      "ok": "OK",
+      "cancel": "Cancel",
+      "clear": "Clear",
+      "today": "Today"
+    },
+    "select": {
+      "empty": "None"
+    }
+  },
+  "signin": {
+    "title": "Sign in",
+    "email": "Email",
+    "password": "Password",
+    "remember": "Remember me",
+    "submit": "Sign in"
+  },
+  "settings": {
+    "title": "Settings",
+    "email": "Email",
+    "default_cellar": "Default cellar",
+    "select_default_cellar": "Select your default cellar",
+    "locale": "Language",
+    "select_locale": "Select your language"
+  },
+  "cellar": {
+    "list": {
+      "title": "My Cellars"
+    },
+    "form": {
+      "edit": "Edit cellar",
+      "new": "New cellar"
+    },
+    "name": "Name",
+    "description": "Description"
+  },
+  "bottle": {
+    "list": {
+      "title": "{{count}} Bottle",
+      "title_plural": "{{count}} Bottles",
+      "selected": "{{count}} Selected",
+      "empty": "You don't have any bottle yet!",
+      "select": "Select",
+      "selectAll": "Select all",
+      "unselect": "Unselect",
+      "unselectAll": "Unselect all"
+    },
+    "form": {
+      "edit": "Edit bottle",
+      "new": "New bottle",
+      "tab_etiquette": "Etiquette",
+      "tab_history": "History",
+      "quantity": "Quantity",
+      "no_log": "No entry for now"
+    },
+    "menu": {
+      "open": "Open bottle menu",
+      "delete_dialog": "Delete {{count}} bottle?",
+      "delete_dialog_plural": "Delete {{count}} bottles?"
+    },
+    "cellar": "Cellar",
+    "sort": "Sort",
+    "appellation": "Appellation",
+    "cuvee": "Cuvée",
+    "vintage": "Vintage",
+    "bottlingDate": "Bottling date",
+    "expirationDate": "Expiration date",
+    "producer": "Producer",
+    "region": "Region",
+    "country": "Country",
+    "size": "Size",
+    "color": "Color",
+    "effervescence": "Effervescence",
+    "type": "Type",
+    "capsule": "Capsule",
+    "alcohol": "Alcohol level",
+    "medal": "Medal/Prize"
+  },
+  "log": {
+    "form": {
+      "edit": "Edit entry",
+      "new": "New history entry"
+    },
+    "print": {
+      "full": "{{status}}{{who}}{{when}}{{where}}{{why}}{{value}}{{cellar}}{{rate}}.",
+      "status": "$t(enum.status.{{status}})",
+      "who": " to {{who}}",
+      "when": " on {{when}}",
+      "where": " in {{where}}",
+      "why": " for {{why}}",
+      "value": ", for {{value}} €",
+      "cellar": ", stored in {{cellar}}",
+      "rate": ", rated {{rate}} stars"
+    },
+    "status": "Status",
+    "when": "When",
+    "where": "Where",
+    "who": "Who",
+    "value": "Price",
+    "rate": "Rating",
+    "cellar": "Cellar",
+    "why": "Why/Occasion",
+    "comment": "Comment"
+  },
+  "enum": {
+    "sort": {
+      "wine": "Wine",
+      "beer": "Beer"
+    },
+    "color": {
+      "red": "Red",
+      "white": "White",
+      "rose": "Rosé",
+      "yellow": "Yellow"
+    },
+    "type": {
+      "raw": "Raw",
+      "dry": "Dry",
+      "semidry": "Semi dry",
+      "sweet": "Sweet",
+      "mellow": "Mellow",
+      "liquorous": "Liquorous",
+      "alcohol": "Alcohol"
+    },
+    "effervescence": {
+      "still": "Still",
+      "semisparkling": "Semi sparkling",
+      "sparkling": "Sparkling",
+      "verysparkling": "Very sparkling"
+    },
+    "size": {
+      "200": "Piccolo (20 cl)",
+      "250": "Chopine (25 cl)",
+      "330": "Can (33 cl)",
+      "375": "Demi (37.5 cl)",
+      "500": "Medium (50 cl)",
+      "620": "Clavelin (62 cl)",
+      "750": "Standard (75 cl)",
+      "1000": "Liter (1 l)",
+      "1500": "Magnum (1.5 l)",
+      "2250": "Marie jeanne (2.25 l)",
+      "3000": "Jeroboam (3 l)",
+      "4500": "Rehoboam (4.5 l)",
+      "6000": "Methuselah (6 l)",
+      "9000": "Salmanazar (9 l)",
+      "12000": "Balthazar (12 l)",
+      "15000": "Nebuchadnezzar (15 l)",
+      "18000": "Melchior (18 l)",
+      "18000b": "Solomon (18 l)",
+      "20000": "Solomon (20 l)",
+      "25000": "Sovereign (25 l)",
+      "26250": "Sovereign (26.25 l)",
+      "27000": "Primat (27 l)",
+      "30000": "Melchizedek (30 l)"
+    },
+    "capsule": {
+      "green": "Green",
+      "blue": "Blue",
+      "redwine": "Redwine",
+      "orange": "Orange",
+      "yellow": "Yellow",
+      "grey": "Grey",
+      "red": "Red",
+      "white": "White"
+    },
+    "status": {
+      "received": "Received",
+      "bought": "Bought",
+      "picked": "Picked",
+      "unpicked": "Re-stashed",
+      "moved": "Moved",
+      "given": "Given",
+      "sold": "Sold",
+      "drank": "Drank"
+    }
+  }
+}

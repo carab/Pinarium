@@ -1,5 +1,6 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
+import {Trans} from 'react-i18next/hooks'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
@@ -41,7 +42,7 @@ export default function LogDialog({log, create, onClose}) {
   }
 
   return (
-    <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
+    <Dialog open={open} onClose={onClose} aria-labelledby="log-dialog-title">
       <LogDialogContent
         log={log}
         create={create}
@@ -57,20 +58,29 @@ const LogDialogContent = observer(function({log, create, onSave, onCancel}) {
     return null
   }
 
+  const count = log.bottles.length
+
   return (
     <form onSubmit={onSave} noValidate autoComplete="off">
-      <DialogTitle id="form-dialog-title">
-        {create
-          ? 'New history entry'
-          : `${log.status} ${log.bottles.length} bottles`}
+      <DialogTitle id="log-dialog-title">
+        {create ? (
+          <Trans i18nKey="log.form.new" />
+        ) : (
+          <>
+            <Trans i18nKey={`enum.status.${log.status}`} count={count} />
+            {` (${count})`}
+          </>
+        )}
       </DialogTitle>
       <DialogContent>
         <LogForm log={log} statuses={create ? defaultStatuses : undefined} />
       </DialogContent>
       <DialogActions>
-        <Button onClick={onCancel}>Cancel</Button>
+        <Button onClick={onCancel}>
+          <Trans i18nKey="label.cancel" />
+        </Button>
         <Button type="primary" color="primary">
-          Save
+          <Trans i18nKey="label.save" />
         </Button>
       </DialogActions>
     </form>

@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 export default observer(function Main() {
-  if (!auth.user) {
+  if (null === auth.user) {
     return <Redirect to="/signin" noThrow />
   }
 

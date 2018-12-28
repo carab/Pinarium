@@ -1,5 +1,6 @@
-import React, {useState} from 'react'
+import React from 'react'
 import {observer, useObservable} from 'mobx-react-lite'
+import {useTranslation} from 'react-i18next/hooks'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -18,15 +19,19 @@ import {useCellars, useCellar} from '../stores/cellars'
 
 export default observer(function UserSettings() {
   const cellars = useCellars()
-  const user = useUser()
+  const [user, ready] = useUser()
+  const [t, i18n] = useTranslation()
 
   const ui = useObservable({
     cellar: {
       open: false,
     },
+    locale: {
+      open: false,
+    },
   })
 
-  if (null === user) {
+  if (!auth.user || !ready) {
     return null
   }
 
@@ -38,9 +43,19 @@ export default observer(function UserSettings() {
     ui.cellar.open = false
     userStore.update([user], {defaultCellar: cellar})
   }
+  const handleOpenLocale = event => {
+    ui.locale.open = true
+  }
+
+  const handleCloseLocale = locale => event => {
+    ui.locale.open = false
+    userStore.update([user], {locale})
+  }
+
+  const currentLocale = user.locale || i18n.languages[0].substring(0, 2)
 
   return (
-    <Container title="Settings" size="sm">
+    <Container title={t('settings.title')} size="sm">
       <List>
         {/* <ListItem>
           <ListItemText
@@ -56,30 +71,38 @@ export default observer(function UserSettings() {
         </ListItem>
         <ListItem
           button
-          aria-label="Select default cellar"
+          aria-label={t('settings.select_default_cellar')}
           onClick={handleOpenCellar}
         >
           <ListItemIcon>
             <CellarIcon />
           </ListItemIcon>
           <ListItemText
-            primary="Default cellar"
+            primary={t('settings.default_cellar')}
             secondary={
               user.defaultCellar ? (
                 <CellarRenderer $ref={user.defaultCellar} />
               ) : (
-                'Select a default cellar'
+                t('settings.select_default_cellar')
               )
             }
           />
         </ListItem>
-        <ListItem>
+        <ListItem
+          button
+          aria-label={t('settings.select_locale')}
+          onClick={handleOpenLocale}
+        >
           <ListItemIcon>
             <LocaleIcon />
           </ListItemIcon>
           <ListItemText
-            primary="Language"
-            secondary={user.locale ? user.locale : 'Select your language'}
+            primary={t('settings.locale')}
+            secondary={
+              currentLocale
+                ? t(`locale.${currentLocale}`)
+                : t('settings.select_locale')
+            }
           />
         </ListItem>
         {/* <ListItem>
@@ -93,17 +116,51 @@ export default observer(function UserSettings() {
         </ListItem> */}
       </List>
       <CellarDialog
-        id="default-cellar-menu"
         open={ui.cellar.open}
         cellars={cellars}
         selected={user.defaultCellar}
         onClose={handleCloseCellar}
       />
+      <LocaleDialog
+        open={ui.locale.open}
+        locales={['en', 'fr']}
+        selected={currentLocale}
+        onClose={handleCloseLocale}
+      />
     </Container>
   )
 })
 
+function LocaleDialog({locales, selected, onClose, ...props}) {
+  const [t] = useTranslation()
+
+  return (
+    <Dialog
+      onClose={onClose(selected)}
+      aria-labelledby="locale-dialog-title"
+      {...props}
+    >
+      <DialogTitle id="locale-dialog-title">
+        {t('settings.select_locale')}
+      </DialogTitle>
+      <MenuList>
+        {locales.map(locale => (
+          <MenuItem
+            key={locale}
+            selected={locale === selected}
+            onClick={onClose(locale)}
+          >
+            {t(`locale.${locale}`)}
+          </MenuItem>
+        ))}
+      </MenuList>
+    </Dialog>
+  )
+}
+
 function CellarDialog({cellars, selected, onClose, ...props}) {
+  const [t] = useTranslation()
+
   return (
     <Dialog
       onClose={onClose(selected)}
@@ -111,7 +168,7 @@ function CellarDialog({cellars, selected, onClose, ...props}) {
       {...props}
     >
       <DialogTitle id="cellar-dialog-title">
-        Select the default cellar
+        {t('settings.select_default_cellar')}
       </DialogTitle>
       <MenuList>
         {cellars.map(cellar => (
@@ -129,7 +186,7 @@ function CellarDialog({cellars, selected, onClose, ...props}) {
 }
 
 const CellarRenderer = observer(function({$ref}) {
-  const cellar = useCellar($ref)
+  const [cellar] = useCellar($ref)
 
   if (cellar) {
     return cellar.name

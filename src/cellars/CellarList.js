@@ -1,7 +1,7 @@
 import React from 'react'
-import {Link} from '@reach/router'
 import {observer} from 'mobx-react-lite'
-import Typography from '@material-ui/core/Typography'
+import {Trans} from 'react-i18next/hooks'
+import {Link} from '@reach/router'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -16,7 +16,7 @@ export default observer(function CellarList() {
   return (
     <Container
       size="sm"
-      title="Cellars"
+      title={<Trans i18nKey="cellar.list.title" />}
       actions={null}
     >
       <List>

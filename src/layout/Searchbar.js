@@ -1,11 +1,9 @@
-import React, {useCallback, useState} from 'react'
-import {Router, Redirect} from '@reach/router'
+import React from 'react'
 import {observer} from 'mobx-react-lite'
-import deburr from 'lodash/deburr'
+import {useTranslation} from 'react-i18next/hooks'
 import keycode from 'keycode'
 import Downshift from 'downshift'
 import {makeStyles} from '@material-ui/styles'
-import TextField from '@material-ui/core/TextField'
 import Paper from '@material-ui/core/Paper'
 import MenuItem from '@material-ui/core/MenuItem'
 import Chip from '@material-ui/core/Chip'
@@ -123,6 +121,8 @@ export default observer(function DownshiftMultiple() {
 })
 
 const SearchInput = observer(function({onDelete, classes, ...props}) {
+  const [t] = useTranslation()
+  
   return (
     <Input
       fullWidth
@@ -141,7 +141,7 @@ const SearchInput = observer(function({onDelete, classes, ...props}) {
         root: classes.inputRoot,
         input: classes.inputInput,
       }}
-      placeholder="Enter your search"
+      placeholder={t('searchbar.title')}
       {...props}
     />
   )
@@ -181,24 +181,4 @@ function SearchSuggestion({
       {`${suggestion.name} : ${suggestion.value}`}
     </MenuItem>
   )
-}
-
-function getSuggestions(suggestions, value) {
-  const inputValue = deburr(value.trim()).toLowerCase()
-  const inputLength = inputValue.length
-  let count = 0
-
-  return inputLength === 0
-    ? []
-    : suggestions.filter(suggestion => {
-        const keep =
-          count < 5 &&
-          suggestion.label.slice(0, inputLength).toLowerCase() === inputValue
-
-        if (keep) {
-          count += 1
-        }
-
-        return keep
-      })
 }

@@ -5,7 +5,7 @@ import {makeStore, useCollection, useDocument} from './utils'
 import statusesDef from '../enums/statuses'
 
 const logs = extendObservable(makeStore(Log, 'logs', autocompletes), {
-  createFrom(template, user) {
+  createFrom(template) {
     const log = this.create()
 
     log.when = template.when ? template.when : new Date()
@@ -16,9 +16,9 @@ const logs = extendObservable(makeStore(Log, 'logs', autocompletes), {
       statusDef => statusDef.name === log.status
     )
 
-    if (user && statusDef && statusDef.fields.indexOf('cellar') > -1) {
-      log.cellar = user.defaultCellar
-    }
+    // if (userStore && statusDef && statusDef.fields.indexOf('cellar') > -1) {
+    //   log.cellar = userStore.defaultCellar
+    // }
 
     // Bottles filter
     log.bottles = template.bottles

@@ -1,7 +1,8 @@
 import React, {useState} from 'react'
-import _groupBy from 'lodash/groupBy'
 import {observer, useObservable} from 'mobx-react-lite'
+import {Trans, useTranslation} from 'react-i18next/hooks'
 import {navigate} from '@reach/router'
+import _groupBy from 'lodash/groupBy'
 import IconButton from '@material-ui/core/IconButton'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -9,8 +10,6 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import Button from '@material-ui/core/Button'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Divider from '@material-ui/core/Divider'
 import {makeStyles} from '@material-ui/styles'
@@ -54,12 +53,12 @@ const ICONS = {
 
 export default observer(function BottleMenu({bottles, showEdit}) {
   const ui = useObservable({delete: {open: false}})
-  const user = useUser()
   const [log, setLog] = useState(null)
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
 
   const classes = useStyles()
+  const [t] = useTranslation()
 
   const handleOpen = event => {
     setAnchorEl(event.currentTarget)
@@ -82,7 +81,6 @@ export default observer(function BottleMenu({bottles, showEdit}) {
         return nextStatuses.indexOf(status) !== -1
       })
       .map(bottle => bottle.$ref)
-    console.log(filteredBottles)
 
     const log = logs.createFrom(
       {
@@ -90,7 +88,6 @@ export default observer(function BottleMenu({bottles, showEdit}) {
         // Only keep bottles on which the new status is a possible next status
         bottles: filteredBottles,
       },
-      user
     )
 
     setLog(log)
@@ -150,7 +147,8 @@ export default observer(function BottleMenu({bottles, showEdit}) {
         aria-haspopup="true"
         onClick={handleOpen}
         color="inherit"
-        title="Open bottle menu"
+        title={t('bottle.menu.open')}
+        aria-label={t('bottle.menu.open')}
       >
         <MoreIcon />
       </IconButton>
@@ -174,7 +172,7 @@ export default observer(function BottleMenu({bottles, showEdit}) {
                 <ListItemIcon>
                   <EditIcon />
                 </ListItemIcon>
-                Edit
+                {t('label.edit')}
               </MenuItem>,
               <Divider key="divider" />,
             ]
@@ -188,7 +186,11 @@ export default observer(function BottleMenu({bottles, showEdit}) {
                   <Icon />
                 </ListItemIcon>
               ) : null}
-              {item.status} {showCount ? `(${item.count})` : null}
+              <Trans
+                i18nKey={`enum.status.${item.status}`}
+                count={item.count}
+              />
+              {showCount ? ` (${item.count})` : null}
             </MenuItem>
           )
         })}
@@ -198,14 +200,14 @@ export default observer(function BottleMenu({bottles, showEdit}) {
             <ListItemIcon>
               <DuplicateIcon />
             </ListItemIcon>
-            Duplicate
+            {t('label.duplicate')}
           </MenuItem>
         ) : null}
         <MenuItem onClick={handleAskDelete} className={classes.delete}>
           <ListItemIcon>
             <DeleteIcon className={classes.delete} />
           </ListItemIcon>
-          Delete
+          {t('label.delete')}
         </MenuItem>
       </Menu>
     </>
@@ -220,12 +222,14 @@ function DeleteBottleDialog({count, open, onConfirm, onCancel}) {
       aria-labelledby="delete-dialog-title"
     >
       <DialogTitle id="delete-dialog-title">
-        {`Delete ${count} bottles ?`}
+        <Trans i18nKey="bottle.menu.delete_dialog" values={{count}} />
       </DialogTitle>
       <DialogActions>
-        <Button onClick={onCancel}>Cancel</Button>
+        <Button onClick={onCancel}>
+          <Trans i18nKey="label.cancel" />
+        </Button>
         <Button onClick={onConfirm} color="primary" autoFocus>
-          Yes
+          <Trans i18nKey="label.yes" />
         </Button>
       </DialogActions>
     </Dialog>

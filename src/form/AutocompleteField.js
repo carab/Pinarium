@@ -1,5 +1,6 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
+import {useTranslation} from 'react-i18next/hooks'
 import Downshift from 'downshift'
 import {makeStyles} from '@material-ui/styles'
 import Paper from '@material-ui/core/Paper'
@@ -149,6 +150,9 @@ function SuggestionRenderer({
   selected,
   onDelete,
 }) {
+  const [t] = useTranslation()
+  const title = t('form.autocomplete.delete')
+
   return (
     <MenuItem
       {...itemProps}
@@ -160,7 +164,12 @@ function SuggestionRenderer({
     >
       <ListItemText primary={suggestion.value} />
       <ListItemSecondaryAction>
-        <IconButton size="small" aria-label="Delete" onClick={onDelete}>
+        <IconButton
+          size="small"
+          aria-label={title}
+          title={title}
+          onClick={onDelete}
+        >
           <DeleteIcon />
         </IconButton>
       </ListItemSecondaryAction>

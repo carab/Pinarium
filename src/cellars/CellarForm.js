@@ -1,8 +1,8 @@
 import React, {useCallback} from 'react'
 import {observer} from 'mobx-react-lite'
+import {Trans} from 'react-i18next/hooks'
 import {navigate} from '@reach/router'
 import {makeStyles} from '@material-ui/styles'
-import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 
 import Container from '../ui/Container'
@@ -11,9 +11,9 @@ import TextField from '../form/TextField'
 import cellarsStore, {useCellar} from '../stores/cellars'
 
 export default observer(function CellarForm({id}) {
-  const cellar = useCellar(id)
+  const [cellar, ready] = useCellar(id)
 
-  if (null === cellar) {
+  if (!ready) {
     return 'loading'
   }
 
@@ -22,7 +22,11 @@ export default observer(function CellarForm({id}) {
   }
 
   return (
-    <Form title={id ? 'Edit' : 'New'} cellar={cellar} onSave={handleSave} />
+    <Form
+      title={<Trans i18nKey={id ? 'cellar.form.edit' : 'cellar.form.new'} />}
+      cellar={cellar}
+      onSave={handleSave}
+    />
   )
 })
 
@@ -61,7 +65,7 @@ const Form = observer(function({title, cellar, onSave}) {
       title={title}
       actions={
         <Button type="submit" variant="contained" color="secondary">
-          Save
+          <Trans i18nKey="label.save" />
         </Button>
       }
       component="form"
@@ -71,7 +75,7 @@ const Form = observer(function({title, cellar, onSave}) {
     >
       <FieldRow>
         <TextField
-          label="Name"
+          label={<Trans i18nKey="cellar.name" />}
           name="name"
           required={true}
           value={cellar.name}
@@ -83,7 +87,7 @@ const Form = observer(function({title, cellar, onSave}) {
       </FieldRow>
       <FieldRow>
         <TextField
-          label="Description"
+          label={<Trans i18nKey="cellar.description" />}
           name="description"
           value={cellar.description}
           onChange={handleChange}

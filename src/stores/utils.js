@@ -22,18 +22,22 @@ export function createDocument(model, data) {
 export function makeStore(model, subcollection = null, autocompletes = []) {
   const store = observable.object(
     {
+      name: subcollection ? subcollection : 'user',
+      documents: {},
       all: [],
+      ready: false,
       subscribers: 0,
       create() {
         return observable({...model})
       },
-      observe(target) {
+      observe(bag) {
         return snapshot => {
           snapshot.docChanges().forEach(change => {
+            bag.ready = true
             switch (change.type) {
               case 'added':
               case 'modified': {
-                const index = target.findIndex(
+                const index = bag.all.findIndex(
                   document => document.$ref.id === change.doc.ref.id
                 )
 
@@ -41,21 +45,21 @@ export function makeStore(model, subcollection = null, autocompletes = []) {
                 document.$ref = change.doc.ref
 
                 if (index >= 0) {
-                  target[index] = document
+                  bag.all[index] = document
                 } else {
-                  target.push(document)
+                  bag.all.push(document)
                 }
 
                 break
               }
 
               case 'removed': {
-                const index = target.findIndex(
+                const index = bag.all.findIndex(
                   document => document.$ref.id === change.doc.ref.id
                 )
 
                 if (index >= 0) {
-                  target.splice(index, 1)
+                  bag.all.splice(index, 1)
                 }
 
                 break
@@ -83,21 +87,31 @@ export function makeStore(model, subcollection = null, autocompletes = []) {
 
         return collection
       },
-      async listenCollection(target, filter = collectionRef => collectionRef) {
+      async listenCollection(bag, filter = collectionRef => collectionRef) {
         const collectionRef = await this.collection()
-        return filter(collectionRef).onSnapshot(this.observe(target))
+        return filter(collectionRef).onSnapshot(this.observe(bag))
       },
-      async listenDocument($ref, target) {
+      async listenDocument($ref, bag) {
         if (!($ref instanceof firebase.firestore.DocumentReference)) {
           const id = $ref
           $ref = (await store.collection()).doc(id)
         }
 
-        return $ref.onSnapshot(doc => {
-          const document = createDocument(model, doc.data())
-          document.$ref = doc.ref
-          target.document = document
-        })
+        bag.subscribed = true
+        const unsubscribe = $ref.onSnapshot(this.handleDocument(bag))
+
+        return () => {
+          unsubscribe()
+          bag.subscribed = false
+        }
+      },
+      handleDocument(bag) {
+        return snapshot => {
+          const document = createDocument(model, snapshot.data())
+          document.$ref = snapshot.ref
+          bag.document = document
+          bag.ready = true
+        }
       },
       async save({$ref, ...document}) {
         const collection = await this.collection()
@@ -134,6 +148,7 @@ export function makeStore(model, subcollection = null, autocompletes = []) {
     },
     {
       observe: action.bound,
+      handleDocument: action.bound,
       save: action,
       create: action,
       update: action,
@@ -152,7 +167,7 @@ export function makeStore(model, subcollection = null, autocompletes = []) {
       return
     }
 
-    promise = store.listenCollection(store.all)
+    promise = store.listenCollection(store)
   })
 
   autorun(function stop() {
@@ -170,13 +185,13 @@ export function makeStore(model, subcollection = null, autocompletes = []) {
 }
 
 export function useCollection(store, filter) {
-  const collection = useObservable(filter ? [] : store.all)
+  const bag = useObservable(filter ? {all: [], ready: false} : store)
 
   useEffect(
     () => {
       if (filter) {
         //const filter = collectionRef => collectionRef // @todo how to filter in $refs ?
-        const promise = store.listenCollection(collection, filter)
+        const promise = store.listenCollection(bag, filter)
         return () => {
           promise.then(unsubscribe => unsubscribe())
         }
@@ -188,23 +203,37 @@ export function useCollection(store, filter) {
     [auth.user, filter]
   )
 
-  return collection
+  return bag.all
 }
 
 export function useDocument(store, $ref) {
-  const target = useObservable({document: $ref ? null : store.create()})
+  const id = $ref && $ref.id ? $ref.id : $ref
+
+  const bag = useObservable(
+    store.documents[id]
+      ? store.documents[id]
+      : {
+          ready: id ? false : true,
+          subscribed: id ? false : true,
+          document: id ? null : store.create(),
+        }
+  )
+
+  store.documents[id] = bag
 
   useEffect(
     () => {
-      if ($ref) {
-        const promise = store.listenDocument($ref, target)
+      if (!bag.subscribed) {
+        const unsubscribing = store.listenDocument(id, bag)
         return () => {
-          promise.then(unsubscribe => unsubscribe())
+          unsubscribing.then(unsubscribe => {
+            unsubscribe()
+          })
         }
       }
     },
-    [auth.user, $ref]
+    [id]
   )
 
-  return target.document
+  return [bag.document, bag.ready, bag.subscribed]
 }

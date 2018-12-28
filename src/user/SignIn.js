@@ -1,4 +1,5 @@
 import React, {useCallback} from 'react'
+import {Trans} from 'react-i18next/hooks'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import FormControl from '@material-ui/core/FormControl'
@@ -85,14 +86,16 @@ export default observer(function SignIn() {
           <SignInIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          <Trans i18nKey="signin.title" />
         </Typography>
         {form.error ? (
           <Typography color="error">{form.error}</Typography>
         ) : null}
         <form className={classes.form} onSubmit={handleSubmit}>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="email">Email Address</InputLabel>
+            <InputLabel htmlFor="email">
+              <Trans i18nKey="signin.email" />
+            </InputLabel>
             <Input
               id="email"
               name="email"
@@ -103,7 +106,9 @@ export default observer(function SignIn() {
             />
           </FormControl>
           <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="password">Password</InputLabel>
+            <InputLabel htmlFor="password">
+              <Trans i18nKey="signin.password" />
+            </InputLabel>
             <Input
               name="password"
               type="password"
@@ -115,7 +120,7 @@ export default observer(function SignIn() {
           </FormControl>
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+            label={<Trans i18nKey="signin.remember" />}
           />
           <Button
             type="submit"
@@ -124,7 +129,7 @@ export default observer(function SignIn() {
             color="primary"
             className={classes.submit}
           >
-            Sign in
+            <Trans i18nKey="signin.submit" />
           </Button>
         </form>
       </Paper>

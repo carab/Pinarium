@@ -1,10 +1,16 @@
+import {extendObservable} from 'mobx'
+
 import User from '../models/user'
 import {makeStore, useDocument} from './utils'
 import auth from './auth'
 
-const userStore = makeStore(User)
+const userStore = extendObservable(makeStore(User), {
+  document: null,
+}, {
+
+})
 export default userStore
 
-export function useUser($ref) {
-  return useDocument(userStore, auth.user ? auth.user.uid : undefined)
+export function useUser() {
+  return useDocument(userStore, auth.user ? auth.user.uid : undefined, userStore)
 }

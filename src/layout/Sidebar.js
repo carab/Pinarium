@@ -1,6 +1,7 @@
 import React from 'react'
 import {Link, Match} from '@reach/router'
 import {observer} from 'mobx-react-lite'
+import {Trans, useTranslation} from 'react-i18next/hooks'
 import classnames from 'classnames'
 import {makeStyles} from '@material-ui/styles'
 import Drawer from '@material-ui/core/Drawer'
@@ -62,40 +63,41 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const routes = [
-  {
-    to: '/',
-    title: 'My Bottles',
-    icon: <BottleIcon />,
-  },
-  {
-    to: '/history',
-    title: 'Hystory',
-    icon: <LogIcon />,
-  },
-  // {
-  //   to: "/shelves",
-  //   title: "My Shelves",
-  //   icon: <ShelfIcon />
-  // },
-  {
-    to: '/cellars',
-    title: 'My Cellars',
-    icon: <CellarIcon />,
-  },
-  {
-    to: '/settings',
-    title: 'Settings',
-    icon: <SettingsIcon />,
-  },
-]
-
 export default observer(function Sidebar() {
   const classes = useStyles()
+  const [t] = useTranslation()
 
   const handleClose = () => {
     ui.toggleSidebar(false)
   }
+
+  const routes = [
+    {
+      to: '/',
+      title: <Trans i18nKey="sidebar.bottles" />,
+      icon: <BottleIcon />,
+    },
+    {
+      to: '/cellars',
+      title: <Trans i18nKey="sidebar.cellars" />,
+      icon: <CellarIcon />,
+    },
+    {
+      to: '/history',
+      title: <Trans i18nKey="sidebar.history" />,
+      icon: <LogIcon />,
+    },
+    // {
+    //   to: "/shelves",
+    //   title: "My Shelves",
+    //   icon: <ShelfIcon />
+    // },
+    {
+      to: '/settings',
+      title: <Trans i18nKey="sidebar.settings" />,
+      icon: <SettingsIcon />,
+    },
+  ]
 
   return (
     <Drawer
@@ -108,7 +110,7 @@ export default observer(function Sidebar() {
       open={ui.sidebar.open}
     >
       <div className={classes.toolbarIcon}>
-        <IconButton onClick={handleClose}>
+        <IconButton onClick={handleClose} title={t('sidebar.close')}>
           <ChevronLeftIcon />
         </IconButton>
       </div>
@@ -136,7 +138,7 @@ export default observer(function Sidebar() {
           <ListItemIcon>
             <BugIcon />
           </ListItemIcon>
-          <ListItemText primary="Report a bug" />
+          <ListItemText primary={<Trans i18nKey="sidebar.report" />} />
         </ListItem>
       </List>
     </Drawer>

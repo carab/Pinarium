@@ -1,12 +1,12 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
+import {useTranslation} from 'react-i18next/hooks'
 import classnames from 'classnames'
 import {makeStyles} from '@material-ui/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 import IconButton from '@material-ui/core/IconButton'
-import Badge from '@material-ui/core/Badge'
 
 import Searchbar from './Searchbar'
 import {MenuIcon, SearchIcon, CloseIcon} from '../ui/Icons'
@@ -48,6 +48,8 @@ const useStyles = makeStyles(theme => ({
 
 export default observer(function Topbar() {
   const classes = useStyles()
+  const [t] = useTranslation()
+
 
   const handleOpenSidebar = () => {
     ui.toggleSidebar(true)
@@ -68,7 +70,8 @@ export default observer(function Topbar() {
       <Toolbar disableGutters={!ui.sidebar.open} className={classes.toolbar}>
         <IconButton
           color="inherit"
-          aria-label="Open drawer"
+          aria-label={t('topbar.open_sidebar')}
+          title={t('topbar.open_sidebar')}
           onClick={handleOpenSidebar}
           className={classnames(
             classes.menuButton,
@@ -85,13 +88,14 @@ export default observer(function Topbar() {
             noWrap
             className={classes.title}
           >
-            Pinarium
+            {t('topbar.title')}
           </Typography>
         )}
         <Searchbar />
         <IconButton
           color="inherit"
-          aria-label="Toggle search"
+          aria-label={t('topbar.toggle_searchbar')}
+          title={t('topbar.toggle_searchbar')}
           onClick={handleToggleSearch}
         >
           {ui.searchbar.open ? <CloseIcon /> : <SearchIcon />}

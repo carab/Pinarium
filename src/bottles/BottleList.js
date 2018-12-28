@@ -1,6 +1,7 @@
 import React from 'react'
-import classnames from 'classnames'
 import {observer} from 'mobx-react-lite'
+import {Trans, useTranslation} from 'react-i18next/hooks'
+import classnames from 'classnames'
 import {makeStyles} from '@material-ui/styles'
 import Typography from '@material-ui/core/Typography'
 import Table from '@material-ui/core/Table'
@@ -15,12 +16,16 @@ import Container from '../ui/Container'
 import {CloseIcon} from '../ui/Icons'
 
 import bottlesStore, {useBottles} from '../stores/bottles'
-import {useCellars} from '../stores/cellars'
+import {useCellar} from '../stores/cellars'
 import BottleMenu from './BottleMenu'
 
 const useStyle = makeStyles(theme => ({
   tableContainer: {
     overflow: 'auto',
+  },
+  empty: {
+    textAlign: 'center',
+    padding: theme.spacing.unit * 2,
   },
 }))
 
@@ -28,24 +33,25 @@ export default observer(function BottleList() {
   useBottles()
 
   const classes = useStyle()
+  const [t] = useTranslation()
 
   const columns = [
-    {name: 'sort'},
+    {name: 'sort', renderer: EnumRenderer},
     {name: 'cellar', renderer: CellarRenderer},
     {name: 'vintage', props: {numeric: true}},
     {name: 'appellation'},
-    // {name: 'bottlingDate'},
-    // {name: 'expirationDate'},
-    // {name: 'cuvee'},
-    // {name: 'producer'},
-    // {name: 'region'},
-    // {name: 'country'},
-    // {name: 'size'},
-    // {name: 'color'},
-    // {name: 'effervescence'},
-    // {name: 'type'},
-    // {name: 'capsule'},
-    // {name: 'alcohol'},
+    {name: 'bottlingDate', renderer: DateRenderer},
+    {name: 'expirationDate', renderer: DateRenderer},
+    {name: 'cuvee'},
+    {name: 'producer'},
+    {name: 'region'},
+    {name: 'country'},
+    {name: 'size', renderer: EnumRenderer},
+    {name: 'color', renderer: EnumRenderer},
+    {name: 'effervescence', renderer: EnumRenderer},
+    {name: 'type', renderer: EnumRenderer},
+    {name: 'capsule', renderer: EnumRenderer},
+    {name: 'alcohol'},
     {name: 'medal'},
   ].filter(column => {
     const item = bottlesStore.autocompleteItems.find(
@@ -55,7 +61,7 @@ export default observer(function BottleList() {
   })
 
   const countSelected = bottlesStore.selectedBottles.length
-  const countAll = bottlesStore.search.data.items.length
+  const countAll = bottlesStore.search.pagination.total
 
   const handleSelectAll = event => {
     if (countSelected === countAll) {
@@ -79,13 +85,27 @@ export default observer(function BottleList() {
     }
   }
 
+  if (!bottlesStore.ready) {
+    return null
+  }
+
   return (
     <Container
       highlighted={countSelected > 0}
       title={
-        countSelected > 0
-          ? `${countSelected} Selected bottles`
-          : `${bottlesStore.search.pagination.total} Bottles`
+        countSelected > 0 ? (
+          <Trans
+            i18nKey="bottle.list.selected"
+            count={countSelected}
+            values={{count: countSelected}}
+          />
+        ) : (
+          <Trans
+            i18nKey="bottle.list.title"
+            count={countAll}
+            values={{count: countAll}}
+          />
+        )
       }
       actions={
         countSelected > 0 ? (
@@ -93,7 +113,7 @@ export default observer(function BottleList() {
             <IconButton
               onClick={handleUnselectAll}
               color="inherit"
-              title="Unselect all"
+              title={t('bottle.list.unselectAll')}
             >
               <CloseIcon />
             </IconButton>
@@ -118,7 +138,7 @@ export default observer(function BottleList() {
                 </TableCell>
                 {columns.map(column => (
                   <TableCell key={column.name} {...column.props}>
-                    {column.name}
+                    {t(`bottle.${column.name}`)}
                   </TableCell>
                 ))}
                 <TableCell />
@@ -138,7 +158,9 @@ export default observer(function BottleList() {
           </Table>
         </div>
       ) : (
-        <Typography>You don't have any bottle yet !</Typography>
+        <Typography className={classes.empty}>
+          {t('bottle.list.empty')}
+        </Typography>
       )}
     </Container>
   )
@@ -184,13 +206,31 @@ const BottleRow = observer(function({bottle, columns, selected, onSelect}) {
 })
 
 const CellarRenderer = observer(function({row, column}) {
-  const cellarRef = row[column.name]
-  const cellars = useCellars()
+  const [cellar, ready] = useCellar(row[column.name])
 
-  if (cellarRef) {
-    const cellar = cellars.find(cellar => cellar.$ref.id === cellarRef.id)
+  if (ready) {
     return cellar ? cellar.name : null
   }
 
   return null
 })
+
+const EnumRenderer = function({row, column}) {
+  const value = row[column.name]
+
+  if (value) {
+    return <Trans i18nKey={`enum.${column.name}.${value}`} />
+  }
+
+  return null
+}
+
+const DateRenderer = function({row, column}) {
+  const date = row[column.name]
+
+  if (date) {
+    return date.toString()
+  }
+
+  return null
+}

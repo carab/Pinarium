@@ -1,5 +1,6 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
+import {Trans, useTranslation} from 'react-i18next/hooks'
 import {makeStyles} from '@material-ui/styles'
 import InputAdornment from '@material-ui/core/InputAdornment'
 
@@ -40,6 +41,7 @@ const useStyles = makeStyles(theme => ({
 export default observer(function LogForm({log, statuses, onSave}) {
   const errors = {}
   const classes = useStyles()
+  const [t] = useTranslation()
 
   const handleChange = (value, name) => {
     log[name] = value
@@ -50,7 +52,7 @@ export default observer(function LogForm({log, statuses, onSave}) {
     when: (
       <DateField
         key="when"
-        label="When"
+        label={t('log.when')}
         name="when"
         value={log.when}
         onChange={handleChange}
@@ -60,7 +62,7 @@ export default observer(function LogForm({log, statuses, onSave}) {
     where: (
       <AutocompleteField
         key="where"
-        label="Where"
+        label={t('log.where')}
         name="where"
         namespace="where"
         value={log.where}
@@ -78,7 +80,7 @@ export default observer(function LogForm({log, statuses, onSave}) {
     who: (
       <AutocompleteField
         key="who"
-        label="Who"
+        label={t('log.who')}
         name="who"
         namespace="who"
         value={log.who}
@@ -96,7 +98,7 @@ export default observer(function LogForm({log, statuses, onSave}) {
     value: (
       <TextField
         key="value"
-        label="Value"
+        label={t('log.value')}
         name="value"
         value={log.value}
         onChange={handleChange}
@@ -113,7 +115,7 @@ export default observer(function LogForm({log, statuses, onSave}) {
     rate: (
       <SelectField
         key="rate"
-        label="Rate"
+        label={t('log.rate')}
         name="rate"
         value={log.rate}
         onChange={handleChange}
@@ -135,7 +137,7 @@ export default observer(function LogForm({log, statuses, onSave}) {
     cellar: (
       <CellarField
         key="cellar"
-        label="Cellar"
+        label={t('log.cellar')}
         name="cellar"
         value={log.cellar}
         required={true}
@@ -153,7 +155,7 @@ export default observer(function LogForm({log, statuses, onSave}) {
     why: (
       <AutocompleteField
         key="why"
-        label="Why"
+        label={t('log.why')}
         name="why"
         namespace="why"
         value={log.why}
@@ -171,7 +173,7 @@ export default observer(function LogForm({log, statuses, onSave}) {
     comment: (
       <TextField
         key="comment"
-        label="Comment"
+        label={t('log.comment')}
         name="comment"
         value={log.comment}
         onChange={handleChange}
@@ -191,14 +193,14 @@ export default observer(function LogForm({log, statuses, onSave}) {
     <FieldRow>
       {statuses ? (
         <SelectField
-          label="Status"
+          label={t('log.status')}
           name="status"
           value={log.status}
           required={true}
           onChange={handleChange}
           options={statuses.map(status => ({
             value: status,
-            label: status.toUpperCase(),
+            label: t(`enum.status.${status}`),
           }))}
           className={classes.sm}
           InputProps={{

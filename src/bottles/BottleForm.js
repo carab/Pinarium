@@ -1,5 +1,7 @@
 import React, {useState} from 'react'
 import {observer, useObservable} from 'mobx-react-lite'
+import {useTranslation} from 'react-i18next/hooks'
+import {format} from 'date-fns'
 import {navigate} from '@reach/router'
 import SwipeableViews from 'react-swipeable-views'
 import {makeStyles, useTheme} from '@material-ui/styles'
@@ -10,6 +12,7 @@ import Tab from '@material-ui/core/Tab'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
+import Divider from '@material-ui/core/Divider'
 
 import Container from '../ui/Container'
 import FieldRow from '../form/FieldRow'
@@ -23,7 +26,7 @@ import {SaveIcon} from '../ui/Icons'
 
 import bottlesStore, {useBottle} from '../stores/bottles'
 import logsStore, {useLog} from '../stores/logs'
-import {useUser} from '../stores/userStore'
+import {useCellar} from '../stores/cellars'
 import sorts from '../enums/sorts'
 import sizes from '../enums/sizes'
 import colors from '../enums/colors'
@@ -31,9 +34,9 @@ import capsules from '../enums/capsules'
 import effervescences from '../enums/effervescences'
 
 export default observer(function BottleForm({id}) {
-  const bottle = useBottle(id)
+  const [bottle, ready] = useBottle(id)
 
-  if (null === bottle) {
+  if (!ready) {
     return 'loading'
   }
 
@@ -41,9 +44,7 @@ export default observer(function BottleForm({id}) {
     bottlesStore.save(bottle)
   }
 
-  return (
-    <Form title={id ? 'Edit' : 'New'} bottle={bottle} onSave={handleSave} />
-  )
+  return <Form bottle={bottle} onSave={handleSave} />
 })
 
 const useStyles = makeStyles(theme => ({
@@ -68,9 +69,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const Form = observer(function({title, bottle, onSave}) {
-  const user = useUser()
-
+const Form = observer(function({bottle, onSave}) {
   const errors = {}
   const [tab, setTab] = useState(0)
   const [log, setLog] = useState(null)
@@ -80,6 +79,7 @@ const Form = observer(function({title, bottle, onSave}) {
 
   const classes = useStyles()
   const theme = useTheme()
+  const [t] = useTranslation()
 
   const handleChange = (value, name) => {
     bottle[name] = value
@@ -96,13 +96,10 @@ const Form = observer(function({title, bottle, onSave}) {
 
       const $refs = await Promise.all(promises)
       if (bottle.logs.length === 0) {
-        const log = logsStore.createFrom(
-          {
-            status: 'bought',
-            bottles: $refs,
-          },
-          user
-        )
+        const log = logsStore.createFrom({
+          status: 'bought',
+          bottles: $refs,
+        })
 
         setLog(log)
       } else {
@@ -126,10 +123,15 @@ const Form = observer(function({title, bottle, onSave}) {
       <LogDialog create log={log} onClose={handleCloseLog} />
       <Container
         size="sm"
-        title={title}
+        title={t(bottle.$ref ? 'bottle.form.edit' : 'bottle.form.new')}
         actions={
           <>
-            <IconButton type="submit" color="secondary" title="Save">
+            <IconButton
+              type="submit"
+              color="secondary"
+              title={t('label.save')}
+              aria-label={t('label.save')}
+            >
               <SaveIcon />
             </IconButton>
             {edit ? <BottleMenu bottles={[bottle]} /> : null}
@@ -148,8 +150,8 @@ const Form = observer(function({title, bottle, onSave}) {
             textColor="primary"
             fullWidth
           >
-            <Tab label="Etiquette" />
-            <Tab label="History" />
+            <Tab label={t('bottle.form.tab_etiquette')} />
+            <Tab label={t('bottle.form.tab_history')} />
           </Tabs>
         ) : null}
         <SwipeableViews
@@ -161,7 +163,7 @@ const Form = observer(function({title, bottle, onSave}) {
             <FieldRow>
               {!edit ? (
                 <TextField
-                  label="Quantity"
+                  label={t('bottle.form.quantity')}
                   required={true}
                   type="number"
                   value={form.quantity}
@@ -170,7 +172,7 @@ const Form = observer(function({title, bottle, onSave}) {
                 />
               ) : null}
               <SelectField
-                label="Sort"
+                label={t('bottle.sort')}
                 name="sort"
                 value={bottle.sort}
                 required={true}
@@ -179,14 +181,14 @@ const Form = observer(function({title, bottle, onSave}) {
                 helperText={errors.sort}
                 options={sorts.map(sort => ({
                   value: sort.name,
-                  label: sort.name.toUpperCase(),
+                  label: t(`enum.sort.${sort.name}`),
                 }))}
                 className={classes.sm}
               />
             </FieldRow>
             <FieldRow>
               <AutocompleteField
-                label="Appellation"
+                label={t('bottle.appellation')}
                 name="appellation"
                 required={true}
                 value={bottle.appellation}
@@ -197,7 +199,7 @@ const Form = observer(function({title, bottle, onSave}) {
                 namespace="appellation"
               />
               <AutocompleteField
-                label="Cuvée"
+                label={t('bottle.cuvee')}
                 name="cuvee"
                 value={bottle.cuvee}
                 onChange={handleChange}
@@ -206,7 +208,7 @@ const Form = observer(function({title, bottle, onSave}) {
               />
               {sortDef && sortDef.vintage ? (
                 <TextField
-                  label="Vintage"
+                  label={t('bottle.vintage')}
                   name="vintage"
                   type="number"
                   inputProps={{pattern: '[0-9]{4}'}}
@@ -217,7 +219,7 @@ const Form = observer(function({title, bottle, onSave}) {
               ) : null}
               {sortDef && sortDef.bottlingDate ? (
                 <DateField
-                  label="Bottling date"
+                  label={t('bottle.bottlingDate')}
                   name="bottlingDate"
                   value={bottle.bottlingDate}
                   onChange={handleChange}
@@ -226,7 +228,7 @@ const Form = observer(function({title, bottle, onSave}) {
               ) : null}
               {sortDef && sortDef.expirationDate ? (
                 <DateField
-                  label="Expiration date"
+                  label={t('bottle.expirationDate')}
                   name="expirationDate"
                   value={bottle.expirationDate}
                   onChange={handleChange}
@@ -236,7 +238,7 @@ const Form = observer(function({title, bottle, onSave}) {
             </FieldRow>
             <FieldRow>
               <AutocompleteField
-                label="Producer"
+                label={t('bottle.producer')}
                 name="producer"
                 value={bottle.producer}
                 onChange={handleChange}
@@ -244,7 +246,7 @@ const Form = observer(function({title, bottle, onSave}) {
                 namespace="producer"
               />
               <AutocompleteField
-                label="Region"
+                label={t('bottle.region')}
                 name="region"
                 value={bottle.region}
                 onChange={handleChange}
@@ -252,7 +254,7 @@ const Form = observer(function({title, bottle, onSave}) {
                 namespace="region"
               />
               <AutocompleteField
-                label="Country"
+                label={t('bottle.country')}
                 name="country"
                 value={bottle.country}
                 onChange={handleChange}
@@ -262,51 +264,51 @@ const Form = observer(function({title, bottle, onSave}) {
             </FieldRow>
             <FieldRow>
               <SelectField
-                label="Size"
+                label={t('bottle.size')}
                 name="size"
                 value={bottle.size}
                 onChange={handleChange}
-                empty={<em>None</em>}
+                empty={<em>{t('form.select.empty')}</em>}
                 options={sizes.map(size => ({
                   value: size,
-                  label: size,
+                  label: t(`enum.size.${size}`),
                 }))}
                 className={classes.md}
               />
               <SelectField
-                label="Color"
+                label={t('bottle.color')}
                 name="color"
                 value={bottle.color}
                 onChange={handleChange}
-                empty={<em>None</em>}
+                empty={<em>{t('form.select.empty')}</em>}
                 options={colors.map(color => ({
                   value: color,
-                  label: color.toUpperCase(),
+                  label: t(`enum.color.${color}`),
                 }))}
                 className={classes.md}
               />
               <SelectField
-                label="Effervescence"
+                label={t('bottle.effervescence')}
                 name="effervescence"
                 value={bottle.effervescence}
                 onChange={handleChange}
-                empty={<em>None</em>}
+                empty={<em>{t('form.select.empty')}</em>}
                 options={effervescences.map(effervescence => ({
                   value: effervescence,
-                  label: effervescence.toUpperCase(),
+                  label: t(`enum.effervescence.${effervescence}`),
                 }))}
                 className={classes.md}
               />
               {sortDef ? (
                 <SelectField
-                  label="Type"
+                  label={t('bottle.type')}
                   name="type"
                   value={bottle.type}
                   onChange={handleChange}
-                  empty={<em>None</em>}
+                  empty={<em>{t('form.select.empty')}</em>}
                   options={sortDef.types.map(type => ({
                     value: type,
-                    label: type.toUpperCase(),
+                    label: t(`enum.type.${type}`),
                   }))}
                   className={classes.md}
                 />
@@ -314,27 +316,27 @@ const Form = observer(function({title, bottle, onSave}) {
             </FieldRow>
             <FieldRow>
               <SelectField
-                label="Capsule"
+                label={t('bottle.capsule')}
                 name="capsule"
                 value={bottle.capsule}
                 onChange={handleChange}
-                empty={<em>None</em>}
+                empty={<em>{t('form.select.empty')}</em>}
                 options={capsules.map(capsule => ({
                   value: capsule,
-                  label: capsule.toUpperCase(),
+                  label: t(`enum.capsule.${capsule}`),
                 }))}
                 className={classes.sm}
               />
               <TextField
                 type="number"
-                label="Alcohol"
+                label={t('bottle.alcohol')}
                 name="alcohol"
                 value={bottle.alcohol}
                 onChange={handleChange}
                 className={classes.sm}
               />
               <TextField
-                label="Medal/Prize"
+                label={t('bottle.medal')}
                 name="medal"
                 value={bottle.medal}
                 onChange={handleChange}
@@ -346,12 +348,13 @@ const Form = observer(function({title, bottle, onSave}) {
             {edit ? (
               bottle.logs && bottle.logs.length ? (
                 <List>
+                  <Divider />
                   {bottle.logs.map($ref => (
                     <LogItem key={$ref.id} id={$ref.id} />
                   ))}
                 </List>
               ) : (
-                <Typography>No entry for now</Typography>
+                <Typography>{t('bottle.form.no_log')}</Typography>
               )
             ) : null}
           </>
@@ -362,28 +365,40 @@ const Form = observer(function({title, bottle, onSave}) {
 })
 
 const LogItem = observer(function({id}) {
-  const log = useLog(id)
+  const [log, ready] = useLog(id)
 
-  if (log) {
-    return (
-      <ListItem>
-        <ListItemText primary={printLog(log)} secondary={log.comment} />
-      </ListItem>
-    )
+  if (!ready) {
+    return null
   }
+
+  return (
+    <>
+      <ListItem>
+        <ListItemText
+          primary={<LogRenderer log={log} />}
+          secondary={log.comment}
+        />
+      </ListItem>
+      <Divider />
+    </>
+  )
 })
 
-function printLog(log) {
-  const value = [
-    log.status,
-    log.when,
-    log.where,
-    log.who,
-    log.why,
-    log.value,
-    log.rate,
-    log.cellar,
-  ].filter(field => null !== field && null !== undefined)
+function LogRenderer({log}) {
+  const [t] = useTranslation()
+  const [cellar] = useCellar(log.cellar)
 
-  return value.join(', ')
+  const values = {
+    status: log.status ? t('log.print.status', {status: log.status}) : '',
+    when: log.when ? t('log.print.when', {when: format(log.when, 'P')}) : '',
+    where: log.where ? t('log.print.where', {where: log.where}) : '',
+    who: log.who ? t('log.print.who', {who: log.who}) : '',
+    why: log.why ? t('log.print.why', {why: log.why}) : '',
+    value: log.value ? t('log.print.value', {value: log.value}) : '',
+    rate: log.rate ? t('log.print.rate', {rate: log.rate}) : '',
+    cellar:
+      log.cellar && cellar ? t('log.print.cellar', {cellar: cellar.name}) : '',
+  }
+
+  return t('log.print.full', values)
 }
