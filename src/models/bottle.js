@@ -5,7 +5,7 @@ export default {
   updateDate: null,
 
   // Etiquette data
-  sort: null,
+  sort: 'wine',
   vintage: null,
   appellation: null,
   bottlingDate: null,
@@ -23,12 +23,14 @@ export default {
   alcohol: null,
   medal: null,
 
-  // Stock data
+  // data copied from last logs
   cellar: null,
-  cellarName: null,
   shelve: null,
   reference: null,
   status: null,
+  value: null,
+  rate: null,
+  outDate: null,
 
   // History data
   logs: [],

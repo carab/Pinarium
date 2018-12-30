@@ -16,6 +16,7 @@ import LogIcon from '@material-ui/icons/SwapHoriz'
 import BottleIcon from '@material-ui/icons/LocalBar'
 import CellarIcon from '@material-ui/icons/ViewColumn'
 import ShelfIcon from '@material-ui/icons/GridOn'
+import ColumnsIcon from '@material-ui/icons/ViewColumn'
 
 import PickIcon from '@material-ui/icons/ArrowUpward'
 import UnpickIcon from '@material-ui/icons/ArrowDownward'
@@ -34,6 +35,8 @@ import CloseIcon from '@material-ui/icons/Close'
 import AddIcon from '@material-ui/icons/Add'
 import SelectIcon from '@material-ui/icons/Redo'
 import UnselectIcon from '@material-ui/icons/Undo'
+import ExpandLessIcon from '@material-ui/icons/ExpandLess'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import RemoveIcon from '@material-ui/icons/RemoveCircleOutline'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import SaveIcon from '@material-ui/icons/Save'
@@ -64,14 +67,13 @@ export {
   BottleIcon,
   CellarIcon,
   ShelfIcon,
-  PickIcon,
-  UnpickIcon,
-  DrinkIcon,
-  UndrinkIcon,
+  ColumnsIcon,
   EditIcon,
   ViewIcon,
   SelectIcon,
   UnselectIcon,
+  ExpandLessIcon,
+  ExpandMoreIcon,
   RemoveIcon,
   AddIcon,
   SearchIcon,
@@ -79,6 +81,10 @@ export {
   MoreIcon,
   DeleteIcon,
   // Statuses
+  PickIcon,
+  UnpickIcon,
+  DrinkIcon,
+  UndrinkIcon,
   SellIcon,
   GiveIcon,
   DuplicateIcon,

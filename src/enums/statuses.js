@@ -11,7 +11,7 @@ export default [
   },
   {
     name: 'picked',
-    fields: ['when', 'where', 'why', 'comment'],
+    fields: ['when', 'comment'],
     next: ['unpicked', 'drank'],
   },
   {

@@ -28,10 +28,10 @@ import {
   DeleteIcon,
 } from '../ui/Icons'
 import LogDialog from '../logs/LogDialog'
+import useAnchor from '../hooks/useAnchor'
 
 import logs from '../stores/logs'
 import bottlesStore from '../stores/bottles'
-import {useUser} from '../stores/userStore'
 import statusesDef, {defaultStatuses} from '../enums/statuses'
 
 const useStyles = makeStyles(theme => ({
@@ -54,22 +54,13 @@ const ICONS = {
 export default observer(function BottleMenu({bottles, showEdit}) {
   const ui = useObservable({delete: {open: false}})
   const [log, setLog] = useState(null)
-  const [anchorEl, setAnchorEl] = useState(null)
-  const open = Boolean(anchorEl)
+  const [anchor, open, onOpen, onClose] = useAnchor()
 
   const classes = useStyles()
   const [t] = useTranslation()
 
-  const handleOpen = event => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleClose = event => {
-    setAnchorEl(null)
-  }
-
   const handleCreateLog = status => event => {
-    handleClose(event)
+    onClose(event)
 
     const filteredBottles = bottles
       .filter(bottle => bottle.$ref)
@@ -82,13 +73,11 @@ export default observer(function BottleMenu({bottles, showEdit}) {
       })
       .map(bottle => bottle.$ref)
 
-    const log = logs.createFrom(
-      {
-        status,
-        // Only keep bottles on which the new status is a possible next status
-        bottles: filteredBottles,
-      },
-    )
+    const log = logs.createFrom({
+      status,
+      // Only keep bottles on which the new status is a possible next status
+      bottles: filteredBottles,
+    })
 
     setLog(log)
   }
@@ -98,7 +87,7 @@ export default observer(function BottleMenu({bottles, showEdit}) {
   }
 
   const handleEdit = event => {
-    handleClose(event)
+    onClose(event)
     bottles.forEach(bottle => navigate(`/bottle/${bottle.$ref.id}`))
   }
 
@@ -120,7 +109,7 @@ export default observer(function BottleMenu({bottles, showEdit}) {
   const showCount = bottles.length > 1
 
   const handleAskDelete = event => {
-    handleClose(event)
+    onClose(event)
     ui.delete.open = true
   }
 
@@ -143,9 +132,9 @@ export default observer(function BottleMenu({bottles, showEdit}) {
         onCancel={handleCancelDelete}
       />
       <IconButton
-        aria-owns={open ? 'menu-appbar' : undefined}
+        aria-owns={open ? 'menu-bottle' : undefined}
         aria-haspopup="true"
-        onClick={handleOpen}
+        onClick={onOpen}
         color="inherit"
         title={t('bottle.menu.open')}
         aria-label={t('bottle.menu.open')}
@@ -153,8 +142,8 @@ export default observer(function BottleMenu({bottles, showEdit}) {
         <MoreIcon />
       </IconButton>
       <Menu
-        id="menu-appbar"
-        anchorEl={anchorEl}
+        id="menu-bottle"
+        anchorEl={anchor}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'right',
@@ -164,7 +153,7 @@ export default observer(function BottleMenu({bottles, showEdit}) {
           horizontal: 'right',
         }}
         open={open}
-        onClose={handleClose}
+        onClose={onClose}
       >
         {showEdit
           ? [
@@ -196,7 +185,7 @@ export default observer(function BottleMenu({bottles, showEdit}) {
         })}
         {items.length ? <Divider /> : null}
         {bottles.length === 1 ? (
-          <MenuItem onClick={handleClose}>
+          <MenuItem onClick={onClose}>
             <ListItemIcon>
               <DuplicateIcon />
             </ListItemIcon>

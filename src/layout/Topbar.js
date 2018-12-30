@@ -1,7 +1,7 @@
 import React from 'react'
 import {observer} from 'mobx-react-lite'
 import {useTranslation} from 'react-i18next/hooks'
-import {Link} from '@reach/router'
+import {navigate, Link} from '@reach/router'
 import {makeStyles} from '@material-ui/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -13,6 +13,7 @@ import Searchbar from './Searchbar'
 import {MenuIcon, SearchIcon, CloseIcon, LogoIcon} from '../ui/Icons'
 
 import ui from '../stores/ui'
+import searchStore from '../stores/searchStore'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -44,6 +45,10 @@ export default observer(function Topbar() {
 
   const handleToggleSearch = () => {
     ui.toggleSearchbar()
+    if (!ui.searchbar.open) {
+      searchStore.filters = []
+      navigate('/bottles')
+    }
   }
 
   return (

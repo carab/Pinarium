@@ -14,6 +14,7 @@
     "toggle_searchbar": "Afficher/cacher la barre de recherche"
   },
   "sidebar": {
+    "searches": "Mes Recherches",
     "bottles": "Mes Bouteilles",
     "cellars": "Mes Caves",
     "history": "Historiques",
@@ -160,6 +161,17 @@
     "cellar": "Cave",
     "why": "Pourquoi/Occasion",
     "comment": "Commentaire"
+  },
+  "search": {
+    "list": {
+      "title": "Mes Recherches"
+    },
+    "form": {
+      "edit": "Modifier une recherche",
+      "new": "Nouvelle recherche"
+    },
+    "name": "Nom",
+    "query": "Requête"
   },
   "enum": {
     "sort": {

@@ -79,7 +79,7 @@ const LogDialogContent = observer(function({log, create, onSave, onCancel}) {
         <Button onClick={onCancel}>
           <Trans i18nKey="label.cancel" />
         </Button>
-        <Button type="primary" color="primary">
+        <Button type="submit" color="primary">
           <Trans i18nKey="label.save" />
         </Button>
       </DialogActions>

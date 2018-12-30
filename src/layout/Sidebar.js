@@ -2,7 +2,6 @@ import React from 'react'
 import {Link, Match} from '@reach/router'
 import {observer} from 'mobx-react-lite'
 import {useTranslation} from 'react-i18next/hooks'
-import classnames from 'classnames'
 import {makeStyles} from '@material-ui/styles'
 import Drawer from '@material-ui/core/Drawer'
 import Divider from '@material-ui/core/Divider'
@@ -13,6 +12,8 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import Collapse from '@material-ui/core/Collapse'
 import Hidden from '@material-ui/core/Hidden'
 import Typography from '@material-ui/core/Typography'
 
@@ -22,12 +23,18 @@ import {
   BugIcon,
   BottleIcon,
   CellarIcon,
-  ShelfIcon,
   LogIcon,
   SettingsIcon,
+  SearchIcon,
+  ExpandLessIcon,
+  ExpandMoreIcon,
+  DeleteIcon,
 } from '../ui/Icons'
 
+import useToggable from '../hooks/useToggable'
+
 import ui from '../stores/ui'
+import {useSearches} from '../stores/searchesStore'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -92,16 +99,19 @@ export const SidebarDrawer = observer(function({onClose, ...props}) {
 
   const routes = [
     {
-      to: '/',
+      path: '/bottles/*',
+      to: '/bottles',
       title: t('sidebar.bottles'),
       icon: <BottleIcon />,
     },
     {
+      path: '/cellars',
       to: '/cellars',
       title: t('sidebar.cellars'),
       icon: <CellarIcon />,
     },
     {
+      path: '/history',
       to: '/history',
       title: t('sidebar.history'),
       icon: <LogIcon />,
@@ -112,6 +122,7 @@ export const SidebarDrawer = observer(function({onClose, ...props}) {
     //   icon: <ShelfIcon />
     // },
     {
+      path: '/settings',
       to: '/settings',
       title: t('sidebar.settings'),
       icon: <SettingsIcon />,
@@ -153,12 +164,13 @@ export const SidebarDrawer = observer(function({onClose, ...props}) {
         </IconButton>
       </div>
       <Divider />
+      <SearchesMenu onClick={onClose} />
       <MenuList role="menu" className={classes.menu}>
         {routes.map(route => (
-          <Match key={route.to} path={route.to}>
+          <Match key={route.to} path={route.path}>
             {({match}) => (
               <MenuItem
-                selected={null !== match}
+                selected={Boolean(match)}
                 component={Link}
                 to={route.to}
                 onClick={onClose}
@@ -180,5 +192,56 @@ export const SidebarDrawer = observer(function({onClose, ...props}) {
         </ListItem>
       </List>
     </Drawer>
+  )
+})
+
+const SearchesMenu = observer(function({onClick}) {
+  const [open, onToggle] = useToggable()
+  const [t] = useTranslation()
+  const searches = useSearches()
+
+  if (searches.length === 0) {
+    return null
+  }
+
+  const title = t('label.delete')
+
+  return (
+    <>
+      <MenuList>
+        <MenuItem button onClick={onToggle}>
+          <ListItemIcon>
+            <SearchIcon />
+          </ListItemIcon>
+          <ListItemText primary={t('sidebar.searches')} />
+          {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+        </MenuItem>
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          {searches.map(search => (
+            <List key={search.$ref.id} component="div" disablePadding>
+              <ListItem
+                button
+                component={Link}
+                to={`/bottles/${search.query}`}
+                onClick={onClick}
+              >
+                <ListItemText inset primary={search.name} />
+                <ListItemSecondaryAction>
+                  <IconButton
+                    size="small"
+                    aria-label={title}
+                    title={title}
+                    onClick={() => search.$ref.delete()}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            </List>
+          ))}
+        </Collapse>
+      </MenuList>
+      <Divider />
+    </>
   )
 })

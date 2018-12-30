@@ -43,7 +43,7 @@ export default observer(function Main() {
         <div className={classes.spacer} />
         <Router>
           <Redirect from="/" to="/bottles" noThrow />
-          <BottleList path="/bottles" />
+          <BottleList path="/bottles/*" />
           <BottleForm path="/bottle" />
           <BottleForm path="/bottle/:id" />
           <CellarList path="/cellars" />

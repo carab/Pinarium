@@ -19,6 +19,7 @@
     "toggle_searchbar": "Toggle the searchbar"
   },
   "sidebar": {
+    "searches": "My Searches",
     "bottles": "My Bottles",
     "cellars": "My Cellars",
     "history": "History",
@@ -164,6 +165,17 @@
     "cellar": "Cellar",
     "why": "Why/Occasion",
     "comment": "Comment"
+  },
+  "search": {
+    "list": {
+      "title": "My Searches"
+    },
+    "form": {
+      "edit": "Edit search",
+      "new": "New search"
+    },
+    "name": "Name",
+    "query": "Query"
   },
   "enum": {
     "sort": {

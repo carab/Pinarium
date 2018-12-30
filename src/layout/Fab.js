@@ -35,7 +35,7 @@ export default observer(function Bouh() {
 
   const fabs = [
     {
-      path: '/bottles',
+      path: '/bottles/*',
       to: '/bottle',
       title: t('fab.add_bottle'),
       color: 'primary',
