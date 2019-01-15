@@ -14,8 +14,8 @@ import {
   StatusIcon,
   WhereIcon,
   WhoIcon,
-  ValueIcon,
-  RateIcon,
+  PriceIcon,
+  RatingIcon,
   CellarIcon,
   WhyIcon,
   CommentIcon,
@@ -43,7 +43,7 @@ export default observer(function LogForm({log, statuses, onSave}) {
   const classes = useStyles()
   const [t] = useTranslation()
 
-  const handleChange = (value, name) => {
+  function handleChange(value, name) {
     log[name] = value
   }
 
@@ -95,29 +95,29 @@ export default observer(function LogForm({log, statuses, onSave}) {
         }}
       />
     ),
-    value: (
+    price: (
       <TextField
-        key="value"
-        label={t('log.value')}
-        name="value"
-        value={log.value}
+        key="price"
+        label={t('log.price')}
+        name="price"
+        value={log.price}
         onChange={handleChange}
         className={classes.sm}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <ValueIcon />
+              <PriceIcon />
             </InputAdornment>
           ),
         }}
       />
     ),
-    rate: (
+    rating: (
       <SelectField
-        key="rate"
-        label={t('log.rate')}
-        name="rate"
-        value={log.rate}
+        key="rating"
+        label={t('log.rating')}
+        name="rating"
+        value={log.rating}
         onChange={handleChange}
         empty={<em>None</em>}
         options={ratings.map(rating => ({
@@ -128,7 +128,7 @@ export default observer(function LogForm({log, statuses, onSave}) {
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <RateIcon />
+              <RatingIcon />
             </InputAdornment>
           ),
         }}

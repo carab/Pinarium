@@ -5,13 +5,16 @@ import {Link} from '@reach/router'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import IconButton from '@material-ui/core/IconButton'
 
 import Container from '../ui/Container'
+import {ViewIcon} from '../ui/Icons'
 
-import {useCellars} from '../stores/cellars'
+import {useCellars} from '../stores/cellarsStore'
 
-export default observer(function CellarList() {
-  const cellars = useCellars()
+function CellarList() {
+  const [cellars] = useCellars()
 
   return (
     <Container
@@ -31,14 +34,19 @@ export default observer(function CellarList() {
               primary={cellar.name}
               secondary={cellar.description}
             />
-            {/* <ListItemSecondaryAction>
-            <IconButton component={Link} to="/bottles">
-              <ViewIcon />
-            </IconButton>
-          </ListItemSecondaryAction> */}
+            <ListItemSecondaryAction>
+              <IconButton
+                component={Link}
+                to={`/bottles/cellar=${cellar.$ref.id}`}
+              >
+                <ViewIcon />
+              </IconButton>
+            </ListItemSecondaryAction>
           </ListItem>
         ))}
       </List>
     </Container>
   )
-})
+}
+
+export default observer(CellarList)

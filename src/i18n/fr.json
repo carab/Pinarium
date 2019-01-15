@@ -6,7 +6,9 @@
     "cancel": "Annuler",
     "edit": "Modifier",
     "duplicate": "Dupliquer",
-    "delete": "Supprimer"
+    "delete": "Supprimer",
+    "remove": "Retirer",
+    "open_menu": "Ouvrir le menu"
   },
   "topbar": {
     "home": "Aller à l'accueil",
@@ -38,8 +40,11 @@
       "empty": "",
       "ok": "OK",
       "cancel": "Annuler",
-      "clear": "Remise à zéro",
+      "clear": "Supprimer",
       "today": "Aujourd'hui"
+    },
+    "image:": {
+      "upload": "Envoyer une image"
     },
     "select": {
       "empty": "Aucun"
@@ -79,12 +84,30 @@
       "selected_plural": "{{count}} Sélectionnées",
       "empty": "Vous n'avez aucune bouteille pour l'instant !",
       "select": "Sélectionner",
+      "selectAllVisible": "Sélectionner les visibles",
       "selectAll": "Tout sélectionner",
       "unselect": "Désélectionner",
-      "unselectAll": "Tout déselectionner"
+      "unselectAll": "Tout déselectionner",
+      "unselectAllVisible": "Déselectionner les visibles",
+      "visibility": "Visibilité",
+      "stocked": "En stock",
+      "unstocked": "Hors stock",
+      "all": "Toutes",
+      "sort": "Tri",
+      "pagination": {
+        "previous": "Page précédente",
+        "next": "Page suivante",
+        "current": "{{from}}-{{to}} sur {{count}}"
+      }
+    },
+    "dialog": {
+      "add_field": "Ajouter un champ",
+      "no_value": "Sans valeur",
+      "available_values": "Valeurs"
     },
     "form": {
       "edit": "Modifier une bouteille",
+      "edit_plural": "Modifier {{count}} bouteilles",
       "new": "Nouvelles bouteilles",
       "tab_etiquette": "Etiquette",
       "tab_history": "Historique",
@@ -92,7 +115,6 @@
       "no_log": "Aucune entrée pour l'instant"
     },
     "menu": {
-      "open": "Ouvrir le menu des bouteilles",
       "delete_dialog": "Supprimer {{count}} bouteille ?",
       "delete_dialog_plural": "Supprimer {{count}} bouteilles ?"
     },
@@ -118,6 +140,7 @@
       "alcohol": "{{alcohol}}",
       "medal": "{{medal}}"
     },
+    "image": "Image",
     "cellar": "Cave",
     "sort": "Sorte",
     "appellation": "Appellation",
@@ -134,7 +157,14 @@
     "type": "Type",
     "capsule": "Capsule",
     "alcohol": "Degré d'alcool",
-    "medal": "Médaille/Prix"
+    "medal": "Médaille/Prix",
+    "comment": "Commentaire",
+    "status": "Statut",
+    "rating": "Note",
+    "inDate": "Date d'entrée",
+    "outDate": "Date de sortie",
+    "buyingPrice": "Prix d'achat",
+    "sellingPrice": "Prix de vente"
   },
   "log": {
     "form": {
@@ -142,22 +172,22 @@
       "new": "Nouvelle entrée"
     },
     "print": {
-      "full": "{{status}}{{who}}{{when}}{{where}}{{why}}{{value}}{{cellar}}{{rate}}.",
+      "full": "{{status}}{{who}}{{when}}{{where}}{{why}}{{price}}{{cellar}}{{rating}}.",
       "status": "$t(enum.status.{{status}})",
       "who": " à {{who}}",
       "when": " le {{when}}",
       "where": " à {{where}}",
       "why": " pour {{why}}",
-      "value": ", pour {{value}} €",
-      "cellar": ", stockée à {{cellar}}",
-      "rate": ", notée {{rate}} étoiles"
+      "price": ", pour {{price}} €",
+      "cellar": ", conservée à {{cellar}}",
+      "rating": ", notée {{rating}} étoiles"
     },
     "status": "Statut",
     "when": "Quand",
     "where": "Où",
     "who": "Qui",
-    "value": "Prix",
-    "rate": "Note",
+    "price": "Prix unitaire",
+    "rating": "Note",
     "cellar": "Cave",
     "why": "Pourquoi/Occasion",
     "comment": "Commentaire"

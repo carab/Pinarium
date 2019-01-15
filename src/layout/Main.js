@@ -1,12 +1,12 @@
 import React from 'react'
-import {Router, Redirect} from '@reach/router'
+import {Router, Redirect, Match} from '@reach/router'
 import {observer} from 'mobx-react-lite'
 import {makeStyles} from '@material-ui/styles'
 
 import Topbar from './Topbar'
 import Sidebar from './Sidebar'
 import Fab from './Fab'
-import BottleList from '../bottles/BottleList'
+import BottleList from '../bottles/BottlePage'
 import BottleForm from '../bottles/BottleForm'
 import CellarList from '../cellars/CellarList'
 import CellarForm from '../cellars/CellarForm'
@@ -19,11 +19,24 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
   },
   spacer: theme.mixins.toolbar,
-  content: {
+  main: {
     flexGrow: 1,
-    padding: theme.spacing.unit * 3,
     height: '100vh',
     overflow: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
+    [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing.unit * 3,
+    },
+  },
+  content: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    flexGrow: 1,
+    [theme.breakpoints.up('sm')]: {
+      flexGrow: 0,
+    },
   },
 }))
 
@@ -39,9 +52,9 @@ export default observer(function Main() {
       <Topbar />
       <Sidebar />
       <Fab />
-      <main className={classes.content}>
+      <main className={classes.main}>
         <div className={classes.spacer} />
-        <Router>
+        <Router className={classes.content}>
           <Redirect from="/" to="/bottles" noThrow />
           <BottleList path="/bottles/*" />
           <BottleForm path="/bottle" />

@@ -8,7 +8,7 @@ export default function useAnchor() {
     setAnchor(event.currentTarget)
   }
 
-  const handleClose = event => {
+  const handleClose = () => {
     setAnchor(null)
   }
 

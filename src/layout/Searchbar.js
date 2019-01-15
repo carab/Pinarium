@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, useCallback} from 'react'
 import {observer} from 'mobx-react-lite'
 import {useTranslation} from 'react-i18next/hooks'
 import {Router, navigate} from '@reach/router'
@@ -14,10 +14,15 @@ import IconButton from '@material-ui/core/IconButton'
 
 import {SaveIcon} from '../ui/Icons'
 import SearchDialog from '../search/SearchDialog'
+import FieldRenderer from '../field/FieldRenderer'
 
+import {format} from '../lib/date'
 import ui from '../stores/ui'
-import {useSearch} from '../stores/searchStore'
+import {useSearch, ENUMS} from '../stores/searchStore'
 import searchesStore from '../stores/searchesStore'
+import {useCellars} from '../stores/cellarsStore'
+import {useAutocompletes} from '../stores/autocompletesStore'
+import useLocale from '../hooks/useLocale'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -51,60 +56,68 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export default observer(function Searchbar() {
+export default observer(function Searchbar({open}) {
   const classes = useStyles()
-  const search = useSearch()
+  const Search = useSearch()
   const [ref, setRef] = useState(null)
 
   const handleKeyDown = event => {
     if (
-      search.filters.length &&
-      !search.input.length &&
+      Search.filters.length &&
+      !Search.input.length &&
       keycode(event) === 'backspace'
     ) {
-      search.filters.pop()
-      navigate(`/bottles/${search.query}`, {replace: true})
+      Search.filters.pop()
+      navigate(`/bottles/${Search.query}`, {replace: true})
     }
   }
 
   const handleInputChange = event => {
-    search.input = event.target.value
+    Search.input = event.target.value
   }
 
   const handleChange = ({name, value}) => {
-    search.filters.push([name, value])
-    navigate(`/bottles/${search.query}`, {replace: true})
+    Search.filters.push([name, value])
+    navigate(`/bottles/${Search.query}`, {replace: true})
 
     ref.focus()
-    search.input = ''
+    Search.input = ''
   }
 
   const handleDelete = item => () => {
-    const index = search.filters.indexOf(item)
-    search.filters.splice(index, 1)
-    navigate(`/bottles/${search.query}`, {replace: true})
+    const index = Search.filters.indexOf(item)
+    Search.filters.splice(index, 1)
+    navigate(`/bottles/${Search.query}`, {replace: true})
     ref.focus()
   }
 
-  const handleSearchChange = search => {
-    console.log(search)
-  }
+  const handleSearchChange = Search => {}
 
   const handleRef = ref => {
     setRef(ref)
   }
 
+  const setMatcher = useCallback(
+    (name, matcher) => (Search.matchers[name] = matcher)
+  )
+
   return (
     <>
-      <Router>
+      <Router primary={false}>
         <SearchParser path="/bottles/:query" onChange={handleSearchChange} />
       </Router>
-      <Fade in={ui.searchbar.open} mountOnEnter unmountOnExit>
+      {Search.input.length > 1 ? (
+        <SearchSuggestionsProvider
+          query={Search.input}
+          setMatcher={setMatcher}
+        />
+      ) : null}
+      <Fade in={open} mountOnEnter unmountOnExit>
         <div className={classes.root}>
           <Downshift
-            inputValue={search.input}
+            inputValue={Search.input}
             onChange={handleChange}
-            selectedItem={search.filters}
+            selectedItem={Search.filters}
             defaultHighlightedIndex={0}
           >
             {({
@@ -127,13 +140,13 @@ export default observer(function Searchbar() {
                 />
                 {isOpen ? (
                   <Paper className={classes.paper} square>
-                    {search.suggestions.map((suggestion, index) => (
+                    {Search.suggestions.map((suggestion, index) => (
                       <SearchSuggestion
                         suggestion={suggestion}
                         key={index}
                         index={index}
                         highlightedIndex={highlightedIndex}
-                        // selectedItem={search.filters}
+                        // selectedItem={Search.filters}
                         {...getItemProps({item: suggestion})}
                       />
                     ))}
@@ -147,6 +160,54 @@ export default observer(function Searchbar() {
       </Fade>
     </>
   )
+})
+
+const SearchSuggestionsProvider = observer(function({setMatcher}) {
+  const [cellars] = useCellars()
+  const [autocompletes] = useAutocompletes()
+  const [t] = useTranslation()
+  console.log('-- providing search')
+  useEffect(() => {
+    //Search.translate = t
+
+    setMatcher('enum', ({name, type}, match) => {
+      return ENUMS[name]
+        .filter(value => match(t(`enum.${name}.${value}`)))
+        .map(value => ({
+          name,
+          type,
+          value,
+          printable: t(`enum.${name}.${value}`),
+        }))
+    })
+
+    setMatcher('cellar', ({name, type}, match) => {
+      return cellars
+        .filter(cellar => match(cellar.name))
+        .map(cellar => ({
+          name,
+          type,
+          value: cellar.$ref.id,
+          printable: cellar.name,
+        }))
+    })
+
+    setMatcher('autocomplete', ({name, type}, match) => {
+      return autocompletes
+        .filter(
+          autocomplete =>
+            autocomplete.namespace === name && match(autocomplete.value)
+        )
+        .map(autocomplete => ({
+          name,
+          type,
+          value: autocomplete.value,
+          printable: autocomplete.value,
+        }))
+    })
+  })
+
+  return null
 })
 
 const SearchSave = observer(function() {
@@ -199,19 +260,21 @@ const SearchParser = observer(function({query}) {
 
 const SearchInput = observer(function({setRef, onDelete, classes, ...props}) {
   const [t] = useTranslation()
-  const search = useSearch()
+  const Search = useSearch()
 
   return (
     <Input
       inputRef={setRef}
       fullWidth
       autoFocus
-      startAdornment={search.filters.map(item => (
+      startAdornment={Search.filters.map(item => (
         <Chip
           color="primary"
           key={item[0]}
           tabIndex={-1}
-          label={item[1]}
+          label={
+            <FieldRenderer name={item[0]} value={item[1]} namespace="bottle" />
+          }
           className={classes.chip}
           onDelete={onDelete(item)}
         />
@@ -226,18 +289,6 @@ const SearchInput = observer(function({setRef, onDelete, classes, ...props}) {
   )
 })
 
-// const SearchItem = observer(function() {
-//   return (
-//     <Chip
-//       key={item.name}
-//       tabIndex={-1}
-//       label={`${item.name}:${item.value}`}
-//       className={classes.chip}
-//       onDelete={onDelete(item)}
-//     />
-//   )
-// })
-
 function SearchSuggestion({
   suggestion,
   index,
@@ -247,18 +298,14 @@ function SearchSuggestion({
 }) {
   const [t] = useTranslation()
   const isHighlighted = highlightedIndex === index
-  //const isSelected = (selectedItem || '').indexOf(suggestion.name) > -1
 
   return (
     <MenuItem
       {...props}
       selected={isHighlighted}
       component="div"
-      // style={{
-      //   fontWeight: isSelected ? 500 : 400,
-      // }}
     >
-      <strong>{suggestion.value}</strong>
+      <strong>{suggestion.printable}</strong>
       <em style={{opacity: 0.5}}>
         <span style={{padding: '0 0.5em'}}>―</span>
         {t(`bottle.${suggestion.name}`)}

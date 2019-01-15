@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button'
 import Container from '../ui/Container'
 import FieldRow from '../form/FieldRow'
 import TextField from '../form/TextField'
-import cellarsStore, {useCellar} from '../stores/cellars'
+import cellarsStore, {useCellar} from '../stores/cellarsStore'
 
 export default observer(function CellarForm({id}) {
   const [cellar, ready] = useCellar(id)

@@ -3,10 +3,10 @@ import {observer} from 'mobx-react-lite'
 
 import SelectField from './SelectField'
 
-import {useCellars} from '../stores/cellars'
+import {useCellars} from '../stores/cellarsStore'
 
 export default observer(function CellarField(props) {
-  const cellars = useCellars()
+  const [cellars] = useCellars()
   const options = cellars.slice()
 
   return (

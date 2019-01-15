@@ -8,6 +8,11 @@ const ui = observable(
     searchbar: {
       open: false,
     },
+    dialogs: {
+      bottle: {
+        bottles: [],
+      },
+    },
     toggleSidebar(force) {
       this.sidebar.open =
         typeof force === 'boolean' ? force : !this.sidebar.open

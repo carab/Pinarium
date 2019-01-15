@@ -1,13 +1,13 @@
 import Cellar from '../models/cellar'
 import {makeStore, useCollection, useDocument} from './utils'
 
-const cellars = makeStore(Cellar, 'cellars')
-export default cellars
+const cellarsStore = makeStore(Cellar, 'cellars')
+export default cellarsStore
 
 export function useCellars() {
-  return useCollection(cellars)
+  return useCollection(cellarsStore)
 }
 
 export function useCellar($ref) {
-  return useDocument(cellars, $ref)
+  return useDocument(cellarsStore, $ref)
 }

@@ -5,22 +5,27 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
+import Menu from '@material-ui/core/Menu'
 import MenuList from '@material-ui/core/MenuList'
 import MenuItem from '@material-ui/core/MenuItem'
 import Dialog from '@material-ui/core/Dialog'
 import DialogTitle from '@material-ui/core/DialogTitle'
+import IconButton from '@material-ui/core/IconButton'
 
+import CellarRenderer from '../field/CellarRenderer'
 import Container from '../ui/Container'
-import {EmailIcon, LocaleIcon, CellarIcon} from '../ui/Icons'
+import {EmailIcon, LocaleIcon, CellarIcon, MoreIcon} from '../ui/Icons'
+import useAnchor from '../hooks/useAnchor'
 
 import auth from '../stores/auth'
 import userStore, {useUser} from '../stores/userStore'
-import {useCellars, useCellar} from '../stores/cellars'
+import {useCellars} from '../stores/cellarsStore'
+import useLocale from '../hooks/useLocale'
 
 export default observer(function UserSettings() {
-  const cellars = useCellars()
   const [user, ready] = useUser()
-  const [t, i18n] = useTranslation()
+  const [t] = useTranslation()
+  const [locale] = useLocale()
 
   const ui = useObservable({
     cellar: {
@@ -52,10 +57,8 @@ export default observer(function UserSettings() {
     userStore.update([user], {locale})
   }
 
-  const currentLocale = user.locale || i18n.languages[0].substring(0, 2)
-
   return (
-    <Container title={t('settings.title')} size="sm">
+    <Container title={t('settings.title')} size="sm" actions={<UserMenu />}>
       <List>
         {/* <ListItem>
           <ListItemText
@@ -81,7 +84,7 @@ export default observer(function UserSettings() {
             primary={t('settings.default_cellar')}
             secondary={
               user.defaultCellar ? (
-                <CellarRenderer $ref={user.defaultCellar} />
+                <CellarRenderer value={user.defaultCellar} />
               ) : (
                 t('settings.select_default_cellar')
               )
@@ -99,9 +102,7 @@ export default observer(function UserSettings() {
           <ListItemText
             primary={t('settings.locale')}
             secondary={
-              currentLocale
-                ? t(`locale.${currentLocale}`)
-                : t('settings.select_locale')
+              locale ? t(`locale.${locale}`) : t('settings.select_locale')
             }
           />
         </ListItem>
@@ -117,22 +118,21 @@ export default observer(function UserSettings() {
       </List>
       <CellarDialog
         open={ui.cellar.open}
-        cellars={cellars}
         selected={user.defaultCellar}
         onClose={handleCloseCellar}
       />
       <LocaleDialog
         open={ui.locale.open}
-        locales={['en', 'fr']}
-        selected={currentLocale}
+        selected={locale}
         onClose={handleCloseLocale}
       />
     </Container>
   )
 })
 
-function LocaleDialog({locales, selected, onClose, ...props}) {
+function LocaleDialog({selected, onClose, ...props}) {
   const [t] = useTranslation()
+  const locales = ['en', 'fr']
 
   return (
     <Dialog
@@ -158,8 +158,9 @@ function LocaleDialog({locales, selected, onClose, ...props}) {
   )
 }
 
-function CellarDialog({cellars, selected, onClose, ...props}) {
+function CellarDialog({selected, onClose, ...props}) {
   const [t] = useTranslation()
+  const [cellars] = useCellars()
 
   return (
     <Dialog
@@ -185,12 +186,49 @@ function CellarDialog({cellars, selected, onClose, ...props}) {
   )
 }
 
-const CellarRenderer = observer(function({$ref}) {
-  const [cellar] = useCellar($ref)
+const UserMenu = function() {
+  const [t] = useTranslation()
+  const [anchor, open, onOpen, onClose] = useAnchor()
 
-  if (cellar) {
-    return cellar.name
-  }
+  // async function handleStockedJob() {
+  //   console.log('--- starting job ---')
+  //   try {
+  //     await runStocked()
+  //     console.log('--- job done ---')
+  //   } catch (e) {
+  //     console.error('--- job error ---')
+  //     console.error(e)
+  //   }
+  // }
 
-  return null
-})
+  return (
+    <>
+      <IconButton
+        aria-owns={open ? 'menu-user' : undefined}
+        aria-haspopup="true"
+        onClick={onOpen}
+        color="inherit"
+        title={t('user.menu.open')}
+        aria-label={t('user.menu.open')}
+      >
+        <MoreIcon />
+      </IconButton>
+      <Menu
+        id="menu-user"
+        anchorEl={anchor}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        open={open}
+        onClose={onClose}
+      >
+        {/* <MenuItem onClick={handleStockedJob}>{t('job.stocked')}</MenuItem> */}
+      </Menu>
+    </>
+  )
+}

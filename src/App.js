@@ -1,4 +1,5 @@
-import React, {Component} from 'react'
+import React from 'react'
+import {useTranslation} from 'react-i18next/hooks'
 import {Router} from '@reach/router'
 import {createMuiTheme} from '@material-ui/core/styles'
 import {ThemeProvider} from '@material-ui/styles'
@@ -12,6 +13,10 @@ import SignIn from './user/SignIn'
 import Main from './layout/Main'
 import AuthProvider from './providers/AuthProvider'
 import UserProvider from './providers/UserProvider'
+import LocaleProvider from './providers/LocaleProvider'
+
+import {getLocaleData} from './lib/date'
+import useLocale from './hooks/useLocale'
 
 const theme = createMuiTheme({
   palette: {
@@ -23,22 +28,34 @@ const theme = createMuiTheme({
   },
 })
 
-export default class App extends Component {
-  render() {
+export default function App() {
   return (
     <ThemeProvider theme={theme}>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-        <AuthProvider>
-          <UserProvider>
-            <CssBaseline />
-            <Router>
-              <SignIn path="signin" />
-              <Main path="*" />
-            </Router>
-          </UserProvider>
-        </AuthProvider>
-      </MuiPickersUtilsProvider>
+      <LocaleProvider>
+        <PickersProvider>
+          <AuthProvider>
+            <UserProvider>
+              <CssBaseline />
+              <Router>
+                <SignIn path="signin" />
+                <Main path="*" />
+              </Router>
+            </UserProvider>
+          </AuthProvider>
+        </PickersProvider>
+      </LocaleProvider>
     </ThemeProvider>
   )
-  }
+}
+
+function PickersProvider({children}) {
+  const [locale] = useLocale()
+  return (
+    <MuiPickersUtilsProvider
+      utils={DateFnsUtils}
+      locale={getLocaleData(locale)}
+    >
+      {children}
+    </MuiPickersUtilsProvider>
+  )
 }

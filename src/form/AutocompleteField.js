@@ -13,7 +13,7 @@ import MenuList from '@material-ui/core/MenuList'
 import TextField from './TextField'
 import {DeleteIcon} from '../ui/Icons'
 
-import {useAutocompletes} from '../stores/autocompletesStore'
+import {useAutocompleteSuggestions} from '../stores/autocompletesStore'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -57,7 +57,7 @@ export default function AutocompleteField({
 }) {
   const classes = useStyles()
 
-  const getSuggestions = useAutocompletes(namespace)
+  const getSuggestions = useAutocompleteSuggestions(namespace)
 
   const handleChange = selectedItem => {
     const value = selectedItem === '' ? null : selectedItem

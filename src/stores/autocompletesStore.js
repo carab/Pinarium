@@ -2,7 +2,7 @@ import {extendObservable} from 'mobx'
 import deburr from 'lodash/deburr'
 
 import database from '../api/database'
-import {makeStore, useCollection, useDocument} from './utils'
+import {makeStore, useCollection} from './utils'
 import authStore from './auth'
 import Autocomplete from '../models/autocomplete'
 
@@ -28,7 +28,7 @@ const autocompletesStore = extendObservable(
               return collection.add(autocomplete)
             } else {
               // Supposedly one snapshot only...
-              const doc = snapshot.docs[0]
+              const doc = snapshot.docs.shift()
               const data = doc.data()
 
               return batch.update(doc.ref, {
@@ -48,9 +48,15 @@ const autocompletesStore = extendObservable(
 
 export default autocompletesStore
 
-export function useAutocompletes(namespace) {
-  const suggestions = useCollection(autocompletesStore, collectionRef =>
-    collectionRef.where('namespace', '==', namespace)
+export function useAutocompletes() {
+  return useCollection(autocompletesStore)
+}
+
+export function useAutocompleteSuggestions(namespace) {
+  const [suggestions] = useCollection(
+    autocompletesStore,
+    namespace,
+    collectionRef => collectionRef.where('namespace', '==', namespace)
   )
 
   return value => {
@@ -92,7 +98,7 @@ export function useAutocompletes(namespace) {
 //   return suggestions
 // }
 
-function clean(value) {
+export function clean(value) {
   if (value) {
     return deburr(value.trim()).toLowerCase()
   }

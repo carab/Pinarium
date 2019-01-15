@@ -10,44 +10,48 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import LogForm from './LogForm'
 
 import {defaultStatuses} from '../enums/statuses'
-import logs from '../stores/logs'
-import bottles from '../stores/bottles'
-import firebase from '../api/firebase'
+import autocompletesStore from '../stores/autocompletesStore'
+import logsStore from '../stores/logsStore'
+import bottlesStore from '../stores/bottlesStore';
 
 export default function LogDialog({log, create, onClose}) {
   const open = Boolean(log)
 
-  const handleSave = async event => {
+  async function handleSave(event) {
     event.preventDefault()
     event.stopPropagation()
 
     try {
-      const $ref = await logs.save(log)
+      const logRef = await logsStore.save(log)
 
-      const data = {
-        status: log.status,
-        logs: firebase.firestore.FieldValue.arrayUnion($ref),
-      }
+      // Update autocompletes
+      await autocompletesStore.updateFrom(log, ['where', 'who', 'why'])
 
-      if (log.cellar) {
-        data.cellar = log.cellar
-      }
+      // Update bottles
+      await bottlesStore.addLogs(log.bottles, [logRef])
+      await bottlesStore.updateFromLogs(log.bottles)
 
-      await bottles.update(log.bottles, data)
-
-      onClose(event)
+      onClose(logRef)
     } catch (error) {
       console.error(error)
     }
   }
 
+  function handleCancel(event) {
+    onClose(null)
+  }
+
   return (
-    <Dialog open={open} onClose={onClose} aria-labelledby="log-dialog-title">
+    <Dialog
+      open={open}
+      onClose={handleCancel}
+      aria-labelledby="log-dialog-title"
+    >
       <LogDialogContent
         log={log}
         create={create}
         onSave={handleSave}
-        onCancel={onClose}
+        onCancel={handleCancel}
       />
     </Dialog>
   )

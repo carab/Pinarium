@@ -1,7 +1,7 @@
 export default {
   // Meta data
-  updateDate: null,
   creationDate: null,
+  updateDate: null,
 
   // Cellar data
   name: null,

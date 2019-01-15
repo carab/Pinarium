@@ -10,7 +10,9 @@
     "cancel": "Cancel",
     "edit": "Edit",
     "duplicate": "Duplicate",
-    "delete": "Delete"
+    "delete": "Delete",
+    "remove": "Remove",
+    "open_menu": "Open menu"
   },
   "topbar": {
     "title": "Pinarium",
@@ -32,7 +34,8 @@
   },
   "fab": {
     "add_bottle": "Add a bottle",
-    "add_cellar": "Add a cellar"
+    "add_cellar": "Add a cellar",
+    "available_values": "Values"
   },
   "form": {
     "autocomplete": {
@@ -45,6 +48,9 @@
       "cancel": "Cancel",
       "clear": "Clear",
       "today": "Today"
+    },
+    "image:": {
+      "upload": "Upload an image"
     },
     "select": {
       "empty": "None"
@@ -84,11 +90,29 @@
       "empty": "You don't have any bottle yet!",
       "select": "Select",
       "selectAll": "Select all",
+      "selectAllVisible": "Select visible",
       "unselect": "Unselect",
-      "unselectAll": "Unselect all"
+      "unselectAll": "Unselect all",
+      "unselectAllVisible": "Unselect visible",
+      "visibility": "Visibility",
+      "stocked": "In stock",
+      "unstocked": "Out of stock",
+      "all": "All",
+      "sort": "Sort",
+      "pagination": {
+        "previous": "Previous page",
+        "next": "Next page",
+        "current": "{{from}}-{{to}} of {{count}}"
+      }
+    },
+    "dialog": {
+      "add_field": "Select a field",
+      "no_value": "Without value",
+      "available_values": "Values"
     },
     "form": {
       "edit": "Edit bottle",
+      "edit_plural": "Edit {{count}} bottles",
       "new": "New bottle",
       "tab_etiquette": "Etiquette",
       "tab_history": "History",
@@ -96,7 +120,6 @@
       "no_log": "No entry for now"
     },
     "menu": {
-      "open": "Open bottle menu",
       "delete_dialog": "Delete {{count}} bottle?",
       "delete_dialog_plural": "Delete {{count}} bottles?"
     },
@@ -122,6 +145,7 @@
       "alcohol": "{{alcohol}}",
       "medal": "{{medal}}"
     },
+    "image": "Image",
     "cellar": "Cellar",
     "sort": "Sort",
     "appellation": "Appellation",
@@ -138,7 +162,14 @@
     "type": "Type",
     "capsule": "Capsule",
     "alcohol": "Alcohol level",
-    "medal": "Medal/Prize"
+    "medal": "Medal/Prize",
+    "comment": "Comment",
+    "status": "Status",
+    "rating": "Rating",
+    "inDate": "Entry date",
+    "outDate": "Out date",
+    "buyingPrice": "Buying price",
+    "sellingPrice": "Selling price"
   },
   "log": {
     "form": {
@@ -146,22 +177,22 @@
       "new": "New history entry"
     },
     "print": {
-      "full": "{{status}}{{who}}{{when}}{{where}}{{why}}{{value}}{{cellar}}{{rate}}.",
+      "full": "{{status}}{{who}}{{when}}{{where}}{{why}}{{price}}{{cellar}}{{rating}}.",
       "status": "$t(enum.status.{{status}})",
       "who": " to {{who}}",
       "when": " on {{when}}",
       "where": " in {{where}}",
       "why": " for {{why}}",
-      "value": ", for {{value}} €",
+      "price": ", for {{price}} €",
       "cellar": ", stored in {{cellar}}",
-      "rate": ", rated {{rate}} stars"
+      "rating": ", rated {{rating}} stars"
     },
     "status": "Status",
     "when": "When",
     "where": "Where",
     "who": "Who",
-    "value": "Price",
-    "rate": "Rating",
+    "price": "Unit Price",
+    "rating": "Rating",
     "cellar": "Cellar",
     "why": "Why/Occasion",
     "comment": "Comment"

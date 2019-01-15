@@ -198,7 +198,7 @@ export const SidebarDrawer = observer(function({onClose, ...props}) {
 const SearchesMenu = observer(function({onClick}) {
   const [open, onToggle] = useToggable()
   const [t] = useTranslation()
-  const searches = useSearches()
+  const [searches] = useSearches()
 
   if (searches.length === 0) {
     return null

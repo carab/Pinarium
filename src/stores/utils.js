@@ -5,7 +5,6 @@ import {useObservable} from 'mobx-react-lite'
 import firebase from '../api/firebase'
 import database from '../api/database'
 import auth from './auth'
-import autocompletesStore from './autocompletesStore'
 
 export function createDocument(model, data) {
   const document = {...model, ...data}
@@ -19,60 +18,14 @@ export function createDocument(model, data) {
   return document
 }
 
-export function makeStore(model, subcollection = null, autocompletes = []) {
+export function makeStore(model, subcollection = null) {
   const store = observable.object(
     {
       name: subcollection ? subcollection : 'user',
       documents: {},
-      all: [],
-      ready: false,
-      subscribers: 0,
+      collections: {},
       create() {
-        return observable({...model})
-      },
-      observe(bag) {
-        return snapshot => {
-          snapshot.docChanges().forEach(change => {
-            bag.ready = true
-            switch (change.type) {
-              case 'added':
-              case 'modified': {
-                const index = bag.all.findIndex(
-                  document => document.$ref.id === change.doc.ref.id
-                )
-
-                const document = createDocument(model, change.doc.data())
-                document.$ref = change.doc.ref
-
-                if (index >= 0) {
-                  bag.all[index] = document
-                } else {
-                  bag.all.push(document)
-                }
-
-                break
-              }
-
-              case 'removed': {
-                const index = bag.all.findIndex(
-                  document => document.$ref.id === change.doc.ref.id
-                )
-
-                if (index >= 0) {
-                  bag.all.splice(index, 1)
-                }
-
-                break
-              }
-
-              default:
-            }
-          })
-        }
-      },
-      subscribe() {
-        this.subscribers++
-        return () => this.subscribers--
+        return {...model}
       },
       async collection() {
         if (!auth.user) {
@@ -87,31 +40,81 @@ export function makeStore(model, subcollection = null, autocompletes = []) {
 
         return collection
       },
-      async listenCollection(bag, filter = collectionRef => collectionRef) {
+      async listenCollection(target, filter) {
+        target.subscribed = true
+
         const collectionRef = await this.collection()
-        return filter(collectionRef).onSnapshot(this.observe(bag))
+
+        const unsubscribe = filter(collectionRef)
+          // .orderBy('inDate')
+          // .limit(10)
+          .onSnapshot(
+            action(snapshot => {
+              target.ready = true
+              snapshot.docChanges().forEach(change => {
+                switch (change.type) {
+                  case 'added':
+                  case 'modified': {
+                    const index = target.collection.findIndex(
+                      document => document.$ref.id === change.doc.ref.id
+                    )
+
+                    const document = createDocument(model, change.doc.data())
+                    document.$ref = change.doc.ref
+
+                    if (index >= 0) {
+                      target.collection[index] = document
+                    } else {
+                      target.collection.push(document)
+                    }
+
+                    break
+                  }
+
+                  case 'removed': {
+                    const index = target.collection.findIndex(
+                      document => document.$ref.id === change.doc.ref.id
+                    )
+
+                    if (index >= 0) {
+                      target.collection.splice(index, 1)
+                    }
+
+                    break
+                  }
+
+                  default:
+                }
+              })
+            })
+          )
+
+        return action(() => {
+          unsubscribe()
+          target.subscribed = false
+        })
       },
-      async listenDocument($ref, bag) {
+      async listenDocument($ref, target) {
+        target.subscribed = true
+
         if (!($ref instanceof firebase.firestore.DocumentReference)) {
           const id = $ref
           $ref = (await store.collection()).doc(id)
         }
 
-        bag.subscribed = true
-        const unsubscribe = $ref.onSnapshot(this.handleDocument(bag))
+        const unsubscribe = $ref.onSnapshot(
+          action(snapshot => {
+            const document = createDocument(model, snapshot.data())
+            document.$ref = snapshot.ref
+            target.document = document
+            target.ready = true
+          })
+        )
 
-        return () => {
+        return action(() => {
           unsubscribe()
-          bag.subscribed = false
-        }
-      },
-      handleDocument(bag) {
-        return snapshot => {
-          const document = createDocument(model, snapshot.data())
-          document.$ref = snapshot.ref
-          bag.document = document
-          bag.ready = true
-        }
+          target.subscribed = false
+        })
       },
       async save({$ref, ...document}) {
         const collection = await this.collection()
@@ -124,12 +127,10 @@ export function makeStore(model, subcollection = null, autocompletes = []) {
           $ref = await collection.add(document)
         }
 
-        autocompletesStore.updateFrom(document, autocompletes)
-
         return $ref
       },
       async update($refs, data) {
-        const batch = (await database).batch()
+        const batch = await this.batch()
         $refs.forEach($ref => {
           // $refs is either the expected document reference, or the document which included its $ref
           if (!($ref instanceof firebase.firestore.DocumentReference)) {
@@ -141,90 +142,109 @@ export function makeStore(model, subcollection = null, autocompletes = []) {
         return batch.commit()
       },
       async delete($refs) {
-        const batch = (await database).batch()
+        const batch = await this.batch()
         $refs.forEach($ref => batch.delete($ref))
         return batch.commit()
       },
+      async batch() {
+        const batch = (await database).batch()
+        return batch
+      },
     },
     {
-      observe: action.bound,
-      handleDocument: action.bound,
+      listenCollection: action,
+      listenDocument: action,
       save: action,
       create: action,
       update: action,
-      subscribe: action,
     }
   )
-
-  let promise
-  autorun(function start() {
-    if (!auth.user) {
-      return
-    }
-
-    // Only listen to firebase for the first subscriber
-    if (store.subscribers !== 1) {
-      return
-    }
-
-    promise = store.listenCollection(store)
-  })
-
-  autorun(function stop() {
-    // Only stop listening when there is no more subscriber
-    if (store.subscribers > 0) {
-      return
-    }
-
-    if (promise) {
-      promise.then(unsubscribe => unsubscribe())
-    }
-  })
 
   return store
 }
 
-export function useCollection(store, filter) {
-  const bag = useObservable(filter ? {all: [], ready: false} : store)
+function defaultFilter(collectionRef) {
+  return collectionRef
+}
+
+export function useCollection(store, name = 'all', filter = defaultFilter) {
+  const state = useObservable({
+    target: {
+      ready: false,
+      subscribed: false,
+      collection: [],
+    },
+  })
+  // const state = useObservable(
+  //   store.collections[name]
+  //     ? store.collections[name]
+  //     : {
+  //         name,
+  //         ready: false,
+  //         subscribed: false,
+  //         collection: [],
+  //       }
+  // )
+  // if (!store.collections[name]) {
+  //   store.collections[name] = state
+  // }
 
   useEffect(
     () => {
-      if (filter) {
-        //const filter = collectionRef => collectionRef // @todo how to filter in $refs ?
-        const promise = store.listenCollection(bag, filter)
-        return () => {
-          promise.then(unsubscribe => unsubscribe())
+      if (!store.collections[name]) {
+        store.collections[name] = {
+          ready: false,
+          subscribed: false,
+          collection: [],
         }
       }
 
-      const unsubscribe = store.subscribe()
-      return unsubscribe
+      state.target = store.collections[name]
+
+      console.log(`subscribed ? ${state.target.subscribed ? 'y' : 'n'}`)
+      if (!state.target.subscribed) {
+        console.log(`subscribing ${store.name}`)
+        const unsubscribing = store.listenCollection(state.target, filter)
+        return () => {
+          unsubscribing.then(unsubscribe => {
+            unsubscribe()
+          })
+        }
+      }
     },
-    [auth.user, filter]
+    [auth.user, name]
   )
 
-  return bag.all
+  return [state.target.collection, state.target.ready, state.target.subscribed]
 }
 
 export function useDocument(store, $ref) {
   const id = $ref && $ref.id ? $ref.id : $ref
 
-  const bag = useObservable(
-    store.documents[id]
+  const target = useObservable(
+    id
       ? store.documents[id]
+        ? store.documents[id]
+        : {
+            ready: false,
+            subscribed: false,
+            document: null,
+          }
       : {
-          ready: id ? false : true,
-          subscribed: id ? false : true,
-          document: id ? null : store.create(),
+          ready: true,
+          subscribed: true,
+          document: store.create(),
         }
   )
 
-  store.documents[id] = bag
+  if (id && !store.documents[id]) {
+    store.documents[id] = target
+  }
 
   useEffect(
     () => {
-      if (!bag.subscribed) {
-        const unsubscribing = store.listenDocument(id, bag)
+      if (!target.subscribed) {
+        const unsubscribing = store.listenDocument(id, target)
         return () => {
           unsubscribing.then(unsubscribe => {
             unsubscribe()
@@ -235,5 +255,5 @@ export function useDocument(store, $ref) {
     [id]
   )
 
-  return [bag.document, bag.ready, bag.subscribed]
+  return [target.document, target.ready, target.subscribed]
 }

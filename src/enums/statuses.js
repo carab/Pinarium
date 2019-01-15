@@ -6,7 +6,7 @@ export default [
   },
   {
     name: 'bought',
-    fields: ['when', 'who', 'where', 'why', 'cellar', 'value', 'comment'],
+    fields: ['when', 'who', 'where', 'why', 'cellar', 'price', 'comment'],
     next: ['picked', 'drank', 'moved', 'given', 'sold'],
   },
   {
@@ -31,12 +31,12 @@ export default [
   },
   {
     name: 'sold',
-    fields: ['when', 'who', 'where', 'why', 'value', 'comment'],
+    fields: ['when', 'who', 'where', 'why', 'price', 'comment'],
     next: ['received', 'bought', 'drank'],
   },
   {
     name: 'drank',
-    fields: ['when', 'where', 'why', 'rate', 'comment'],
+    fields: ['when', 'where', 'why', 'rating', 'comment'],
     next: [],
   },
 ]

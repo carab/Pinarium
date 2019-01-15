@@ -1,237 +1,73 @@
-import React, {useCallback} from 'react'
-import {format} from 'date-fns'
+import React from 'react'
 import {observer} from 'mobx-react-lite'
-import {Trans, useTranslation} from 'react-i18next/hooks'
+import {useTranslation} from 'react-i18next/hooks'
 import classnames from 'classnames'
+import {
+  AutoSizer,
+  InfiniteLoader,
+  List as VirtualizedList,
+} from 'react-virtualized'
 import {makeStyles} from '@material-ui/styles'
-import Typography from '@material-ui/core/Typography'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
-import Checkbox from '@material-ui/core/Checkbox'
-import IconButton from '@material-ui/core/IconButton'
-import Hidden from '@material-ui/core/Hidden'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import Menu from '@material-ui/core/Menu'
-import MenuItem from '@material-ui/core/MenuItem'
-
-import Container from '../ui/Container'
-import {CloseIcon, ColumnsIcon} from '../ui/Icons'
+import {
+  List,
+  ListItem,
+  Checkbox,
+  ListItemText,
+  ListItemSecondaryAction,
+} from '@material-ui/core'
+import {useCellar} from '../stores/cellarsStore'
 import BottleMenu from './BottleMenu'
-
-import bottlesStore, {useBottles} from '../stores/bottles'
-import {useCellar} from '../stores/cellars'
-import {useSearch} from '../stores/searchStore'
-import useAnchor from '../hooks/useAnchor'
-
-const CellarRenderer = observer(function({row, column}) {
-  const [cellar, ready] = useCellar(row[column.name])
-
-  if (ready) {
-    return cellar ? cellar.name : null
-  }
-
-  return null
-})
-
-const EnumRenderer = function({row, column}) {
-  const value = row[column.name]
-
-  if (value) {
-    return <Trans i18nKey={`enum.${column.name}.${value}`} />
-  }
-
-  return null
-}
-
-const DateRenderer = function({row, column}) {
-  const date = row[column.name]
-
-  if (date) {
-    return date.toString()
-  }
-
-  return null
-}
-
-const COLUMNS = [
-  {name: 'sort', renderer: EnumRenderer},
-  {name: 'cellar', renderer: CellarRenderer},
-  {name: 'appellation'},
-  {name: 'vintage', props: {numeric: true}},
-  {name: 'bottlingDate', renderer: DateRenderer},
-  {name: 'expirationDate', renderer: DateRenderer},
-  {name: 'cuvee'},
-  {name: 'producer'},
-  {name: 'region'},
-  {name: 'country'},
-  {name: 'size', renderer: EnumRenderer},
-  {name: 'color', renderer: EnumRenderer},
-  {name: 'effervescence', renderer: EnumRenderer},
-  {name: 'type', renderer: EnumRenderer},
-  {name: 'capsule', renderer: EnumRenderer},
-  {name: 'alcohol'},
-  {name: 'medal'},
-]
+import useLocale from '../hooks/useLocale'
+import {format} from '../lib/date'
 
 const useStyle = makeStyles(theme => ({
-  tableContainer: {
+  listContainer: {
     overflow: 'auto',
-  },
-  empty: {
-    textAlign: 'center',
-    padding: theme.spacing.unit * 2,
+    flexGrow: 1,
+    // paddingBottom: theme.spacing.unit * 10,
+    [theme.breakpoints.up('sm')]: {
+      paddingBottom: theme.spacing.unit * 4,
+    },
   },
 }))
 
-export default observer(function BottleList() {
-  useBottles()
-  const search = useSearch()
-
+function BottleList({bottles, isSelected, onSelect, onLoadBottles}) {
   const classes = useStyle()
-  const [t] = useTranslation()
 
-  const columns = COLUMNS.filter((column) => {
-    const item = search.filters.find(([name]) => name === column.name)
-    return undefined === item
-  })
-    .filter(column => search.isColumn(column.name))
-
-  const countSelected = bottlesStore.selectedBottles.length
-  const countAll = search.search.pagination.total
-
-  const handleSelectAll = event => {
-    if (countSelected === countAll) {
-      handleUnselectAll(event)
-    } else {
-      const bottles = search.search.data.items
-      bottlesStore.select(bottles)
-    }
+  function rowRenderer({index, key, style}) {
+    const bottle = bottles[index]
+    return (
+      <BottleItem
+        key={key}
+        style={style}
+        bottle={bottle}
+        selected={isSelected(bottle)}
+        onSelect={onSelect(bottle)}
+      />
+    )
   }
-
-  const handleUnselectAll = event => {
-    const bottles = search.search.data.items
-    bottlesStore.unselect(bottles)
-  }
-
-  const handleSelect = bottle => event => {
-    if (bottlesStore.isSelected(bottle)) {
-      bottlesStore.unselect([bottle])
-    } else {
-      bottlesStore.select([bottle])
-    }
-  }
-
-  if (!bottlesStore.ready) {
-    return null
-  }
-
   return (
-    <Container
-      highlighted={countSelected > 0}
-      title={
-        countSelected > 0 ? (
-          <Trans
-            i18nKey="bottle.list.selected"
-            count={countSelected}
-            values={{count: countSelected}}
-          />
-        ) : (
-          <Trans
-            i18nKey="bottle.list.title"
-            count={countAll}
-            values={{count: countAll}}
-          />
-        )
-      }
-      actions={
-        countSelected > 0 ? (
-          <>
-            <IconButton
-              onClick={handleUnselectAll}
-              color="inherit"
-              title={t('bottle.list.unselectAll')}
-            >
-              <CloseIcon />
-            </IconButton>
-            <BottleMenu bottles={bottlesStore.selectedBottles} />
-          </>
-        ) : (
-          <>
-            <ColumnsMenu />
-          </>
-        )
-      }
+    <div
+      className={classes.listContainer}
     >
-      {bottlesStore.all.length ? (
-        <>
-          <Hidden mdUp>
-            <div className={classes.demo}>
-              <List dense>
-                {search.search.data.items.map(bottle => (
-                  <BottleItem
-                    key={bottle.$ref.id}
-                    bottle={bottle}
-                    columns={columns}
-                    selected={bottlesStore.isSelected(bottle)}
-                    onSelect={handleSelect(bottle)}
-                  />
-                ))}
-              </List>
-            </div>
-          </Hidden>
-          <Hidden smDown>
-            <div className={classes.tableContainer}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        indeterminate={
-                          countSelected > 0 && countSelected < countAll
-                        }
-                        checked={countSelected === countAll}
-                        onChange={handleSelectAll}
-                      />
-                    </TableCell>
-                    {columns.map(column => (
-                      <TableCell key={column.name} {...column.props}>
-                        {t(`bottle.${column.name}`)}
-                      </TableCell>
-                    ))}
-                    <TableCell />
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {search.search.data.items.map(bottle => (
-                    <BottleRow
-                      key={bottle.$ref.id}
-                      bottle={bottle}
-                      columns={columns}
-                      selected={bottlesStore.isSelected(bottle)}
-                      onSelect={handleSelect(bottle)}
-                    />
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </Hidden>
-        </>
-      ) : (
-        <Typography className={classes.empty}>
-          {t('bottle.list.empty')}
-        </Typography>
-      )}
-    </Container>
+      <AutoSizer disableWidth disableHeight>
+        {({width, height}) => (
+          <VirtualizedList
+            rowCount={bottles.length}
+            rowHeight={86}
+            rowRenderer={rowRenderer}
+            width={300}
+            height={400}
+          />
+        )}
+      </AutoSizer>
+    </div>
   )
-})
+}
 
-const useStyles = makeStyles(theme => ({
+export default BottleList
+
+const useItemStyle = makeStyles(theme => ({
   picked: {
     fontWeight: 'bold',
   },
@@ -240,38 +76,8 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const BottleRow = observer(function({bottle, columns, selected, onSelect}) {
-  const classes = useStyles()
-
-  const className = classnames({
-    [classes.picked]: bottle.status === 'picked',
-    [classes.disabled]:
-      ['drank', 'sold', 'given'].indexOf(bottle.status) !== -1,
-  })
-
-  return (
-    <TableRow hover>
-      <TableCell padding="checkbox">
-        <Checkbox checked={selected} onChange={onSelect} />
-      </TableCell>
-      {columns.map(column => (
-        <TableCell key={column.name} className={className} {...column.props}>
-          {column.renderer ? (
-            <column.renderer row={bottle} column={column} />
-          ) : (
-            bottle[column.name]
-          )}
-        </TableCell>
-      ))}
-      <TableCell>
-        <BottleMenu bottles={[bottle]} showEdit />
-      </TableCell>
-    </TableRow>
-  )
-})
-
-const BottleItem = observer(function({bottle, columns, selected, onSelect}) {
-  const classes = useStyles()
+const BottleItem = observer(function({bottle, selected, onSelect}) {
+  const classes = useItemStyle()
   const [t] = useTranslation()
   const [cellar] = useCellar(bottle.cellar)
 
@@ -284,7 +90,7 @@ const BottleItem = observer(function({bottle, columns, selected, onSelect}) {
   const [primary, secondary, tertiary] = bottleRenderer(bottle, cellar, t)
 
   return (
-    <ListItem>
+    <ListItem ContainerComponent="div">
       <Checkbox checked={selected} onChange={onSelect} />
       <ListItemText
         className={className}
@@ -298,22 +104,24 @@ const BottleItem = observer(function({bottle, columns, selected, onSelect}) {
         }
       />
       <ListItemSecondaryAction>
-        <BottleMenu bottles={[bottle]} showEdit />
+        <BottleMenu bottles={[bottle]} />
       </ListItemSecondaryAction>
     </ListItem>
   )
 })
 
 export function bottleRenderer(bottle, cellar, t) {
+  const [locale] = useLocale()
+
   const values = {
     bottlingDate: bottle.bottlingDate
       ? t('bottle.print.bottlingDate', {
-          bottlingDate: format(bottle.bottlingDate, 'P'),
+          bottlingDate: format(bottle.bottlingDate, 'P', locale),
         })
       : '',
     expirationDate: bottle.expirationDate
       ? t('bottle.print.expirationDate', {
-          expirationDate: format(bottle.expirationDate, 'P'),
+          expirationDate: format(bottle.expirationDate, 'P', locale),
         })
       : '',
     appellation: bottle.appellation
@@ -347,50 +155,3 @@ export function bottleRenderer(bottle, cellar, t) {
     t('bottle.print.tertiary', values),
   ]
 }
-
-const ColumnsMenu = observer(function({}) {
-  const [anchor, open, handleOpen, handleClose] = useAnchor()
-
-  const [t] = useTranslation()
-  const search = useSearch()
-
-  const handleToggle = column => event => {
-    search.toggleColumn(column)
-  }
-
-  return (
-    <>
-      <IconButton
-        aria-owns={open ? 'columns-menu' : undefined}
-        aria-haspopup="true"
-        onClick={handleOpen}
-        color="inherit"
-        title={t('bottle.list.open_columns')}
-        aria-label={t('bottle.list.open_columns')}
-      >
-        <ColumnsIcon />
-      </IconButton>
-      <Menu
-        id="columns-menu"
-        anchorEl={anchor}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={open}
-        onClose={handleClose}
-      >
-        {COLUMNS.map(({name}) => (
-          <MenuItem key={name} onClick={handleToggle(name)}>
-            <Checkbox checked={search.isColumn(name)} />
-            {t(`bottle.${name}`)}
-          </MenuItem>
-        ))}
-      </Menu>
-    </>
-  )
-})

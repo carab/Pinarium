@@ -45,10 +45,6 @@ export default observer(function Topbar() {
 
   const handleToggleSearch = () => {
     ui.toggleSearchbar()
-    if (!ui.searchbar.open) {
-      searchStore.filters = []
-      navigate('/bottles')
-    }
   }
 
   return (
@@ -92,7 +88,7 @@ export default observer(function Topbar() {
             {t('topbar.title')}
           </Typography>
         )}
-        <Searchbar />
+        <Searchbar open={ui.searchbar.open} />
         <IconButton
           color="inherit"
           aria-label={t('topbar.toggle_searchbar')}

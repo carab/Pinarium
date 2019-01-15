@@ -1,10 +1,13 @@
+import uid from '../lib/uid'
+
 export default {
   // Meta data
-  hash: null,
+  hash: uid(),
   creationDate: null,
   updateDate: null,
 
   // Etiquette data
+  image: null,
   sort: 'wine',
   vintage: null,
   appellation: null,
@@ -22,24 +25,21 @@ export default {
   capsule: null,
   alcohol: null,
   medal: null,
+  organic: null,
+  comment: null,
 
   // data copied from last logs
+  stocked: true,
   cellar: null,
   shelve: null,
   reference: null,
   status: null,
-  value: null,
-  rate: null,
+  rating: null,
+  inDate: null,
   outDate: null,
+  buyingPrice: null,
+  sellingPrice: null,
 
   // History data
   logs: [],
 }
-
-export const autocompletes = [
-  'appellation',
-  'cuvee',
-  'producer',
-  'region',
-  'country',
-]

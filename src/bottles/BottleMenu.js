@@ -20,7 +20,6 @@ import {
   PickIcon,
   UnpickIcon,
   DrinkIcon,
-  UndrinkIcon,
   MoveIcon,
   GiveIcon,
   SellIcon,
@@ -30,8 +29,10 @@ import {
 import LogDialog from '../logs/LogDialog'
 import useAnchor from '../hooks/useAnchor'
 
-import logs from '../stores/logs'
-import bottlesStore from '../stores/bottles'
+import logsStore from '../stores/logsStore'
+import bottlesStore from '../stores/bottlesStore'
+import {useUser} from '../stores/userStore'
+import uiStore from '../stores/ui'
 import statusesDef, {defaultStatuses} from '../enums/statuses'
 
 const useStyles = makeStyles(theme => ({
@@ -51,7 +52,8 @@ const ICONS = {
   sold: SellIcon,
 }
 
-export default observer(function BottleMenu({bottles, showEdit}) {
+export default observer(function BottleMenu({bottles}) {
+  const [user] = useUser()
   const ui = useObservable({delete: {open: false}})
   const [log, setLog] = useState(null)
   const [anchor, open, onOpen, onClose] = useAnchor()
@@ -73,22 +75,27 @@ export default observer(function BottleMenu({bottles, showEdit}) {
       })
       .map(bottle => bottle.$ref)
 
-    const log = logs.createFrom({
+    const log = logsStore.createFrom({
       status,
       // Only keep bottles on which the new status is a possible next status
       bottles: filteredBottles,
+      cellar: user.defaultCellar,
     })
 
     setLog(log)
   }
 
-  const handleCloseLog = event => {
+  function handleCloseLog(log) {
     setLog(null)
   }
 
-  const handleEdit = event => {
+  function handleEdit(event) {
     onClose(event)
-    bottles.forEach(bottle => navigate(`/bottle/${bottle.$ref.id}`))
+    if (bottles.length === 1) {
+      navigate(`/bottle/${bottles[0].$ref.id}`)
+    } else if (bottles.length) {
+      uiStore.dialogs.bottle.bottles = bottles
+    }
   }
 
   // Build status change items from all bottles current status
@@ -155,17 +162,13 @@ export default observer(function BottleMenu({bottles, showEdit}) {
         open={open}
         onClose={onClose}
       >
-        {showEdit
-          ? [
-              <MenuItem key="edit" onClick={handleEdit}>
-                <ListItemIcon>
-                  <EditIcon />
-                </ListItemIcon>
-                {t('label.edit')}
-              </MenuItem>,
-              <Divider key="divider" />,
-            ]
-          : null}
+        <MenuItem onClick={handleEdit}>
+          <ListItemIcon>
+            <EditIcon />
+          </ListItemIcon>
+          {t('label.edit')} {showCount ? ` (${bottles.length})` : null}
+        </MenuItem>
+        <Divider />
         {items.map(item => {
           const Icon = ICONS[item.status]
           return (

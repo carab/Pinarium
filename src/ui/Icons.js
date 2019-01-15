@@ -17,6 +17,8 @@ import BottleIcon from '@material-ui/icons/LocalBar'
 import CellarIcon from '@material-ui/icons/ViewColumn'
 import ShelfIcon from '@material-ui/icons/GridOn'
 import ColumnsIcon from '@material-ui/icons/ViewColumn'
+import VisibilityIcon from '@material-ui/icons/Visibility'
+import SortIcon from '@material-ui/icons/Sort'
 
 import PickIcon from '@material-ui/icons/ArrowUpward'
 import UnpickIcon from '@material-ui/icons/ArrowDownward'
@@ -28,7 +30,9 @@ import MoveIcon from '@material-ui/icons/CompareArrows'
 import ViewIcon from '@material-ui/icons/Visibility'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
+import ClearIcon from '@material-ui/icons/Clear'
 import DuplicateIcon from '@material-ui/icons/FileCopy'
+import AddImageIcon from '@material-ui/icons/AddAPhoto'
 
 import SearchIcon from '@material-ui/icons/Search'
 import CloseIcon from '@material-ui/icons/Close'
@@ -40,14 +44,19 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import RemoveIcon from '@material-ui/icons/RemoveCircleOutline'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import SaveIcon from '@material-ui/icons/Save'
+import UploadIcon from '@material-ui/icons/CloudUpload'
+import DropdownIcon from '@material-ui/icons/ArrowDropDown'
+import DropupIcon from '@material-ui/icons/ArrowDropUp'
+import ListIcon from '@material-ui/icons/List'
+import CheckboxIcon from '@material-ui/icons/CheckBox'
 
 // Fields
 import StatusIcon from '@material-ui/icons/CompareArrows'
 import CommentIcon from '@material-ui/icons/Comment'
 import WhereIcon from '@material-ui/icons/LocationOn'
 import WhoIcon from '@material-ui/icons/Person'
-import ValueIcon from '@material-ui/icons/EuroSymbol'
-import RateIcon from '@material-ui/icons/StarRate'
+import PriceIcon from '@material-ui/icons/EuroSymbol'
+import RatingIcon from '@material-ui/icons/StarRate'
 import WhyIcon from '@material-ui/icons/HelpOutline'
 
 export {
@@ -68,6 +77,8 @@ export {
   CellarIcon,
   ShelfIcon,
   ColumnsIcon,
+  VisibilityIcon,
+  SortIcon,
   EditIcon,
   ViewIcon,
   SelectIcon,
@@ -80,6 +91,13 @@ export {
   CloseIcon,
   MoreIcon,
   DeleteIcon,
+  ClearIcon,
+  UploadIcon,
+  AddImageIcon,
+  DropdownIcon,
+  DropupIcon,
+  ListIcon,
+  CheckboxIcon,
   // Statuses
   PickIcon,
   UnpickIcon,
@@ -95,7 +113,7 @@ export {
   CommentIcon,
   WhereIcon,
   WhoIcon,
-  ValueIcon,
-  RateIcon,
+  PriceIcon,
+  RatingIcon,
   WhyIcon,
 }

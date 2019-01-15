@@ -27,6 +27,7 @@ export default function DateField({
       format="P"
       keyboard
       clearable
+      autoOk
       invalidLabel={t('form.date.invalid')}
       emptyLabel={t('form.date.empty')}
       okLabel={t('form.date.ok')}
