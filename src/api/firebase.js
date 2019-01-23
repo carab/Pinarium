@@ -1,13 +1,15 @@
-import firebase from 'firebase'
-import 'firebase/firestore'
+import firebase from 'firebase';
+import 'firebase/firestore';
 
-firebase.initializeApp({
-  apiKey: 'AIzaSyAzxN-ud1aXlIKeM7L6S-IAaFpDj22ecjw',
-  authDomain: 'vinarium.firebaseapp.com',
-  databaseURL: 'https://vinarium.firebaseio.com',
-  projectId: 'firebase-vinarium',
-  storageBucket: 'firebase-vinarium.appspot.com',
-  messagingSenderId: '917810871864',
-})
+const config = {
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+};
 
-export default firebase
+firebase.initializeApp(config);
+
+export default firebase;

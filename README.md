@@ -1,3 +1,11 @@
+Pinarium
+========
+
+## What is Pinarium
+
+Pinarium is used and developped by people in love with wines.
+It allows to manage wine caves, to better know what you have, what to drink, and when to drink.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

@@ -1,6 +1,6 @@
 {
   "name": "pinarium",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@date-io/date-fns": "0.0.2",
@@ -12,6 +12,7 @@
     "date-fns": "^2.0.0-alpha.27",
     "downshift": "^3.1.7",
     "firebase": "^5.7.0",
+    "firebase-tools": "^6.3.0",
     "i18next": "^13.0.1",
     "i18next-browser-languagedetector": "^2.2.4",
     "i18next-xhr-backend": "^1.5.1",
@@ -36,7 +37,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "firebase": "firebase",
+    "deploy": "firebase deploy"
   },
   "eslintConfig": {
     "extends": "react-app",
