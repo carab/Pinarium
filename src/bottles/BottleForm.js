@@ -1,79 +1,78 @@
-import React, {useState} from 'react'
-import {observer} from 'mobx-react-lite'
-import {useTranslation} from 'react-i18next/hooks'
-import {navigate} from '@reach/router'
-import SwipeableViews from 'react-swipeable-views'
-import {useTheme} from '@material-ui/styles'
-import IconButton from '@material-ui/core/IconButton'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import Divider from '@material-ui/core/Divider'
+import React, {useState} from 'react';
+import {observer} from 'mobx-react-lite';
+import {useTranslation} from 'react-i18next/hooks';
+import {navigate} from '@reach/router';
+import SwipeableViews from 'react-swipeable-views';
+import {useTheme} from '@material-ui/styles';
+import IconButton from '@material-ui/core/IconButton';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Divider from '@material-ui/core/Divider';
 
-import Container from '../ui/Container'
-import TextField from '../form/TextField'
-import LogDialog from '../logs/LogDialog'
-import BottleMenu from './BottleMenu'
-import EtiquetteForm from './EtiquetteForm'
-import {SaveIcon, EditIcon, DeleteIcon} from '../ui/Icons'
+import Container from '../ui/Container';
+import ProgressButton from '../ui/ProgressButton';
+import TextField from '../form/TextField';
+import LogDialog from '../logs/LogDialog';
+import BottleMenu from './BottleMenu';
+import EtiquetteForm from './EtiquetteForm';
+import {SaveIcon, EditIcon, DeleteIcon} from '../ui/Icons';
 
-import {format} from '../lib/date'
-import bottlesStore, {useBottle} from '../stores/bottlesStore'
-import logsStore, {useBottleLogs} from '../stores/logsStore'
-import autocompletesStore from '../stores/autocompletesStore'
-import {useCellar} from '../stores/cellarsStore'
-import {useUser} from '../stores/userStore'
-import useLocale from '../hooks/useLocale'
+import {format} from '../lib/date';
+import bottlesStore, {useBottle} from '../stores/bottlesStore';
+import logsStore, {useBottleLogs} from '../stores/logsStore';
+import autocompletesStore from '../stores/autocompletesStore';
+import {useCellar} from '../stores/cellarsStore';
+import {useUser} from '../stores/userStore';
+import useLocale from '../hooks/useLocale';
 
 export default observer(function BottleForm({id}) {
-  const [bottle, ready] = useBottle(id)
+  const [bottle, ready] = useBottle(id);
 
   if (!ready) {
-    return null
+    return null;
   }
 
-  function handleSave() {
-    bottlesStore.save(bottle)
-  }
+  return <Form bottle={bottle} />;
+});
 
-  return <Form bottle={bottle} onSave={handleSave} />
-})
+const Form = observer(function({bottle}) {
+  const errors = {};
+  const [user] = useUser();
+  const [tab, setTab] = useState(0);
+  const [log, setLog] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const editing = Boolean(bottle.$ref);
 
-const Form = observer(function({bottle, onSave}) {
-  const errors = {}
-  const [user] = useUser()
-  const [tab, setTab] = useState(0)
-  const [log, setLog] = useState(null)
-  const [quantity, setQuantity] = useState(1)
-  const edit = Boolean(bottle.$ref)
-
-  const theme = useTheme()
-  const [t] = useTranslation()
+  const theme = useTheme();
+  const [t] = useTranslation();
 
   function handleChange(value, name) {
-    bottle[name] = value
+    bottle[name] = value;
   }
 
   function handleChangeQuantity(value) {
-    setQuantity(value)
+    setQuantity(value);
   }
 
   const handleSubmit = async event => {
-    event.preventDefault()
+    event.preventDefault();
+    setSaving(true);
 
     try {
-      // Preprocess data (eg. for image uploading)
-      const data = await bottlesStore.preSave(bottle)
+      // Preprocess data (eg. for etiquette uploading)
+      const data = await bottlesStore.preSave(bottle);
 
       // Create $quantity bottles and add them initial log
       const promises = Array.from({length: quantity}, () =>
         bottlesStore.save(data)
-      )
+      );
 
-      const $refs = await Promise.all(promises)
+      const $refs = await Promise.all(promises);
 
       await autocompletesStore.updateFrom(data, [
         'appellation',
@@ -81,27 +80,32 @@ const Form = observer(function({bottle, onSave}) {
         'producer',
         'region',
         'country',
-      ])
+        'etiquette',
+      ]);
+
+      setSaving(false);
 
       if (data.logs.length === 0) {
         const log = logsStore.createFrom({
           status: 'bought',
           bottles: $refs,
           cellar: user.defaultCellar,
-        })
+        });
 
-        setLog(log)
+        setLog(log);
       } else {
-        navigate('/bottles')
+        // navigate('/bottles');
+        console.log('saved');
       }
     } catch (error) {
-      console.error(error)
+      setSaving(false);
+      console.error(error);
     }
-  }
+  };
 
   function handleCloseLog(logRef) {
-    setLog(null)
-    navigate('/bottles')
+    setLog(null);
+    navigate('/bottles');
   }
 
   return (
@@ -109,7 +113,7 @@ const Form = observer(function({bottle, onSave}) {
       <LogDialog create log={log} onClose={handleCloseLog} />
       <Container
         startAdornment={
-          !edit && (
+          !editing && (
             <TextField
               label={t('bottle.form.quantity')}
               required={true}
@@ -120,18 +124,22 @@ const Form = observer(function({bottle, onSave}) {
           )
         }
         size="sm"
-        title={t(edit ? 'bottle.form.edit' : 'bottle.form.new')}
+        title={t(editing ? 'bottle.form.edit' : 'bottle.form.new')}
         actions={
           <>
-            <IconButton
+            <ProgressButton
+              Component={IconButton}
+              loading={saving}
+              size={40}
               type="submit"
               color="secondary"
               title={t('label.save')}
               aria-label={t('label.save')}
+              onClick={handleSubmit}
             >
               <SaveIcon />
-            </IconButton>
-            {edit && <BottleMenu bottles={[bottle]} />}
+            </ProgressButton>
+            {editing && <BottleMenu bottles={[bottle]} />}
           </>
         }
         component="form"
@@ -139,13 +147,13 @@ const Form = observer(function({bottle, onSave}) {
         noValidate
         autoComplete="off"
       >
-        {edit && (
+        {editing && (
           <Tabs
             value={tab}
             onChange={(event, tab) => setTab(tab)}
             indicatorColor="primary"
             textColor="primary"
-            fullWidth
+            variant="fullWidth"
           >
             <Tab label={t('bottle.form.tab_etiquette')} />
             <Tab label={t('bottle.form.tab_history')} />
@@ -161,40 +169,40 @@ const Form = observer(function({bottle, onSave}) {
             bottle={bottle}
             onChange={handleChange}
           />
-          <>{edit && <LogList bottle={bottle} />}</>
+          <>{editing && <LogList bottle={bottle} />}</>
         </SwipeableViews>
       </Container>
     </>
-  )
-})
+  );
+});
 
 const LogList = observer(function({bottle}) {
-  const [t] = useTranslation()
-  const [logs, ready] = useBottleLogs(bottle.$ref)
+  const [t] = useTranslation();
+  const [logs, ready] = useBottleLogs(bottle.$ref);
 
   if (!ready) {
-    return null
+    return null;
   }
 
   async function handleDelete(log) {
     // Delete or update log depending on if it's the last bottle
     if (log.bottles.length <= 1) {
-      await logsStore.delete([log.$ref])
+      await logsStore.delete([log.$ref]);
     } else {
-      await logsStore.removeBottles([log.$ref], [bottle.$ref])
+      await logsStore.removeBottles([log.$ref], [bottle.$ref]);
     }
 
-    await bottlesStore.removeLogs([bottle.$ref], [log.$ref])
-    await bottlesStore.updateFromLogs([bottle.$ref])
+    await bottlesStore.removeLogs([bottle.$ref], [log.$ref]);
+    await bottlesStore.updateFromLogs([bottle.$ref]);
   }
 
-  const [log, setLog] = useState(null)
+  const [log, setLog] = useState(null);
   function handleEdit(log) {
-    setLog(log)
+    setLog(log);
   }
 
   function handleSave(logRef) {
-    setLog(null)
+    setLog(null);
   }
 
   return (
@@ -218,11 +226,11 @@ const LogList = observer(function({bottle}) {
       </List>
       <LogDialog log={log} onClose={handleSave} />
     </>
-  )
-})
+  );
+});
 
 const LogItem = observer(function({log, onEdit, onDelete}) {
-  const [t] = useTranslation()
+  const [t] = useTranslation();
 
   return (
     <>
@@ -252,13 +260,13 @@ const LogItem = observer(function({log, onEdit, onDelete}) {
       </ListItem>
       <Divider />
     </>
-  )
-})
+  );
+});
 
 export const LogRenderer = observer(function({log}) {
-  const [t] = useTranslation()
-  const [locale] = useLocale()
-  const [cellar] = useCellar(log.cellar)
+  const [t] = useTranslation();
+  const [locale] = useLocale();
+  const [cellar] = useCellar(log.cellar);
 
   const values = {
     status: log.status ? t('log.print.status', {status: log.status}) : '',
@@ -274,7 +282,7 @@ export const LogRenderer = observer(function({log}) {
     rating: log.rating ? t('log.print.rating', {rating: log.rating}) : '',
     cellar:
       log.cellar && cellar ? t('log.print.cellar', {cellar: cellar.name}) : '',
-  }
+  };
 
-  return t('log.print.full', values)
-})
+  return t('log.print.full', values);
+});

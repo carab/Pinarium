@@ -1,21 +1,21 @@
-import React from 'react'
-import {Link, Match} from '@reach/router'
-import {observer} from 'mobx-react-lite'
-import {useTranslation} from 'react-i18next/hooks'
-import {makeStyles} from '@material-ui/styles'
-import Drawer from '@material-ui/core/Drawer'
-import Divider from '@material-ui/core/Divider'
-import IconButton from '@material-ui/core/IconButton'
-import MenuItem from '@material-ui/core/MenuItem'
-import MenuList from '@material-ui/core/MenuList'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import Collapse from '@material-ui/core/Collapse'
-import Hidden from '@material-ui/core/Hidden'
-import Typography from '@material-ui/core/Typography'
+import React from 'react';
+import {Link, Match} from '@reach/router';
+import {observer} from 'mobx-react-lite';
+import {useTranslation} from 'react-i18next/hooks';
+import {makeStyles} from '@material-ui/styles';
+import Drawer from '@material-ui/core/Drawer';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Collapse from '@material-ui/core/Collapse';
+import Hidden from '@material-ui/core/Hidden';
+import Typography from '@material-ui/core/Typography';
 
 import {
   ChevronLeftIcon,
@@ -29,12 +29,12 @@ import {
   ExpandLessIcon,
   ExpandMoreIcon,
   DeleteIcon,
-} from '../ui/Icons'
+} from '../ui/Icons';
 
-import useToggable from '../hooks/useToggable'
+import useToggable from '../hooks/useToggable';
 
-import ui from '../stores/ui'
-import {useSearches} from '../stores/searchesStore'
+import ui from '../stores/ui';
+import {useSearches} from '../stores/searchesStore';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     flexGrow: '0',
     flexDirection: 'column',
-    width: theme.spacing.unit * 32,
+    width: theme.spacing.unit * 40,
     maxWidth: `calc(100vw - ${theme.spacing.unit * 8}px)`,
   },
   toolbar: {
@@ -63,12 +63,12 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 0,
     marginTop: 'auto',
   },
-}))
+}));
 
 export default function Sidebar() {
   const handleClose = () => {
-    ui.toggleSidebar(false)
-  }
+    ui.toggleSidebar(false);
+  };
 
   return (
     <>
@@ -90,12 +90,12 @@ export default function Sidebar() {
         />
       </Hidden>
     </>
-  )
+  );
 }
 
 export const SidebarDrawer = observer(function({onClose, ...props}) {
-  const classes = useStyles()
-  const [t] = useTranslation()
+  const classes = useStyles();
+  const [t] = useTranslation();
 
   const routes = [
     {
@@ -127,7 +127,7 @@ export const SidebarDrawer = observer(function({onClose, ...props}) {
       title: t('sidebar.settings'),
       icon: <SettingsIcon />,
     },
-  ]
+  ];
 
   return (
     <Drawer
@@ -192,19 +192,19 @@ export const SidebarDrawer = observer(function({onClose, ...props}) {
         </ListItem>
       </List>
     </Drawer>
-  )
-})
+  );
+});
 
 const SearchesMenu = observer(function({onClick}) {
-  const [open, onToggle] = useToggable()
-  const [t] = useTranslation()
-  const [searches] = useSearches()
+  const [open, onToggle] = useToggable();
+  const [t] = useTranslation();
+  const [searches] = useSearches();
 
   if (searches.length === 0) {
-    return null
+    return null;
   }
 
-  const title = t('label.delete')
+  const title = t('label.delete');
 
   return (
     <>
@@ -243,5 +243,5 @@ const SearchesMenu = observer(function({onClick}) {
       </MenuList>
       <Divider />
     </>
-  )
-})
+  );
+});

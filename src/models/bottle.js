@@ -7,7 +7,7 @@ export default {
   updateDate: null,
 
   // Etiquette data
-  image: null,
+  etiquette: null,
   sort: 'wine',
   vintage: null,
   appellation: null,

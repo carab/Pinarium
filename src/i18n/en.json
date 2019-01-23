@@ -18,7 +18,7 @@
     "title": "Pinarium",
     "home": "Go to home",
     "open_sidebar": "Open the sidebar",
-    "toggle_searchbar": "Toggle the searchbar"
+    "toggle_search": "Toggle the search"
   },
   "sidebar": {
     "searches": "My Searches",
@@ -62,6 +62,9 @@
     "password": "Password",
     "remember": "Remember me",
     "submit": "Sign in"
+  },
+  "job": {
+    "clean_etiquettes": "Clean etiquettes"
   },
   "settings": {
     "title": "Settings",
@@ -145,7 +148,7 @@
       "alcohol": "{{alcohol}}",
       "medal": "{{medal}}"
     },
-    "image": "Image",
+    "etiquette": "Etiquette",
     "cellar": "Cellar",
     "sort": "Sort",
     "appellation": "Appellation",
@@ -198,6 +201,7 @@
     "comment": "Comment"
   },
   "search": {
+    "reset": "Reset",
     "list": {
       "title": "My Searches"
     },

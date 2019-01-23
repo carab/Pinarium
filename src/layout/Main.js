@@ -1,18 +1,20 @@
-import React from 'react'
-import {Router, Redirect, Match} from '@reach/router'
-import {observer} from 'mobx-react-lite'
-import {makeStyles} from '@material-ui/styles'
+import React from 'react';
+import {Router, Redirect} from '@reach/router';
+import {observer} from 'mobx-react-lite';
+import {makeStyles} from '@material-ui/styles';
 
-import Topbar from './Topbar'
-import Sidebar from './Sidebar'
-import Fab from './Fab'
-import BottleList from '../bottles/BottlePage'
-import BottleForm from '../bottles/BottleForm'
-import CellarList from '../cellars/CellarList'
-import CellarForm from '../cellars/CellarForm'
-import UserSettings from '../user/UserSettings'
+import Topbar from './Topbar';
+import Sidebar from './Sidebar';
+import Fab from './Fab';
+import BottleList from '../bottles/BottlePage';
+import BottleForm from '../bottles/BottleForm';
+import BottleDeleteDialog from '../bottles/BottleDeleteDialog';
+import CellarList from '../cellars/CellarList';
+import CellarForm from '../cellars/CellarForm';
+import UserSettings from '../user/UserSettings';
+import SearchDrawer from '../search/SearchDrawer';
 
-import auth from '../stores/auth'
+import auth from '../stores/auth';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,17 +37,17 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     flexGrow: 1,
     [theme.breakpoints.up('sm')]: {
-      flexGrow: 0,
+      // flexGrow: 0,
     },
   },
-}))
+}));
 
 export default observer(function Main() {
   if (null === auth.user) {
-    return <Redirect to="/signin" noThrow />
+    return <Redirect to="/signin" noThrow />;
   }
 
-  const classes = useStyles()
+  const classes = useStyles();
 
   return (
     <div className={classes.root}>
@@ -56,7 +58,7 @@ export default observer(function Main() {
         <div className={classes.spacer} />
         <Router className={classes.content}>
           <Redirect from="/" to="/bottles" noThrow />
-          <BottleList path="/bottles/*" />
+          <BottleList path="/bottles/:query" />
           <BottleForm path="/bottle" />
           <BottleForm path="/bottle/:id" />
           <CellarList path="/cellars" />
@@ -65,6 +67,8 @@ export default observer(function Main() {
           <UserSettings path="/settings" />
         </Router>
       </main>
+      <SearchDrawer />
+      <BottleDeleteDialog />
     </div>
-  )
-})
+  );
+});

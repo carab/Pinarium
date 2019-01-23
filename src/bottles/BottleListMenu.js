@@ -1,5 +1,5 @@
-import React from 'react'
-import {useTranslation} from 'react-i18next/hooks'
+import React from 'react';
+import {useTranslation} from 'react-i18next/hooks';
 
 import {
   IconButton,
@@ -12,37 +12,37 @@ import {
   ListItemText,
   Dialog,
   DialogTitle,
-} from '@material-ui/core'
+} from '@material-ui/core';
 
-import {MoreIcon, VisibilityIcon, SortIcon} from '../ui/Icons'
+import {MoreIcon, VisibilityIcon, SortIcon} from '../ui/Icons';
 
-import useAnchor from '../hooks/useAnchor'
-import useToggable from '../hooks/useToggable'
-import {useSearch, VISIBILITIES} from '../stores/searchStore'
+import useAnchor from '../hooks/useAnchor';
+import useToggable from '../hooks/useToggable';
+import {useSearch, VISIBILITIES} from '../stores/searchStore';
 
-function BottleListMenu({columns}) {
-  const [t] = useTranslation()
-  const [anchor, open, onOpen, onClose] = useAnchor()
-  const [visibilityOpen, onToggleVisibility] = useToggable()
+function BottleListMenu() {
+  const [t] = useTranslation();
+  const [anchor, open, onOpen, onClose] = useAnchor();
+  const [visibilityOpen, onToggleVisibility] = useToggable();
 
-  const Search = useSearch()
+  const Search = useSearch();
 
-  const id = 'bottle-list-menu'
-  const sortItems = columns.filter(column => column.sortable)
+  const id = 'bottle-list-menu';
+  const sortItems = [];
   const currentVisibility = VISIBILITIES.find(
     ({value}) => value === Search.visibility
-  )
+  );
 
   function handleOpenVisibility() {
-    onToggleVisibility()
-    onClose()
+    onToggleVisibility();
+    onClose();
   }
 
   function handleCloseVisibility(value) {
     return () => {
-      Search.visibility = value
-      onToggleVisibility()
-    }
+      Search.visibility = value;
+      onToggleVisibility();
+    };
   }
 
   return (
@@ -50,6 +50,7 @@ function BottleListMenu({columns}) {
       <IconButton
         aria-owns={anchor ? id : undefined}
         aria-haspopup="true"
+        color="inherit"
         onClick={onOpen}
       >
         <MoreIcon />
@@ -97,11 +98,11 @@ function BottleListMenu({columns}) {
         onClose={handleCloseVisibility}
       />
     </>
-  )
+  );
 }
 
 function VisibilityDialog({selected, onClose, ...props}) {
-  const [t] = useTranslation()
+  const [t] = useTranslation();
 
   return (
     <Dialog
@@ -124,7 +125,7 @@ function VisibilityDialog({selected, onClose, ...props}) {
         ))}
       </MenuList>
     </Dialog>
-  )
+  );
 }
 
-export default BottleListMenu
+export default BottleListMenu;

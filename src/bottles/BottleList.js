@@ -1,24 +1,25 @@
-import React from 'react'
-import {observer} from 'mobx-react-lite'
-import {useTranslation} from 'react-i18next/hooks'
-import classnames from 'classnames'
+import React from 'react';
+import {observer} from 'mobx-react-lite';
+import {useTranslation} from 'react-i18next/hooks';
+import classnames from 'classnames';
+import {AutoSizer, List as VirtualizedList} from 'react-virtualized';
+import {makeStyles} from '@material-ui/styles';
 import {
-  AutoSizer,
-  InfiniteLoader,
-  List as VirtualizedList,
-} from 'react-virtualized'
-import {makeStyles} from '@material-ui/styles'
-import {
-  List,
   ListItem,
-  Checkbox,
   ListItemText,
   ListItemSecondaryAction,
-} from '@material-ui/core'
-import {useCellar} from '../stores/cellarsStore'
-import BottleMenu from './BottleMenu'
-import useLocale from '../hooks/useLocale'
-import {format} from '../lib/date'
+  ListItemAvatar,
+  Avatar,
+} from '@material-ui/core';
+
+import BottleMenu from './BottleMenu';
+import {BottleIcon, CheckIcon} from '../ui/Icons';
+import useLocale from '../hooks/useLocale';
+import useFirebaseImage from '../hooks/useFirebaseImage';
+import usePreloadImage from '../hooks/usePreloadImage';
+import {useCellar} from '../stores/cellarsStore';
+import {useSelection} from '../stores/selectionStore';
+import {format} from '../lib/date';
 
 const useStyle = makeStyles(theme => ({
   listContainer: {
@@ -29,43 +30,46 @@ const useStyle = makeStyles(theme => ({
       paddingBottom: theme.spacing.unit * 4,
     },
   },
-}))
+}));
 
-function BottleList({bottles, isSelected, onSelect, onLoadBottles}) {
-  const classes = useStyle()
+const ROW_HEIGHT = 86;
+
+function BottleList({bottles}) {
+  const classes = useStyle();
+  const [selection] = useSelection();
+
+  const onlySelect = selection.length > 0;
 
   function rowRenderer({index, key, style}) {
-    const bottle = bottles[index]
+    const bottle = bottles[index];
     return (
       <BottleItem
         key={key}
-        style={style}
         bottle={bottle}
-        selected={isSelected(bottle)}
-        onSelect={onSelect(bottle)}
+        onlySelect={onlySelect}
+        style={style}
       />
-    )
+    );
   }
+
   return (
-    <div
-      className={classes.listContainer}
-    >
-      <AutoSizer disableWidth disableHeight>
+    <div className={classes.listContainer}>
+      <AutoSizer>
         {({width, height}) => (
           <VirtualizedList
             rowCount={bottles.length}
-            rowHeight={86}
+            rowHeight={ROW_HEIGHT}
             rowRenderer={rowRenderer}
-            width={300}
-            height={400}
+            width={width}
+            height={height}
           />
         )}
       </AutoSizer>
     </div>
-  )
+  );
 }
 
-export default BottleList
+export default BottleList;
 
 const useItemStyle = makeStyles(theme => ({
   picked: {
@@ -74,44 +78,76 @@ const useItemStyle = makeStyles(theme => ({
   disabled: {
     opacity: 0.3,
   },
-}))
+  selectedAvatar: {
+    color: theme.palette.secondary.contrastText,
+    backgroundColor: theme.palette.secondary.light,
+  },
+}));
 
-const BottleItem = observer(function({bottle, selected, onSelect}) {
-  const classes = useItemStyle()
-  const [t] = useTranslation()
-  const [cellar] = useCellar(bottle.cellar)
+const BottleItem = observer(function({bottle, onlySelect, ...props}) {
+  const [selected, select, unselect] = useSelection(bottle);
+  const [cellar] = useCellar(bottle.cellar);
+  const classes = useItemStyle();
+  const [t] = useTranslation();
+  const [url] = useFirebaseImage(bottle.etiquette);
+  const [ready] = usePreloadImage(url);
 
   const className = classnames({
     [classes.picked]: bottle.status === 'picked',
     [classes.disabled]:
       ['drank', 'sold', 'given'].indexOf(bottle.status) !== -1,
-  })
+  });
 
-  const [primary, secondary, tertiary] = bottleRenderer(bottle, cellar, t)
+  function handleSelect(event) {
+    if (selected) {
+      unselect();
+    } else {
+      select();
+    }
+  }
+
+  const [primary, secondary, tertiary] = bottleRenderer(bottle, cellar, t);
 
   return (
-    <ListItem ContainerComponent="div">
-      <Checkbox checked={selected} onChange={onSelect} />
-      <ListItemText
-        className={className}
-        primary={primary}
-        secondary={
-          <>
-            {secondary}
-            <br />
-            {tertiary}
-          </>
-        }
-      />
-      <ListItemSecondaryAction>
-        <BottleMenu bottles={[bottle]} />
-      </ListItemSecondaryAction>
-    </ListItem>
-  )
-})
+    <div {...props}>
+      <ListItem
+        ContainerComponent="div"
+        onClick={onlySelect ? handleSelect : undefined}
+      >
+        {/* <Checkbox checked={selected} onChange={handleSelect} /> */}
+        <ListItemAvatar onClick={handleSelect}>
+          <Avatar
+            classes={{
+              colorDefault: selected ? classes.selectedAvatar : undefined,
+            }}
+            onClick={handleSelect}
+            alt={primary}
+            src={!selected && ready ? url : null}
+          >
+            {selected ? <CheckIcon /> : !ready ? <BottleIcon /> : null}
+          </Avatar>
+        </ListItemAvatar>
+        <ListItemText
+          className={className}
+          primary={primary}
+          secondary={
+            <>
+              {secondary}
+              <br />
+              {tertiary}
+            </>
+          }
+        />
+        <ListItemSecondaryAction>
+          <BottleMenu bottles={[bottle]} />
+        </ListItemSecondaryAction>
+      </ListItem>
+    </div>
+  );
+});
 
 export function bottleRenderer(bottle, cellar, t) {
-  const [locale] = useLocale()
+  const [locale] = useLocale();
 
   const values = {
     bottlingDate: bottle.bottlingDate
@@ -147,11 +183,11 @@ export function bottleRenderer(bottle, cellar, t) {
       bottle.cellar && cellar
         ? t('bottle.print.cellar', {cellar: cellar.name})
         : '',
-  }
+  };
 
   return [
     t('bottle.print.primary', values),
     t('bottle.print.secondary', values),
     t('bottle.print.tertiary', values),
-  ]
+  ];
 }

@@ -1,31 +1,32 @@
-import React from 'react'
-import {observer, useObservable} from 'mobx-react-lite'
-import {useTranslation} from 'react-i18next/hooks'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import Menu from '@material-ui/core/Menu'
-import MenuList from '@material-ui/core/MenuList'
-import MenuItem from '@material-ui/core/MenuItem'
-import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import IconButton from '@material-ui/core/IconButton'
+import React from 'react';
+import {observer, useObservable} from 'mobx-react-lite';
+import {useTranslation} from 'react-i18next/hooks';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import Menu from '@material-ui/core/Menu';
+import MenuList from '@material-ui/core/MenuList';
+import MenuItem from '@material-ui/core/MenuItem';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import IconButton from '@material-ui/core/IconButton';
 
-import CellarRenderer from '../field/CellarRenderer'
-import Container from '../ui/Container'
-import {EmailIcon, LocaleIcon, CellarIcon, MoreIcon} from '../ui/Icons'
-import useAnchor from '../hooks/useAnchor'
+import CellarRenderer from '../field/CellarRenderer';
+import Container from '../ui/Container';
+import {EmailIcon, LocaleIcon, CellarIcon, MoreIcon} from '../ui/Icons';
+import useAnchor from '../hooks/useAnchor';
 
-import auth from '../stores/auth'
-import userStore, {useUser} from '../stores/userStore'
-import {useCellars} from '../stores/cellarsStore'
-import useLocale from '../hooks/useLocale'
+import auth from '../stores/auth';
+import userStore, {useUser} from '../stores/userStore';
+import {useCellars} from '../stores/cellarsStore';
+import useLocale from '../hooks/useLocale';
+import cleanEtiquettes from '../jobs/cleanEtiquettes';
 
 export default observer(function UserSettings() {
-  const [user, ready] = useUser()
-  const [t] = useTranslation()
-  const [locale] = useLocale()
+  const [user, ready] = useUser();
+  const [t] = useTranslation();
+  const [locale] = useLocale();
 
   const ui = useObservable({
     cellar: {
@@ -34,28 +35,28 @@ export default observer(function UserSettings() {
     locale: {
       open: false,
     },
-  })
+  });
 
   if (!auth.user || !ready) {
-    return null
+    return null;
   }
 
   const handleOpenCellar = event => {
-    ui.cellar.open = true
-  }
+    ui.cellar.open = true;
+  };
 
   const handleCloseCellar = cellar => event => {
-    ui.cellar.open = false
-    userStore.update([user], {defaultCellar: cellar})
-  }
+    ui.cellar.open = false;
+    userStore.update([user], {defaultCellar: cellar});
+  };
   const handleOpenLocale = event => {
-    ui.locale.open = true
-  }
+    ui.locale.open = true;
+  };
 
   const handleCloseLocale = locale => event => {
-    ui.locale.open = false
-    userStore.update([user], {locale})
-  }
+    ui.locale.open = false;
+    userStore.update([user], {locale});
+  };
 
   return (
     <Container title={t('settings.title')} size="sm" actions={<UserMenu />}>
@@ -127,12 +128,12 @@ export default observer(function UserSettings() {
         onClose={handleCloseLocale}
       />
     </Container>
-  )
-})
+  );
+});
 
 function LocaleDialog({selected, onClose, ...props}) {
-  const [t] = useTranslation()
-  const locales = ['en', 'fr']
+  const [t] = useTranslation();
+  const locales = ['en', 'fr'];
 
   return (
     <Dialog
@@ -155,12 +156,12 @@ function LocaleDialog({selected, onClose, ...props}) {
         ))}
       </MenuList>
     </Dialog>
-  )
+  );
 }
 
 function CellarDialog({selected, onClose, ...props}) {
-  const [t] = useTranslation()
-  const [cellars] = useCellars()
+  const [t] = useTranslation();
+  const [cellars] = useCellars();
 
   return (
     <Dialog
@@ -183,23 +184,24 @@ function CellarDialog({selected, onClose, ...props}) {
         ))}
       </MenuList>
     </Dialog>
-  )
+  );
 }
 
 const UserMenu = function() {
-  const [t] = useTranslation()
-  const [anchor, open, onOpen, onClose] = useAnchor()
+  const [t] = useTranslation();
+  const [anchor, open, onOpen, onClose] = useAnchor();
 
-  // async function handleStockedJob() {
-  //   console.log('--- starting job ---')
-  //   try {
-  //     await runStocked()
-  //     console.log('--- job done ---')
-  //   } catch (e) {
-  //     console.error('--- job error ---')
-  //     console.error(e)
-  //   }
-  // }
+  async function handleEtiquettesCleaning() {
+    onClose();
+    console.log('--- starting job ---');
+    try {
+      await cleanEtiquettes(auth.user.uid);
+      console.log('--- job done ---');
+    } catch (e) {
+      console.error('--- job error ---');
+      console.error(e);
+    }
+  }
 
   return (
     <>
@@ -227,8 +229,10 @@ const UserMenu = function() {
         open={open}
         onClose={onClose}
       >
-        {/* <MenuItem onClick={handleStockedJob}>{t('job.stocked')}</MenuItem> */}
+        <MenuItem onClick={handleEtiquettesCleaning}>
+          {t('job.clean_etiquettes')}
+        </MenuItem>
       </Menu>
     </>
-  )
-}
+  );
+};

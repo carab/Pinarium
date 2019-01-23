@@ -13,7 +13,7 @@
   "topbar": {
     "home": "Aller à l'accueil",
     "open_sidebar": "Ouvrir le menu latéral",
-    "toggle_searchbar": "Afficher/cacher la barre de recherche"
+    "toggle_search": "Afficher/cacher la recherche"
   },
   "sidebar": {
     "searches": "Mes Recherches",
@@ -56,6 +56,9 @@
     "password": "Mot de passe",
     "remember": "Rester connecté",
     "submit": "Connexion"
+  },
+  "job": {
+    "clean_etiquettes": "Nettoyage des etiquettes"
   },
   "settings": {
     "title": "Paramètres",
@@ -140,7 +143,7 @@
       "alcohol": "{{alcohol}}",
       "medal": "{{medal}}"
     },
-    "image": "Image",
+    "etiquette": "Etiquette",
     "cellar": "Cave",
     "sort": "Sorte",
     "appellation": "Appellation",
@@ -193,6 +196,7 @@
     "comment": "Commentaire"
   },
   "search": {
+    "reset": "Remettre à zéro",
     "list": {
       "title": "Mes Recherches"
     },

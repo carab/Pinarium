@@ -37,6 +37,11 @@ const logsStore = extendObservable(makeStore(Log, 'logs'), {
     return this.update(logRefs, data)
   },
 
+  async getByBottle(bottleRef) {
+    const collectionRef = await this.collection()
+    return this.addBottleFilter(collectionRef, bottleRef).get()
+  },
+
   addBottleFilter(collectionRef, bottleRef) {
     return collectionRef
       .where('bottles', 'array-contains', bottleRef)

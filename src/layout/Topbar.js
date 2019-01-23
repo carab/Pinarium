@@ -1,19 +1,18 @@
-import React from 'react'
-import {observer} from 'mobx-react-lite'
-import {useTranslation} from 'react-i18next/hooks'
-import {navigate, Link} from '@reach/router'
-import {makeStyles} from '@material-ui/styles'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
-import IconButton from '@material-ui/core/IconButton'
-import Hidden from '@material-ui/core/Hidden'
+import React from 'react';
+import {observer} from 'mobx-react-lite';
+import {useTranslation} from 'react-i18next/hooks';
+import {Link} from '@reach/router';
+import {makeStyles} from '@material-ui/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import Hidden from '@material-ui/core/Hidden';
 
-import Searchbar from './Searchbar'
-import {MenuIcon, SearchIcon, CloseIcon, LogoIcon} from '../ui/Icons'
+import SearchBar from '../search/SearchBar';
+import {MenuIcon, SearchIcon, CloseIcon, LogoIcon} from '../ui/Icons';
 
-import ui from '../stores/ui'
-import searchStore from '../stores/searchStore'
+import uiStore from '../stores/ui';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,30 +29,38 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
   },
-  title: {
-    marginRight: 'auto',
+  actions: {
+    marginLeft: 'auto',
+    display: 'flex',
   },
-}))
+}));
 
 export default observer(function Topbar() {
-  const classes = useStyles()
-  const [t] = useTranslation()
+  const classes = useStyles();
+  const [t] = useTranslation();
 
-  const handleOpenSidebar = () => {
-    ui.toggleSidebar(true)
+  function handleOpenSidebar() {
+    uiStore.toggleSidebar(true);
   }
 
-  const handleToggleSearch = () => {
-    ui.toggleSearchbar()
+  function handleToggleSearchBar() {
+    uiStore.toggleSearchBar();
+  }
+
+  function handleOpenSearchDrawer() {
+    uiStore.searchDrawer.open = true;
   }
 
   return (
     <AppBar
       position="absolute"
       className={classes.root}
-      color={ui.searchbar.open ? 'default' : 'primary'}
+      color={uiStore.searchBar.open ? 'default' : 'primary'}
     >
-      <Toolbar disableGutters={!ui.sidebar.open} className={classes.toolbar}>
+      <Toolbar
+        disableGutters={!uiStore.sidebar.open}
+        className={classes.toolbar}
+      >
         <Hidden mdUp>
           <IconButton
             color="inherit"
@@ -65,7 +72,7 @@ export default observer(function Topbar() {
             <MenuIcon />
           </IconButton>
         </Hidden>
-        <Hidden smDown implementation="css">
+        <Hidden smDown>
           <IconButton
             color="inherit"
             aria-label={t('topbar.home')}
@@ -76,28 +83,38 @@ export default observer(function Topbar() {
           >
             <LogoIcon />
           </IconButton>
-        </Hidden>
-        {ui.searchbar.open ? null : (
-          <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={classes.title}
-          >
+          <Typography component="h1" variant="h6" color="inherit" noWrap>
             {t('topbar.title')}
           </Typography>
-        )}
-        <Searchbar open={ui.searchbar.open} />
-        <IconButton
-          color="inherit"
-          aria-label={t('topbar.toggle_searchbar')}
-          title={t('topbar.toggle_searchbar')}
-          onClick={handleToggleSearch}
-        >
-          {ui.searchbar.open ? <CloseIcon /> : <SearchIcon />}
-        </IconButton>
+          <SearchBar />
+        </Hidden>
+        <Hidden mdUp>
+          <div ref={ref => (uiStore.topbar.titleRef = ref)} />
+        </Hidden>
+        <div className={classes.actions}>
+          <Hidden mdUp>
+            <IconButton
+              color="inherit"
+              aria-label={t('topbar.toggle_search')}
+              title={t('topbar.toggle_search')}
+              onClick={handleOpenSearchDrawer}
+            >
+              <SearchIcon />
+            </IconButton>
+            <div ref={ref => (uiStore.topbar.actionsRef = ref)} />
+          </Hidden>
+          <Hidden smDown>
+            <IconButton
+              color="inherit"
+              aria-label={t('topbar.toggle_search')}
+              title={t('topbar.toggle_search')}
+              onClick={handleToggleSearchBar}
+            >
+              {uiStore.searchBar.open ? <CloseIcon /> : <SearchIcon />}
+            </IconButton>
+          </Hidden>
+        </div>
       </Toolbar>
     </AppBar>
-  )
-})
+  );
+});

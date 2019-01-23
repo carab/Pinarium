@@ -1,52 +1,52 @@
-import React, {useEffect} from 'react'
-import {action} from 'mobx'
-import {observer, useObservable} from 'mobx-react-lite'
-import {useTranslation} from 'react-i18next/hooks'
-import Button from '@material-ui/core/Button'
-import Dialog from '@material-ui/core/Dialog'
-import DialogActions from '@material-ui/core/DialogActions'
-import DialogContent from '@material-ui/core/DialogContent'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import Menu from '@material-ui/core/Menu'
-import MenuItem from '@material-ui/core/MenuItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import Grid from '@material-ui/core/Grid'
-import IconButton from '@material-ui/core/IconButton'
-import ListSubheader from '@material-ui/core/ListSubheader'
-import Badge from '@material-ui/core/Badge'
-import {makeStyles} from '@material-ui/styles'
-import {Divider} from '@material-ui/core'
+import React, {useEffect} from 'react';
+import {action} from 'mobx';
+import {observer, useObservable} from 'mobx-react-lite';
+import {useTranslation} from 'react-i18next/hooks';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import Badge from '@material-ui/core/Badge';
+import {makeStyles} from '@material-ui/styles';
+import {Divider} from '@material-ui/core';
 
-import {useBottleFields} from './EtiquetteForm'
-import FieldRenderer from '../field/FieldRenderer'
-import {AddIcon, ClearIcon, MoreIcon, BottleIcon} from '../ui/Icons'
+import {useBottleFields} from './EtiquetteForm';
+import FieldRenderer from '../field/FieldRenderer';
+import {AddIcon, ClearIcon, MoreIcon, BottleIcon} from '../ui/Icons';
 
-import autocompletesStore from '../stores/autocompletesStore'
-import bottlesStore from '../stores/bottlesStore'
-import uiStore from '../stores/ui'
-import useAnchor from '../hooks/useAnchor'
-import equals from '../lib/equals'
+import autocompletesStore from '../stores/autocompletesStore';
+import bottlesStore from '../stores/bottlesStore';
+import uiStore from '../stores/ui';
+import useAnchor from '../hooks/useAnchor';
+import equals from '../lib/equals';
 
 function BottleDialog() {
-  const {bottles} = uiStore.dialogs.bottle
-  const open = Boolean(bottles.length)
-  const state = useObservable({data: {}})
+  const {bottles} = uiStore.dialogs.bottle;
+  const open = Boolean(bottles.length);
+  const state = useObservable({data: {}});
 
   function onClose() {
-    state.data = {}
-    uiStore.dialogs.bottle.bottles = []
+    state.data = {};
+    uiStore.dialogs.bottle.bottles = [];
   }
 
   async function handleSave(event) {
-    event.preventDefault()
-    event.stopPropagation()
+    event.preventDefault();
+    event.stopPropagation();
 
     try {
-      // Preprocess data (eg. for image uploading)
-      const data = await bottlesStore.preSave(state.data)
+      // Preprocess data (eg. for etiquette uploading)
+      const data = await bottlesStore.preSave(state.data);
 
       // Update bottles
-      await bottlesStore.update(bottles, data)
+      await bottlesStore.update(bottles, data);
 
       // Update autocompletes
       await autocompletesStore.updateFrom(data, [
@@ -55,16 +55,17 @@ function BottleDialog() {
         'producer',
         'region',
         'country',
-      ])
+        'etiquette',
+      ]);
 
-      onClose(bottles)
+      onClose(bottles);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
   }
 
   function handleCancel() {
-    onClose([])
+    onClose([]);
   }
 
   return (
@@ -86,7 +87,7 @@ function BottleDialog() {
         onCancel={handleCancel}
       />
     </Dialog>
-  )
+  );
 }
 
 const useStyles = makeStyles(theme => ({
@@ -103,60 +104,60 @@ const useStyles = makeStyles(theme => ({
   fieldItem: {
     flexGrow: '1',
   },
-}))
+}));
 
 const BottleDialogContent = observer(function({data, bottles, onCancel}) {
-  const classes = useStyles()
-  const [t] = useTranslation()
-  const [anchor, open, onOpen, onClose] = useAnchor()
-  const suggestions = useObservable({})
+  const classes = useStyles();
+  const [t] = useTranslation();
+  const [anchor, open, onOpen, onClose] = useAnchor();
+  const suggestions = useObservable({});
 
   useEffect(
     action(() => {
       bottles.forEach(bottle => {
         Object.keys(bottle).forEach(field => {
           if (undefined === suggestions[field]) {
-            suggestions[field] = []
+            suggestions[field] = [];
           }
 
           const index = suggestions[field].findIndex(data =>
             equals(data.value, bottle[field])
-          )
+          );
 
           if (index === -1) {
-            suggestions[field].push({count: 1, value: bottle[field]})
+            suggestions[field].push({count: 1, value: bottle[field]});
           } else {
-            suggestions[field][index].count++
+            suggestions[field][index].count++;
           }
-        })
-      })
+        });
+      });
     }),
     []
-  )
+  );
 
   function handleCancel() {
-    onCancel()
+    onCancel();
   }
 
   function handleChange(value, name) {
-    data[name] = value
+    data[name] = value;
   }
 
   function handleRemove(name) {
-    delete data[name]
+    delete data[name];
   }
 
   function handleAdd(name) {
     return event => {
-      data[name] = null
-      onClose(event)
-    }
+      data[name] = null;
+      onClose(event);
+    };
   }
 
-  const [fields] = useBottleFields(data, {}, handleChange)
+  const [fields] = useBottleFields(data, {}, handleChange);
   const availableFields = Object.keys(fields).filter(
     name => undefined === data[name]
-  )
+  );
 
   return (
     <>
@@ -208,8 +209,8 @@ const BottleDialogContent = observer(function({data, bottles, onCancel}) {
         </Button>
       </DialogActions>
     </>
-  )
-})
+  );
+});
 
 function FieldItem({
   name,
@@ -220,19 +221,19 @@ function FieldItem({
   onRemove,
   classes,
 }) {
-  const [anchor, open, onOpen, onClose] = useAnchor()
-  const [t] = useTranslation()
-  const id = `bottle-field-${name}-menu`
+  const [anchor, open, onOpen, onClose] = useAnchor();
+  const [t] = useTranslation();
+  const id = `bottle-field-${name}-menu`;
 
   function handleRemove() {
-    onRemove(name)
+    onRemove(name);
   }
 
   function handleChange(value) {
     return event => {
-      onClose()
-      onChange(value, name)
-    }
+      onClose();
+      onChange(value, name);
+    };
   }
 
   return (
@@ -272,7 +273,7 @@ function FieldItem({
               onClick={handleChange(suggestion.value)}
               disabled={null === suggestion.value}
               selected={suggestion.value === value}
-              style={name === 'image' ? {height: 'auto'} : {}}
+              style={name === 'etiquette' ? {height: 'auto'} : {}}
             >
               <ListItemIcon>
                 <Badge badgeContent={suggestion.count} color="primary">
@@ -286,7 +287,7 @@ function FieldItem({
                   value={suggestion.value}
                   name={name}
                   namespace="bottle"
-                  style={name === 'image' ? {maxHeight: '5em'} : {}}
+                  style={name === 'etiquette' ? {maxHeight: '5em'} : {}}
                 />
               )}
             </MenuItem>
@@ -301,7 +302,7 @@ function FieldItem({
         </Menu>
       </Grid>
     </Grid>
-  )
+  );
 }
 
-export default observer(BottleDialog)
+export default observer(BottleDialog);

@@ -1,16 +1,19 @@
-import React, {useState, useEffect} from 'react'
-import {useTranslation} from 'react-i18next/hooks'
-import {makeStyles} from '@material-ui/styles'
-import IconButton from '@material-ui/core/IconButton'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import TextField from '@material-ui/core/TextField'
-import CircularProgress from '@material-ui/core/CircularProgress'
+import React, {useState, useEffect} from 'react';
+import {useTranslation} from 'react-i18next/hooks';
+import {makeStyles} from '@material-ui/styles';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import TextField from '@material-ui/core/TextField';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-import {AddImageIcon} from '../ui/Icons'
+import {AddImageIcon} from '../ui/Icons';
 
-import storageApi from '../api/storageApi'
+import storageApi from '../api/storageApi';
+import {resize, blobify} from '../lib/image';
 
-export default function FileField({
+export const MAX_WIDTH = 360;
+
+export default function ImageField({
   id,
   label,
   value,
@@ -22,17 +25,15 @@ export default function FileField({
   inputProps,
   ...props
 }) {
-  const [t] = useTranslation()
+  const [t] = useTranslation();
 
-  function handleChange(event) {
-    const {files} = event.target
-
+  function handleChange(value) {
     if (onChange) {
-      onChange(files[0], name)
+      onChange(value, name);
     }
   }
 
-  const title = t('form.image.upload')
+  const title = t('form.image.upload');
 
   return (
     <TextField
@@ -69,7 +70,7 @@ export default function FileField({
       }}
       {...props}
     />
-  )
+  );
 }
 
 const useStyle = makeStyles(theme => ({
@@ -90,7 +91,7 @@ const useStyle = makeStyles(theme => ({
   progress: {
     //margin: theme.spacing.unit,
   },
-}))
+}));
 
 function ImageInput({
   accept,
@@ -101,36 +102,66 @@ function ImageInput({
   onChange,
   ...props
 }) {
-  const [src, setSrc] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const [src, setSrc] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const classes = useStyle()
+  const classes = useStyle();
 
   useEffect(
     () => {
-      if (value instanceof File) {
-        setLoading(true)
-        var reader = new FileReader()
+      if (value instanceof File || value instanceof Blob) {
+        setLoading(true);
+        var reader = new FileReader();
 
         reader.onload = event => {
-          setLoading(false)
-          setSrc(event.target.result)
-        }
+          setLoading(false);
+          setSrc(event.target.result);
+        };
 
-        reader.readAsDataURL(value)
+        reader.readAsDataURL(value);
       } else if (value) {
-        setLoading(true)
+        setLoading(true);
         storageApi
           .child(value)
           .getDownloadURL()
           .then(url => {
-            setLoading(false)
-            setSrc(url)
+            setLoading(false);
+            setSrc(url);
           })
+          .catch(error => {
+            console.log(error);
+          });
       }
     },
     [value]
-  )
+  );
+
+  function handleChange(event) {
+    const {files} = event.target;
+    const file = files[0];
+
+    setLoading(true);
+
+    var reader = new FileReader();
+
+    reader.onload = event => {
+      // Resize image
+      const image = new Image();
+
+      image.onload = () => {
+        const dataUrl = resize(image, MAX_WIDTH);
+        const resizedImage = blobify(dataUrl);
+
+        if (onChange) {
+          onChange(resizedImage);
+        }
+      };
+
+      image.src = event.target.result;
+    };
+
+    reader.readAsDataURL(file);
+  }
 
   return (
     <label className={classes.label + ' ' + className}>
@@ -139,12 +170,12 @@ function ImageInput({
         accept={accept}
         className={classes.input}
         id="image-field"
-        onChange={onChange}
+        onChange={handleChange}
         ref={inputRef}
         {...props}
       />
       {/* {loading ? <CircularProgress className={classes.progress} /> : null} */}
       {src ? <img className={classes.image} src={src} alt={label} /> : null}
     </label>
-  )
+  );
 }

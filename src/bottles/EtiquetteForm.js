@@ -1,20 +1,20 @@
-import React from 'react'
-import {observer} from 'mobx-react-lite'
-import {useTranslation} from 'react-i18next/hooks'
-import {makeStyles} from '@material-ui/styles'
+import React from 'react';
+import {observer} from 'mobx-react-lite';
+import {useTranslation} from 'react-i18next/hooks';
+import {makeStyles} from '@material-ui/styles';
 
-import FieldRow from '../form/FieldRow'
-import DateField from '../form/DateFieldPicker'
-import SelectField from '../form/SelectField'
-import TextField from '../form/TextField'
-import ImageField from '../form/ImageField'
-import AutocompleteField from '../form/AutocompleteField'
+import FieldRow from '../form/FieldRow';
+import DateField from '../form/DateFieldPicker';
+import SelectField from '../form/SelectField';
+import TextField from '../form/TextField';
+import ImageField from '../form/ImageField';
+import AutocompleteField from '../form/AutocompleteField';
 
-import sorts from '../enums/sorts'
-import sizes from '../enums/sizes'
-import colors from '../enums/colors'
-import capsules from '../enums/capsules'
-import effervescences from '../enums/effervescences'
+import sorts from '../enums/sorts';
+import sizes from '../enums/sizes';
+import colors from '../enums/colors';
+import capsules from '../enums/capsules';
+import effervescences from '../enums/effervescences';
 
 const useStyles = makeStyles(theme => ({
   xs: {
@@ -36,16 +36,16 @@ const useStyles = makeStyles(theme => ({
   xl: {
     width: '100%',
   },
-}))
+}));
 
 function EtiquetteForm({errors = {}, bottle, onChange}) {
-  const [fields, sortDef] = useBottleFields(bottle, errors, onChange)
+  const [fields, sortDef] = useBottleFields(bottle, errors, onChange);
 
   return (
     <>
       <FieldRow>
         {fields.sort}
-        {fields.image}
+        {fields.etiquette}
       </FieldRow>
       <FieldRow>
         {fields.appellation}
@@ -72,16 +72,16 @@ function EtiquetteForm({errors = {}, bottle, onChange}) {
         {fields.comment}
       </FieldRow>
     </>
-  )
+  );
 }
 
-export default observer(EtiquetteForm)
+export default observer(EtiquetteForm);
 
 export function useBottleFields(bottle, errors, onChange) {
-  const classes = useStyles()
-  const [t] = useTranslation()
+  const classes = useStyles();
+  const [t] = useTranslation();
 
-  const sortDef = sorts.find(sort => sort.name === bottle.sort)
+  const sortDef = sorts.find(sort => sort.name === bottle.sort);
 
   const fields = {
     sort: (
@@ -100,12 +100,12 @@ export function useBottleFields(bottle, errors, onChange) {
         className={classes.sm}
       />
     ),
-    image: (
+    etiquette: (
       <ImageField
-        label={t('bottle.image')}
-        id="bottle-image"
-        name="image"
-        value={bottle.image}
+        label={t('bottle.etiquette')}
+        id="bottle-etiquette"
+        name="etiquette"
+        value={bottle.etiquette}
         onChange={onChange}
         className={classes.md}
         accept="image/*"
@@ -242,10 +242,14 @@ export function useBottleFields(bottle, errors, onChange) {
         value={bottle.type}
         onChange={onChange}
         empty={<em>{t('form.select.empty')}</em>}
-        options={sortDef ? sortDef.types.map(type => ({
-          value: type,
-          label: t(`enum.type.${type}`),
-        })) : []}
+        options={
+          sortDef
+            ? sortDef.types.map(type => ({
+                value: type,
+                label: t(`enum.type.${type}`),
+              }))
+            : []
+        }
         className={classes.md}
       />
     ),
@@ -291,7 +295,7 @@ export function useBottleFields(bottle, errors, onChange) {
         className={classes.xl}
       />
     ),
-  }
+  };
 
-  return [fields, sortDef]
+  return [fields, sortDef];
 }

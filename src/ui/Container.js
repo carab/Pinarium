@@ -1,12 +1,13 @@
-import React from 'react'
-import classnames from 'classnames'
-import {makeStyles} from '@material-ui/styles'
-import Toolbar from '@material-ui/core/Toolbar'
-import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
-import {lighten} from '@material-ui/core/styles/colorManipulator'
+import React from 'react';
+import {observer} from 'mobx-react-lite';
+import classnames from 'classnames';
+import {makeStyles} from '@material-ui/styles';
+import {lighten} from '@material-ui/core/styles/colorManipulator';
+import {Toolbar, Paper, Typography, Portal} from '@material-ui/core';
 
-const useStyles = makeStyles(theme => ({
+import uiStore from '../stores/ui';
+
+const useStyle = makeStyles(theme => ({
   root: {
     width: '100%',
     flexGrow: 1,
@@ -32,8 +33,7 @@ const useStyles = makeStyles(theme => ({
   actions: {
     marginLeft: 'auto',
   },
-  title: {},
-}))
+}));
 
 export default function Container({
   title,
@@ -42,11 +42,10 @@ export default function Container({
   size,
   highlighted,
   startAdornment,
-  endAdornment,
   className,
   ...props
 }) {
-  const classes = useStyles()
+  const classes = useStyle();
 
   return (
     <Paper
@@ -55,23 +54,45 @@ export default function Container({
         [classes.sm]: size === 'sm',
       })}
     >
-      <Toolbar
-        className={classnames(className, {
+      <PageHeader
+        title={
+          <>
+            {startAdornment || null}
+            {title ? (
+              <Typography variant="h6" color="inherit">
+                {title}
+              </Typography>
+            ) : null}
+          </>
+        }
+        actions={
+          actions ? <div className={classes.actions}>{actions}</div> : null
+        }
+        className={classnames({
           [classes.highlighted]: highlighted,
         })}
-      >
-        {startAdornment || null}
-        {title ? (
-          <div className={classes.title}>
-            <Typography variant="h6" color="inherit">
-              {title}
-            </Typography>
-          </div>
-        ) : null}
-        {endAdornment || null}
-        {actions ? <div className={classes.actions}>{actions}</div> : null}
-      </Toolbar>
+      />
       {children}
     </Paper>
-  )
+  );
 }
+
+const PageHeader = observer(function({title, actions, ...props}) {
+  if (uiStore.topbar.titleRef) {
+    return (
+      <>
+        {title && <Portal container={uiStore.topbar.titleRef}>{title}</Portal>}
+        {actions && (
+          <Portal container={uiStore.topbar.actionsRef}>{actions}</Portal>
+        )}
+      </>
+    );
+  }
+
+  return (
+    <Toolbar {...props}>
+      {title}
+      {actions}
+    </Toolbar>
+  );
+});
