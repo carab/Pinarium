@@ -1,6 +1,7 @@
 import React, {Suspense} from 'react';
 import ReactDOM from 'react-dom';
 import './i18n';
+import './bootstrap';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 

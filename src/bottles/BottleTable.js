@@ -22,9 +22,11 @@ import {
 import BottleMenu from './BottleMenu';
 import FieldRenderer from '../field/FieldRenderer';
 import {ColumnsIcon} from '../ui/Icons';
+import Link from '../ui/Link';
 
 import useAnchor from '../hooks/useAnchor';
 import uiStore from '../stores/ui';
+import {useSearch} from '../stores/searchStore';
 import {useSelection} from '../stores/selectionStore';
 
 const useStyle = makeStyles(theme => ({
@@ -68,7 +70,7 @@ const COLUMNS = [
   {name: 'sort', width: 40},
   {name: 'cellar', width: 100},
   {name: 'appellation', sortable: true, width: 200},
-  {name: 'vintage', numeric: true, sortable: true, width: 80},
+  {name: 'vintage', numeric: true, sortable: true, width: 110},
   {name: 'bottlingDate', sortable: true, width: 50},
   {name: 'expirationDate', sortable: true, width: 50},
   {name: 'cuvee', width: 150},
@@ -93,9 +95,10 @@ const COLUMNS = [
 const HEADER_HEIGHT = 56;
 const ROW_HEIGHT = 56;
 
-function BottleTable({Search, bottles, onLoadBottles}) {
+function BottleTable({bottles, onLoadBottles}) {
   const classes = useStyle();
   const [t] = useTranslation();
+  const Search = useSearch();
 
   function handleToggleColumn(column) {
     return event => Search.toggleColumn(column);
@@ -120,7 +123,8 @@ function BottleTable({Search, bottles, onLoadBottles}) {
   columns.push({
     name: 'action',
     width: 80,
-    cellRenderer: ({bottle, column}) => <ActionCell bottle={bottle} />,
+    // cellRenderer: ({bottle, column}) => <ActionCell bottle={bottle} />,
+    cellRenderer: () => null,
     headerRenderer: () => (
       <ColumnsMenu
         onToggle={handleToggleColumn}
@@ -255,6 +259,11 @@ const SelectCell = observer(function({bottle}) {
     }
   }
 
+  function handleClick(event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+
   return (
     <Checkbox
       inputProps={{
@@ -264,6 +273,7 @@ const SelectCell = observer(function({bottle}) {
       }}
       checked={selected}
       onChange={handleSelect}
+      onClick={handleClick}
     />
   );
 });
@@ -317,17 +327,21 @@ const TableRow = observer(function({children, index, bottle, style, ...props}) {
   }
 
   return (
-    <div
+    <Link
+      color="inherit"
+      variant="inherit"
+      underline="none"
       role="row"
       aria-label="row"
       tabIndex={0}
       onMouseOut={handleMouseOut}
       onMouseOver={handleMouseOver}
       style={style}
+      to={`/bottle/${bottle.$ref.id}`}
       {...props}
     >
       {children}
-    </div>
+    </Link>
   );
 });
 

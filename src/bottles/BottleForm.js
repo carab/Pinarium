@@ -41,12 +41,12 @@ export default observer(function BottleForm({id}) {
 
 const Form = observer(function({bottle}) {
   const errors = {};
+  const editing = Boolean(bottle.$ref);
   const [user] = useUser();
   const [tab, setTab] = useState(0);
   const [log, setLog] = useState(null);
   const [saving, setSaving] = useState(false);
-  const [quantity, setQuantity] = useState(1);
-  const editing = Boolean(bottle.$ref);
+  const [quantity, setQuantity] = useState(editing ? 1 : 1);
 
   const theme = useTheme();
   const [t] = useTranslation();
@@ -105,7 +105,7 @@ const Form = observer(function({bottle}) {
 
   function handleCloseLog(logRef) {
     setLog(null);
-    navigate('/bottles');
+    // navigate('/bottles');
   }
 
   return (
@@ -132,7 +132,7 @@ const Form = observer(function({bottle}) {
               loading={saving}
               size={40}
               type="submit"
-              color="secondary"
+              color="inherit"
               title={t('label.save')}
               aria-label={t('label.save')}
               onClick={handleSubmit}
@@ -166,6 +166,7 @@ const Form = observer(function({bottle}) {
         >
           <EtiquetteForm
             errors={errors}
+            editing={editing}
             bottle={bottle}
             onChange={handleChange}
           />

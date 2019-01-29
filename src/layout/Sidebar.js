@@ -205,6 +205,12 @@ const SearchesMenu = observer(function({onClick}) {
   }
 
   const title = t('label.delete');
+  const items = searches.map(search => ({
+    key: search.$ref.id,
+    to: `/bottles/${search.query}`,
+    title: search.name,
+    onDelete: () => search.$ref.delete(),
+  }));
 
   return (
     <>
@@ -217,27 +223,29 @@ const SearchesMenu = observer(function({onClick}) {
           {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
         </MenuItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
-          {searches.map(search => (
-            <List key={search.$ref.id} component="div" disablePadding>
-              <ListItem
-                button
-                component={Link}
-                to={`/bottles/${search.query}`}
-                onClick={onClick}
-              >
-                <ListItemText inset primary={search.name} />
-                <ListItemSecondaryAction>
-                  <IconButton
-                    size="small"
-                    aria-label={title}
-                    title={title}
-                    onClick={() => search.$ref.delete()}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            </List>
+          {items.map(item => (
+            <Match key={item.key} path={item.to}>
+              {({match}) => (
+                <MenuItem
+                  selected={Boolean(match)}
+                  component={Link}
+                  to={item.to}
+                  onClick={onClick}
+                >
+                  <ListItemText inset primary={item.title} />
+                  <ListItemSecondaryAction>
+                    <IconButton
+                      size="small"
+                      aria-label={title}
+                      title={title}
+                      onClick={item.onDelete}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </MenuItem>
+              )}
+            </Match>
           ))}
         </Collapse>
       </MenuList>

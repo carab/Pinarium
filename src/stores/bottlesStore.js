@@ -7,7 +7,8 @@ import storageApi from '../api/storageApi';
 import Bottle from '../models/bottle';
 import {useCollection, useDocument, makeStore} from './utils';
 import auth from './auth';
-import logStore from './logsStore';
+import logsStore from './logsStore';
+import searchStore from './searchStore';
 
 const bottlesStore = extendObservable(
   makeStore(Bottle, 'bottles'),
@@ -78,7 +79,7 @@ const bottlesStore = extendObservable(
 
       const promises = bottleRefs.map(async bottleRef => {
         // First fetch bottle logs
-        const snapshot = await logStore.getByBottle(bottleRef);
+        const snapshot = await logsStore.getByBottle(bottleRef);
 
         if (!snapshot.empty) {
           // Initial data is empty to clean values that may have been deleted
@@ -118,7 +119,9 @@ const bottlesStore = extendObservable(
 
 export default bottlesStore;
 
-export function useBottles(visibility) {
+export function useBottles() {
+  const {visibility} = searchStore;
+
   const name =
     undefined === visibility ? 'all' : visibility ? 'stocked' : 'unstocked';
 
@@ -135,12 +138,9 @@ export function useBottles(visibility) {
 
   const [bottles, ...rest] = useCollection(bottlesStore, name, filter);
 
-  useEffect(
-    () => {
-      bottlesStore.currentBottles = bottles;
-    },
-    [bottles]
-  );
+  useEffect(() => {
+    bottlesStore.currentBottles = bottles;
+  }, [bottles]);
 
   return [bottles, ...rest];
 }

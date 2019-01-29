@@ -1,40 +1,37 @@
 import {useState, useEffect} from 'react';
 
-import storageApi from '../api/storageApi';
+import {getUrl} from '../api/storageApi';
 
-function useFirebaseImage(reference) {
+function useFirebaseImage(path) {
   let mounted = true;
   const [url, setUrl] = useState(null);
   const [error, setError] = useState(null);
 
-  useEffect(
-    () => {
-      mounted = true;
-      setUrl(null);
-      setError(null);
+  useEffect(() => {
+    mounted = true;
+    setUrl(null);
+    setError(null);
 
-      if (reference) {
-        const promise = storageApi.child(reference).getDownloadURL();
+    if (path) {
+      const promise = getUrl(path);
 
-        promise
-          .then(url => {
-            if (mounted) {
-              setUrl(url);
-            }
-          })
-          .catch(error => {
-            if (mounted) {
-              setError(error);
-            }
-          });
+      promise
+        .then(url => {
+          if (mounted) {
+            setUrl(url);
+          }
+        })
+        .catch(error => {
+          if (mounted) {
+            setError(error);
+          }
+        });
 
-        return () => {
-          mounted = false;
-        };
-      }
-    },
-    [reference]
-  );
+      return () => {
+        mounted = false;
+      };
+    }
+  }, [path]);
 
   return [url, error];
 }

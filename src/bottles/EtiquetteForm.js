@@ -43,17 +43,19 @@ function EtiquetteForm({errors = {}, bottle, onChange}) {
 
   return (
     <>
+      <FieldRow>{fields.etiquette}</FieldRow>
       <FieldRow>
         {fields.sort}
-        {fields.etiquette}
-      </FieldRow>
-      <FieldRow>
         {fields.appellation}
         {fields.cuvee}
         {sortDef && sortDef.vintage && fields.vintage}
-        {sortDef && sortDef.bottlingDate && fields.bottlingDate}
-        {sortDef && sortDef.expirationDate && fields.expirationDate}
       </FieldRow>
+      {sortDef && (sortDef.bottlingDate || sortDef.expirationDate) ? (
+        <FieldRow>
+          {sortDef.bottlingDate && fields.bottlingDate}
+          {sortDef.expirationDate && fields.expirationDate}
+        </FieldRow>
+      ) : null}
       <FieldRow>
         {fields.producer}
         {fields.region}
@@ -97,7 +99,7 @@ export function useBottleFields(bottle, errors, onChange) {
           value: sort.name,
           label: t(`enum.sort.${sort.name}`),
         }))}
-        className={classes.sm}
+        className={classes.xs}
       />
     ),
     etiquette: (
@@ -150,7 +152,7 @@ export function useBottleFields(bottle, errors, onChange) {
         name="bottlingDate"
         value={bottle.bottlingDate}
         onChange={onChange}
-        className={classes.sm}
+        className={classes.md}
       />
     ),
     expirationDate: (
@@ -159,10 +161,9 @@ export function useBottleFields(bottle, errors, onChange) {
         name="expirationDate"
         value={bottle.expirationDate}
         onChange={onChange}
-        className={classes.sm}
+        className={classes.md}
       />
     ),
-
     producer: (
       <AutocompleteField
         label={t('bottle.producer')}

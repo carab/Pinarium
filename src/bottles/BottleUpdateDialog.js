@@ -27,7 +27,7 @@ import uiStore from '../stores/ui';
 import useAnchor from '../hooks/useAnchor';
 import equals from '../lib/equals';
 
-function BottleDialog() {
+function BottleUpdateDialog() {
   const {bottles} = uiStore.dialogs.bottle;
   const open = Boolean(bottles.length);
   const state = useObservable({data: {}});
@@ -89,6 +89,8 @@ function BottleDialog() {
     </Dialog>
   );
 }
+
+export default observer(BottleUpdateDialog);
 
 const useStyles = makeStyles(theme => ({
   addButton: {
@@ -304,5 +306,3 @@ function FieldItem({
     </Grid>
   );
 }
-
-export default observer(BottleDialog);

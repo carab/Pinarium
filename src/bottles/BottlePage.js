@@ -1,22 +1,21 @@
-import React, {useEffect} from 'react';
+import React, {memo} from 'react';
+import {navigate, Router} from '@reach/router';
 import {observer} from 'mobx-react-lite';
 import {useTranslation} from 'react-i18next/hooks';
 import {makeStyles} from '@material-ui/styles';
-import Typography from '@material-ui/core/Typography';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import Hidden from '@material-ui/core/Hidden';
+import {Typography, Checkbox, IconButton, Hidden} from '@material-ui/core';
 
 import Container from '../ui/Container';
 import {CloseIcon} from '../ui/Icons';
 import BottleMenu from './BottleMenu';
-import BottleDialog from './BottleDialog';
 import BottleListMenu from './BottleListMenu';
 import BottleList from './BottleList';
 import BottleTable from './BottleTable';
+import SearchDrawerToggle from '../search/SearchDrawerToggle';
 
+import useSize from '../hooks/useSize';
 import {useBottles} from '../stores/bottlesStore';
-import {useSearch, useSearchIndex} from '../stores/searchStore';
+import {useSearchProvider, useSearchQuery} from '../stores/searchStore';
 import {useSelectionProvider} from '../stores/selectionStore';
 
 const useStyle = makeStyles(theme => ({
@@ -26,18 +25,16 @@ const useStyle = makeStyles(theme => ({
   },
   selectAll: {
     marginRight: theme.spacing.unit,
-    marginLeft: (theme.spacing.unit * -3) / 2,
   },
 }));
 
-export default observer(function BottlePage({query}) {
-  const Search = useSearch();
-  const [bottles, ready] = useBottles(Search.visibility);
-  const [filtered] = useSearchIndex(query, bottles);
-  const [selection, select, unselect] = useSelectionProvider(filtered);
-
+function BottlePage() {
   const classes = useStyle();
   const [t] = useTranslation();
+  const isSmall = useSize('sm', 'down');
+  const [bottles, ready] = useBottles();
+  const [filtered] = useSearchProvider(bottles);
+  const [selection, select, unselect] = useSelectionProvider(filtered);
 
   const countAll = filtered.length;
   const countSelected = selection.length;
@@ -62,7 +59,9 @@ export default observer(function BottlePage({query}) {
 
   return (
     <>
-      <BottleDialog />
+      <Router>
+        <QueryProvider path="*" />
+      </Router>
       <Container
         highlighted={countSelected > 0}
         title={
@@ -98,20 +97,20 @@ export default observer(function BottlePage({query}) {
               </IconButton>
               <BottleMenu bottles={selection} />
             </>
+          ) : isSmall ? (
+            <SearchDrawerToggle />
           ) : (
-            <Hidden smDown>
-              <BottleListMenu />
-            </Hidden>
+            <BottleListMenu />
           )
         }
       >
         {filtered.length ? (
           <>
             <Hidden mdUp>
-              <BottleList Search={Search} bottles={filtered} />
+              <BottleList bottles={filtered} />
             </Hidden>
             <Hidden smDown>
-              <BottleTable Search={Search} bottles={filtered} />
+              <BottleTable bottles={filtered} />
             </Hidden>
           </>
         ) : (
@@ -122,4 +121,22 @@ export default observer(function BottlePage({query}) {
       </Container>
     </>
   );
+}
+
+export default observer(BottlePage);
+
+function QueryProvider(props) {
+  return <SearchQueryProvider query={props['*']} />;
+}
+
+const SearchQueryProvider = observer(function({query = '', ...props}) {
+  console.log('SearchQueryProvider');
+  console.log(query);
+  function handleUpdate(query) {
+    navigate(`/bottles/${query}`, {replace: true});
+  }
+
+  useSearchQuery(query, handleUpdate);
+
+  return null;
 });

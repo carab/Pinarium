@@ -1,22 +1,22 @@
-import React, {useCallback} from 'react'
-import {Trans} from 'react-i18next/hooks'
-import Avatar from '@material-ui/core/Avatar'
-import Button from '@material-ui/core/Button'
-import FormControl from '@material-ui/core/FormControl'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Checkbox from '@material-ui/core/Checkbox'
-import Input from '@material-ui/core/Input'
-import InputLabel from '@material-ui/core/InputLabel'
-import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
-import {makeStyles} from '@material-ui/styles'
-import {observer, useObservable} from 'mobx-react-lite'
-import {Redirect} from '@reach/router'
+import React, {useCallback} from 'react';
+import {Trans} from 'react-i18next/hooks';
+import Avatar from '@material-ui/core/Avatar';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import {makeStyles} from '@material-ui/styles';
+import {observer, useObservable} from 'mobx-react-lite';
+import {Redirect} from '@reach/router';
 
-import {SignInIcon} from '../ui/Icons'
+import {SignInIcon} from '../ui/Icons';
+import ProgressButton from '../ui/ProgressButton';
 
-import {signIn} from '../api/auth'
-import auth from '../stores/auth'
+import {signIn} from '../api/auth';
+import auth from '../stores/auth';
 
 const useStyles = makeStyles(theme => ({
   main: {
@@ -47,36 +47,37 @@ const useStyles = makeStyles(theme => ({
   submit: {
     marginTop: theme.spacing.unit * 3,
   },
-}))
+}));
 
 export default observer(function SignIn() {
-  const classes = useStyles()
+  const classes = useStyles();
 
   const form = useObservable({
     email: '',
     password: '',
     error: null,
-  })
+    loading: false,
+  });
 
-  const handleSubmit = useCallback(
-    async event => {
-      event.preventDefault()
+  const handleSubmit = useCallback(async event => {
+    event.preventDefault();
+    form.loading = true;
 
-      try {
-        await signIn(form.email, form.password)
-      } catch (error) {
-        form.error = error.code // @todo map code to labels
-      }
-    },
-    [form.email, form.password]
-  )
+    try {
+      await signIn(form.email, form.password);
+    } catch (error) {
+      form.error = error.code; // @todo map code to labels
+    }
+
+    form.loading = false;
+  }, [form.email, form.password]);
 
   const handleChange = useCallback(event => {
-    form[event.target.name] = event.target.value
-  }, [])
+    form[event.target.name] = event.target.value;
+  }, []);
 
   if (auth.user) {
-    return <Redirect to="/" noThrow />
+    return <Redirect to="/" noThrow />;
   }
 
   return (
@@ -122,17 +123,21 @@ export default observer(function SignIn() {
             control={<Checkbox value="remember" color="primary" />}
             label={<Trans i18nKey="signin.remember" />}
           />
-          <Button
-            type="submit"
+          <ProgressButton
+            loading={form.loading}
+            // size={40}
             fullWidth
+            type="submit"
             variant="contained"
             color="primary"
+            onClick={handleSubmit}
             className={classes.submit}
+            rootProps={{style: {width: '100%'}}}
           >
             <Trans i18nKey="signin.submit" />
-          </Button>
+          </ProgressButton>
         </form>
       </Paper>
     </main>
-  )
-})
+  );
+});

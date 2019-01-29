@@ -1,5 +1,6 @@
 import React from 'react';
 import {observer} from 'mobx-react-lite';
+import {Link} from '@reach/router';
 import {useTranslation} from 'react-i18next/hooks';
 import classnames from 'classnames';
 import {AutoSizer, List as VirtualizedList} from 'react-virtualized';
@@ -7,12 +8,10 @@ import {makeStyles} from '@material-ui/styles';
 import {
   ListItem,
   ListItemText,
-  ListItemSecondaryAction,
   ListItemAvatar,
   Avatar,
 } from '@material-ui/core';
 
-import BottleMenu from './BottleMenu';
 import {BottleIcon, CheckIcon} from '../ui/Icons';
 import useLocale from '../hooks/useLocale';
 import useFirebaseImage from '../hooks/useFirebaseImage';
@@ -36,20 +35,10 @@ const ROW_HEIGHT = 86;
 
 function BottleList({bottles}) {
   const classes = useStyle();
-  const [selection] = useSelection();
-
-  const onlySelect = selection.length > 0;
 
   function rowRenderer({index, key, style}) {
     const bottle = bottles[index];
-    return (
-      <BottleItem
-        key={key}
-        bottle={bottle}
-        onlySelect={onlySelect}
-        style={style}
-      />
-    );
+    return <BottleItem key={key} bottle={bottle} style={style} />;
   }
 
   return (
@@ -84,7 +73,7 @@ const useItemStyle = makeStyles(theme => ({
   },
 }));
 
-const BottleItem = observer(function({bottle, onlySelect, ...props}) {
+const BottleItem = observer(function({bottle, ...props}) {
   const [selected, select, unselect] = useSelection(bottle);
   const [cellar] = useCellar(bottle.cellar);
   const classes = useItemStyle();
@@ -99,6 +88,7 @@ const BottleItem = observer(function({bottle, onlySelect, ...props}) {
   });
 
   function handleSelect(event) {
+    event.preventDefault();
     if (selected) {
       unselect();
     } else {
@@ -106,43 +96,51 @@ const BottleItem = observer(function({bottle, onlySelect, ...props}) {
     }
   }
 
+  function handleKeyPress(event) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      handleSelect(event);
+    }
+  }
+
   const [primary, secondary, tertiary] = bottleRenderer(bottle, cellar, t);
 
   return (
-    <div {...props}>
-      <ListItem
-        ContainerComponent="div"
-        onClick={onlySelect ? handleSelect : undefined}
+    <ListItem
+      component={Link}
+      to={`/bottle/${bottle.$ref.id}`}
+      {...props}
+    >
+      <ListItemAvatar
+        tabIndex="0"
+        role="button"
+        aria-pressed={selected}
+        onKeyPress={handleKeyPress}
+        onClick={handleSelect}
+        aria-label={t('bottle.list.select')}
       >
-        {/* <Checkbox checked={selected} onChange={handleSelect} /> */}
-        <ListItemAvatar onClick={handleSelect}>
-          <Avatar
-            classes={{
-              colorDefault: selected ? classes.selectedAvatar : undefined,
-            }}
-            onClick={handleSelect}
-            alt={primary}
-            src={!selected && ready ? url : null}
-          >
-            {selected ? <CheckIcon /> : !ready ? <BottleIcon /> : null}
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText
-          className={className}
-          primary={primary}
-          secondary={
-            <>
-              {secondary}
-              <br />
-              {tertiary}
-            </>
-          }
-        />
-        <ListItemSecondaryAction>
-          <BottleMenu bottles={[bottle]} />
-        </ListItemSecondaryAction>
-      </ListItem>
-    </div>
+        <Avatar
+          classes={{
+            colorDefault: selected ? classes.selectedAvatar : undefined,
+          }}
+          onClick={handleSelect}
+          alt={primary}
+          src={!selected && ready ? url : null}
+        >
+          {selected ? <CheckIcon /> : !ready ? <BottleIcon /> : null}
+        </Avatar>
+      </ListItemAvatar>
+      <ListItemText
+        className={className}
+        primary={primary}
+        secondary={
+          <>
+            {secondary}
+            <br />
+            {tertiary}
+          </>
+        }
+      />
+    </ListItem>
   );
 });
 

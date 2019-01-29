@@ -1,7 +1,7 @@
 import React from 'react';
 import {makeStyles} from '@material-ui/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import {Button} from '@material-ui/core';
+import classnames from 'classnames';
+import {Button, CircularProgress} from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   wrapper: {
@@ -19,10 +19,20 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function ProgressButton({Component, color, loading, size, children, ...props}) {
+function ProgressButton({
+  Component,
+  rootProps: {className, ...rootProps},
+  color,
+  loading,
+  size,
+  children,
+  ...props
+}) {
   const classes = useStyles();
+  const classNames = classnames(classes.wrapper, className);
+
   return (
-    <div className={classes.wrapper}>
+    <div className={classNames} {...rootProps}>
       <Component color={color} disabled={loading} {...props}>
         {children}
       </Component>
@@ -42,6 +52,7 @@ function ProgressButton({Component, color, loading, size, children, ...props}) {
 ProgressButton.defaultProps = {
   size: 24,
   Component: Button,
+  rootProps: {},
 };
 
 export default ProgressButton;

@@ -1,5 +1,5 @@
-import {observable, action} from 'mobx';
-import {useObservable} from 'mobx-react-lite';
+import {observable, autorun, action} from 'mobx';
+import {useDisposable} from 'mobx-react-lite';
 import itemsjs from 'itemsjs';
 
 import {clean} from './autocompletesStore';
@@ -368,20 +368,26 @@ export function useSearch() {
   return searchStore;
 }
 
-export function useSearchIndex(query, bottles) {
-  useEffect(
-    () => {
-      searchStore.source = bottles;
-    },
-    [bottles]
-  );
-
-  useEffect(
-    () => {
-      searchStore.query = query;
-    },
-    [query]
-  );
+export function useSearchProvider(bottles) {
+  useEffect(() => {
+    searchStore.source = bottles;
+  }, [bottles]);
 
   return [searchStore.search.data.items];
+}
+
+export function useSearchQuery(query, onUpdate) {
+  useEffect(() => {
+    if (searchStore.query !== query) {
+      searchStore.query = query;
+    }
+  }, [query]);
+
+  useDisposable(
+    autorun(() => {
+      onUpdate(searchStore.query);
+    })
+  );
+
+  return null;
 }

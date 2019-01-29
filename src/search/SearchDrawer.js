@@ -98,7 +98,7 @@ const SearchDrawerContent = observer(function({onClose}) {
         </IconButton>
       </Toolbar>
       <div className={classes.content}>
-        <SearchForm />
+        <SearchForm fullWidth />
       </div>
     </>
   );

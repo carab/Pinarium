@@ -6,6 +6,7 @@ import {lighten} from '@material-ui/core/styles/colorManipulator';
 import {Toolbar, Paper, Typography, Portal} from '@material-ui/core';
 
 import uiStore from '../stores/ui';
+import useSize from '../hooks/useSize';
 
 const useStyle = makeStyles(theme => ({
   root: {
@@ -46,6 +47,7 @@ export default function Container({
   ...props
 }) {
   const classes = useStyle();
+  const isSmall = useSize('sm', 'down');
 
   return (
     <Paper
@@ -55,6 +57,7 @@ export default function Container({
       })}
     >
       <PageHeader
+        portal={isSmall}
         title={
           <>
             {startAdornment || null}
@@ -77,8 +80,8 @@ export default function Container({
   );
 }
 
-const PageHeader = observer(function({title, actions, ...props}) {
-  if (uiStore.topbar.titleRef) {
+const PageHeader = observer(function({title, actions, portal, ...props}) {
+  if (portal) {
     return (
       <>
         {title && <Portal container={uiStore.topbar.titleRef}>{title}</Portal>}

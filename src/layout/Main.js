@@ -9,12 +9,15 @@ import Fab from './Fab';
 import BottleList from '../bottles/BottlePage';
 import BottleForm from '../bottles/BottleForm';
 import BottleDeleteDialog from '../bottles/BottleDeleteDialog';
+import BottleUpdateDialog from '../bottles/BottleUpdateDialog';
 import CellarList from '../cellars/CellarList';
 import CellarForm from '../cellars/CellarForm';
 import UserSettings from '../user/UserSettings';
 import SearchDrawer from '../search/SearchDrawer';
 
 import auth from '../stores/auth';
+import {useBottles} from '../stores/bottlesStore';
+import {useCellars} from '../stores/cellarsStore';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,6 +46,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default observer(function Main() {
+  // Preload these as they will be loaded anyway later
+  useBottles();
+  useCellars();
+
   if (null === auth.user) {
     return <Redirect to="/signin" noThrow />;
   }
@@ -58,7 +65,7 @@ export default observer(function Main() {
         <div className={classes.spacer} />
         <Router className={classes.content}>
           <Redirect from="/" to="/bottles" noThrow />
-          <BottleList path="/bottles/:query" />
+          <BottleList path="/bottles/*" />
           <BottleForm path="/bottle" />
           <BottleForm path="/bottle/:id" />
           <CellarList path="/cellars" />
@@ -69,6 +76,7 @@ export default observer(function Main() {
       </main>
       <SearchDrawer />
       <BottleDeleteDialog />
+      <BottleUpdateDialog />
     </div>
   );
 });

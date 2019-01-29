@@ -1,13 +1,22 @@
 import React, {useEffect, useState, useCallback} from 'react';
 import {observer} from 'mobx-react-lite';
+import classnames from 'classnames';
 import {useTranslation} from 'react-i18next/hooks';
-import {navigate} from '@reach/router';
 import keycode from 'keycode';
 import Downshift from 'downshift';
+import {fade} from '@material-ui/core/styles/colorManipulator';
 import {makeStyles} from '@material-ui/styles';
-import {Paper, ListItemText, MenuItem, Chip, Input} from '@material-ui/core';
+import {
+  Paper,
+  ListItemText,
+  MenuItem,
+  Chip,
+  Input,
+  InputBase,
+} from '@material-ui/core';
 
 import FieldRenderer from '../field/FieldRenderer';
+import {SearchIcon} from '../ui/Icons';
 
 import {useSearch, ENUMS} from '../stores/searchStore';
 import {useCellars} from '../stores/cellarsStore';
@@ -18,10 +27,15 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   container: {
-    flexGrow: 1,
     position: 'relative',
+    minWidth: theme.spacing.unit * 50,
+  },
+  fullContainer: {
+    minWidth: 'auto',
+    width: '100%',
   },
   paper: {
     position: 'absolute',
@@ -35,17 +49,30 @@ const useStyles = makeStyles(theme => ({
   },
   inputRoot: {
     flexWrap: 'wrap',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.5),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.6),
+    },
   },
   inputInput: {
     width: 'auto',
     flexGrow: 1,
+    color: 'inherit',
+    marginLeft: theme.spacing.unit,
+  },
+  inputIcon: {
+    margin: `0 ${theme.spacing.unit}px`,
   },
   divider: {
     height: theme.spacing.unit * 2,
   },
 }));
 
-export default observer(function SearchForm() {
+export default observer(function SearchForm({fullWidth}) {
   const classes = useStyles();
   const Search = useSearch();
   const [ref, setRef] = useState(null);
@@ -57,7 +84,6 @@ export default observer(function SearchForm() {
       keycode(event) === 'backspace'
     ) {
       Search.filters.pop();
-      navigate(`/bottles/${Search.query}`, {replace: true});
     }
   };
 
@@ -67,16 +93,13 @@ export default observer(function SearchForm() {
 
   const handleChange = ({name, value}) => {
     Search.filters.push([name, value]);
-    navigate(`/bottles/${Search.query}`, {replace: true});
-
-    ref.focus();
     Search.input = '';
+    ref.focus();
   };
 
   const handleDelete = item => () => {
     const index = Search.filters.indexOf(item);
     Search.filters.splice(index, 1);
-    navigate(`/bottles/${Search.query}`, {replace: true});
     ref.focus();
   };
 
@@ -87,6 +110,10 @@ export default observer(function SearchForm() {
   const setMatcher = useCallback(
     (name, matcher) => (Search.matchers[name] = matcher)
   );
+
+  const containerClasses = classnames(classes.container, {
+    [classes.fullContainer]: fullWidth,
+  });
 
   return (
     <>
@@ -111,7 +138,7 @@ export default observer(function SearchForm() {
             //selectedItem,
             highlightedIndex,
           }) => (
-            <div className={classes.container}>
+            <div className={containerClasses}>
               <SearchInput
                 {...getInputProps({
                   setRef: handleRef,
@@ -192,6 +219,32 @@ const SearchSuggestionsProvider = observer(function({setMatcher}) {
 const SearchInput = observer(function({setRef, onDelete, classes, ...props}) {
   const [t] = useTranslation();
   const Search = useSearch();
+
+  return (
+    <div className={classes.inputRoot}>
+      {Search.filters.map(item => (
+        <Chip
+          color="primary"
+          key={item[0]}
+          tabIndex={-1}
+          label={
+            <FieldRenderer name={item[0]} value={item[1]} namespace="bottle" />
+          }
+          className={classes.chip}
+          onDelete={onDelete(item)}
+        />
+      ))}
+      <InputBase
+        inputRef={setRef}
+        fullWidth
+        autoFocus
+        className={classes.inputInput}
+        placeholder={t('searchbar.title')}
+        {...props}
+      />
+      <SearchIcon className={classes.inputIcon} />
+    </div>
+  );
 
   return (
     <Input
