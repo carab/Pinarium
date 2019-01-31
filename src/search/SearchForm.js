@@ -53,10 +53,16 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.5),
+    backgroundColor: fade(theme.palette.common.white, 0.25),
     '&:hover': {
-      backgroundColor: fade(theme.palette.common.white, 0.6),
+      backgroundColor: fade(theme.palette.common.white, 0.4),
     },
+  },
+  inputContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexGrow: 1,
   },
   inputInput: {
     width: 'auto',
@@ -234,15 +240,17 @@ const SearchInput = observer(function({setRef, onDelete, classes, ...props}) {
           onDelete={onDelete(item)}
         />
       ))}
-      <InputBase
-        inputRef={setRef}
-        fullWidth
-        autoFocus
-        className={classes.inputInput}
-        placeholder={t('searchbar.title')}
-        {...props}
-      />
-      <SearchIcon className={classes.inputIcon} />
+      <div className={classes.inputContainer}>
+        <InputBase
+          inputRef={setRef}
+          fullWidth
+          autoFocus
+          className={classes.inputInput}
+          placeholder={t('searchbar.title')}
+          {...props}
+        />
+        <SearchIcon className={classes.inputIcon} />
+      </div>
     </div>
   );
 

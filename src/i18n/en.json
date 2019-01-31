@@ -97,10 +97,6 @@
       "unselect": "Unselect",
       "unselectAll": "Unselect all",
       "unselectAllVisible": "Unselect visible",
-      "visibility": "Visibility",
-      "stocked": "In stock",
-      "unstocked": "Out of stock",
-      "all": "All",
       "sort": "Sort",
       "pagination": {
         "previous": "Previous page",
@@ -208,6 +204,12 @@
     "form": {
       "edit": "Edit search",
       "new": "New search"
+    },
+    "visibility": {
+      "title": "Visibility",
+      "stocked": "In stock",
+      "unstocked": "Out of stock",
+      "all": "All"
     },
     "name": "Name",
     "query": "Query"

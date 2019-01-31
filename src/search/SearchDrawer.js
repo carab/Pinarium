@@ -2,13 +2,24 @@ import React from 'react';
 import {observer} from 'mobx-react-lite';
 import {useTranslation} from 'react-i18next/hooks';
 import {makeStyles} from '@material-ui/styles';
-import {Drawer, Toolbar, IconButton, Typography} from '@material-ui/core';
+import {
+  Drawer,
+  Toolbar,
+  IconButton,
+  Typography,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Paper,
+} from '@material-ui/core';
 
 import {PreviousIcon, ResetIcon} from '../ui/Icons';
 import SearchForm from './SearchForm';
 
 import uiStore from '../stores/ui';
-import {useSearch} from '../stores/searchStore';
+import {useSearch, VISIBILITIES} from '../stores/searchStore';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -27,7 +38,15 @@ const useStyles = makeStyles(theme => ({
     paddingRight: theme.spacing.unit / 2,
   },
   content: {
-    padding: theme.spacing.unit,
+    // padding: `${theme.spacing.unit * 2}px 0`,
+  },
+  filters: {
+    margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px`,
+  },
+  visibility: {
+    margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px`,
+    padding: theme.spacing.unit * 2,
+    paddingBottom: 0,
   },
 }));
 
@@ -47,9 +66,6 @@ function SearchDrawer() {
       className={classes.root}
       classes={{
         paper: classes.paper,
-      }}
-      ModalProps={{
-        keepMounted: true, // Better open performance on mobile.
       }}
     >
       <SearchDrawerContent onClose={handleClose} />
@@ -98,8 +114,43 @@ const SearchDrawerContent = observer(function({onClose}) {
         </IconButton>
       </Toolbar>
       <div className={classes.content}>
-        <SearchForm fullWidth />
+        <Paper className={classes.filters}>
+          <SearchForm fullWidth />
+        </Paper>
+        <Paper className={classes.visibility}>
+          <SearchVisibilityForm />
+        </Paper>
       </div>
     </>
+  );
+});
+
+const SearchVisibilityForm = observer(function(props) {
+  const [t] = useTranslation();
+  const search = useSearch();
+
+  function handleChange(event) {
+    search.visibility = event.target.value;
+  }
+
+  return (
+    <FormControl component="fieldset" {...props}>
+      <FormLabel component="legend">{t('search.visibility.title')}</FormLabel>
+      <RadioGroup
+        aria-label={t('search.visibility.title')}
+        name="visibility"
+        value={search.visibility}
+        onChange={handleChange}
+      >
+        {VISIBILITIES.map(({name, value}) => (
+          <FormControlLabel
+            key={name}
+            value={name}
+            control={<Radio />}
+            label={t(`search.visibility.${name}`)}
+          />
+        ))}
+      </RadioGroup>
+    </FormControl>
   );
 });

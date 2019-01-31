@@ -8,7 +8,7 @@ import Bottle from '../models/bottle';
 import {useCollection, useDocument, makeStore} from './utils';
 import auth from './auth';
 import logsStore from './logsStore';
-import searchStore from './searchStore';
+import searchStore, {VISIBILITIES} from './searchStore';
 
 const bottlesStore = extendObservable(
   makeStore(Bottle, 'bottles'),
@@ -122,21 +122,19 @@ export default bottlesStore;
 export function useBottles() {
   const {visibility} = searchStore;
 
-  const name =
-    undefined === visibility ? 'all' : visibility ? 'stocked' : 'unstocked';
-
   const filter = useMemo(
     function() {
-      if (undefined === visibility) {
+      if ('all' === visibility) {
         return collectionRef => collectionRef;
       }
 
-      return collectionRef => collectionRef.where('stocked', '==', visibility);
+      const {value} = VISIBILITIES.find(({name}) => name === visibility);
+      return collectionRef => collectionRef.where('stocked', '==', value);
     },
     [visibility]
   );
 
-  const [bottles, ...rest] = useCollection(bottlesStore, name, filter);
+  const [bottles, ...rest] = useCollection(bottlesStore, visibility, filter);
 
   useEffect(() => {
     bottlesStore.currentBottles = bottles;

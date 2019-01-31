@@ -20,9 +20,9 @@ function BottleListMenu() {
 
   const id = 'bottle-list-menu';
 
-  function handleChangeVisibility(value) {
+  function handleChangeVisibility(name) {
     return () => {
-      Search.visibility = value;
+      Search.visibility = name;
       onClose();
     };
   }
@@ -32,19 +32,20 @@ function BottleListMenu() {
       <IconButton
         aria-owns={anchor ? id : undefined}
         aria-haspopup="true"
+        aria-label={t('search.visibility.title')}
         color="inherit"
         onClick={onOpen}
       >
         <VisibilityIcon />
       </IconButton>
       <Menu id={id} anchorEl={anchor} open={open} onClose={onClose}>
-        {VISIBILITIES.map(({name, value}) => {
-          const selected = Search.visibility === value;
+        {VISIBILITIES.map(({name}) => {
+          const selected = Search.visibility === name;
           return (
             <MenuItem
               key={name}
               selected={selected}
-              onClick={handleChangeVisibility(value)}
+              onClick={handleChangeVisibility(name)}
             >
               {selected && (
                 <ListItemIcon>
@@ -53,7 +54,7 @@ function BottleListMenu() {
               )}
               <ListItemText
                 inset={!selected}
-                primary={t(`bottle.list.${name}`)}
+                primary={t(`search.visibility.${name}`)}
               />
             </MenuItem>
           );

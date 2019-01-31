@@ -10,6 +10,7 @@ import effervescences from '../enums/effervescences';
 import capsules from '../enums/capsules';
 import {useEffect} from 'react';
 
+const DEFAULT_VISIBILITY = 'stocked';
 const DEFAULT_FILTERS = [];
 const DEFAULT_COLUMNS = ['appellation', 'vintage', 'cuvee', 'producer'];
 const DEFAULT_SORTS = ['-inDate'];
@@ -121,7 +122,7 @@ const searchStore = observable(
   {
     source: [],
     input: '',
-    visibility: true,
+    visibility: DEFAULT_VISIBILITY,
     filters: DEFAULT_FILTERS,
     columns: DEFAULT_COLUMNS,
     sorts: DEFAULT_SORTS,
@@ -154,7 +155,7 @@ const searchStore = observable(
       const params = query.split('&').map(part => part.split('='));
 
       this.filters = params.filter(
-        ([name]) => name !== 'columns' && name !== 'sorts'
+        ([name]) => name && name !== 'columns' && name !== 'sorts'
       );
 
       const columns = params
@@ -235,6 +236,7 @@ const searchStore = observable(
     // ItemJS related
     get itemjsFilters() {
       const filters = {};
+
       this.filters.forEach(([name, value]) => {
         filters[name] = value;
       });
