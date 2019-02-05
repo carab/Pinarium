@@ -41,7 +41,7 @@
     "firebase": "firebase",
     "deploy": "firebase deploy",
     "preversion": "npm test",
-    "version": "npm run build && npm run deploy -m %s",
+    "version": "npm run build && npm run deploy",
     "postversion": "git push && git push --tags && rm -rf build/temp"
   },
   "eslintConfig": {
