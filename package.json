@@ -39,7 +39,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "firebase": "firebase",
-    "deploy": "firebase deploy"
+    "deploy": "firebase deploy",
+    "preversion": "npm test",
+    "version": "npm run build && npm run deploy -m %s",
+    "postversion": "git push && git push --tags && rm -rf build/temp"
   },
   "eslintConfig": {
     "extends": "react-app",
