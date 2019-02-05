@@ -1,33 +1,41 @@
 import React, {useState} from 'react';
 import {observer} from 'mobx-react-lite';
 import {useTranslation} from 'react-i18next/hooks';
-import {navigate} from '@reach/router';
 import SwipeableViews from 'react-swipeable-views';
-import {useTheme} from '@material-ui/styles';
-import IconButton from '@material-ui/core/IconButton';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Divider from '@material-ui/core/Divider';
+import {useTheme, makeStyles} from '@material-ui/styles';
+import {
+  Tabs,
+  Tab,
+  IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+  Menu,
+  MenuItem,
+  ListItemIcon,
+  Divider,
+  CircularProgress,
+} from '@material-ui/core';
 
 import Container from '../ui/Container';
 import ProgressButton from '../ui/ProgressButton';
 import TextField from '../form/TextField';
-import LogDialog from '../logs/LogDialog';
+import LogEditDialog from '../logs/LogEditDialog';
+import LogDeleteDialog from '../logs/LogDeleteDialog';
 import BottleMenu from './BottleMenu';
 import EtiquetteForm from './EtiquetteForm';
-import {SaveIcon, EditIcon, DeleteIcon} from '../ui/Icons';
+import {MoreIcon, SaveIcon, EditIcon, DeleteIcon} from '../ui/Icons';
 
 import {format} from '../lib/date';
 import bottlesStore, {useBottle} from '../stores/bottlesStore';
 import logsStore, {useBottleLogs} from '../stores/logsStore';
 import autocompletesStore from '../stores/autocompletesStore';
+import dialogStore from '../stores/dialogStore';
 import {useCellar} from '../stores/cellarsStore';
 import {useUser} from '../stores/userStore';
 import useLocale from '../hooks/useLocale';
+import useAnchor from '../hooks/useAnchor';
 
 export default observer(function BottleForm({id}) {
   const [bottle, ready] = useBottle(id);
@@ -110,7 +118,7 @@ const Form = observer(function({bottle}) {
 
   return (
     <>
-      <LogDialog create log={log} onClose={handleCloseLog} />
+      <LogEditDialog create log={log} onClose={handleCloseLog} />
       <Container
         startAdornment={
           !editing && (
@@ -177,33 +185,40 @@ const Form = observer(function({bottle}) {
   );
 });
 
+const useLogListStyles = makeStyles(theme => ({
+  progressWrapper: {
+    textAlign: 'center',
+    padding: theme.spacing.unit * 6,
+  },
+}));
+
 const LogList = observer(function({bottle}) {
   const [t] = useTranslation();
   const [logs, ready] = useBottleLogs(bottle.$ref);
+  const classes = useLogListStyles();
 
   if (!ready) {
-    return null;
+    return (
+      <div className={classes.progressWrapper}>
+        <CircularProgress size={48} color="primary" />
+      </div>
+    );
   }
 
-  async function handleDelete(log) {
-    // Delete or update log depending on if it's the last bottle
-    if (log.bottles.length <= 1) {
-      await logsStore.delete([log.$ref]);
-    } else {
-      await logsStore.removeBottles([log.$ref], [bottle.$ref]);
-    }
-
-    await bottlesStore.removeLogs([bottle.$ref], [log.$ref]);
-    await bottlesStore.updateFromLogs([bottle.$ref]);
+  function handleOpenEdit(log) {
+    dialogStore.open('log_edit', {log, bottle});
   }
 
-  const [log, setLog] = useState(null);
-  function handleEdit(log) {
-    setLog(log);
+  function handleCloseEdit() {
+    dialogStore.close('log_edit');
   }
 
-  function handleSave(logRef) {
-    setLog(null);
+  function handleOpenDelete(log) {
+    dialogStore.open('log_delete', {log, bottle});
+  }
+
+  function handleCloseDelete() {
+    dialogStore.close('log_delete');
   }
 
   return (
@@ -215,8 +230,8 @@ const LogList = observer(function({bottle}) {
             <LogItem
               key={log.$ref.id}
               log={log}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
+              onEdit={handleOpenEdit}
+              onDelete={handleOpenDelete}
             />
           ))
         ) : (
@@ -225,13 +240,39 @@ const LogList = observer(function({bottle}) {
           </ListItem>
         )}
       </List>
-      <LogDialog log={log} onClose={handleSave} />
+      <LogEditDialog
+        {...dialogStore.props('log_edit')}
+        onClose={handleCloseEdit}
+      />
+      <LogDeleteDialog
+        {...dialogStore.props('log_delete')}
+        onClose={handleCloseDelete}
+      />
     </>
   );
 });
 
+const useLogStyles = makeStyles(theme => ({
+  delete: {
+    color: theme.palette.error.main,
+  },
+}));
+
 const LogItem = observer(function({log, onEdit, onDelete}) {
   const [t] = useTranslation();
+  const [anchor, open, onOpen, onClose] = useAnchor();
+  const classes = useLogStyles();
+  const id = `menu-log-${log.$ref}`;
+
+  function handleEdit() {
+    onClose();
+    onEdit(log);
+  }
+
+  function handleDelete() {
+    onClose();
+    onDelete(log);
+  }
 
   return (
     <>
@@ -242,21 +283,43 @@ const LogItem = observer(function({log, onEdit, onDelete}) {
         />
         <ListItemSecondaryAction>
           <IconButton
-            size="small"
-            aria-label={t('label.edit')}
-            title={t('label.edit')}
-            onClick={() => onEdit(log)}
+            aria-owns={open ? id : undefined}
+            aria-haspopup="true"
+            onClick={onOpen}
+            color="inherit"
+            title={t('bottle.menu.open')}
+            aria-label={t('bottle.menu.open')}
           >
-            <EditIcon />
+            <MoreIcon />
           </IconButton>
-          <IconButton
-            size="small"
-            aria-label={t('label.delete')}
-            title={t('label.delete')}
-            onClick={() => onDelete(log)}
+          <Menu
+            id={id}
+            anchorEl={anchor}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={open}
+            onClose={onClose}
           >
-            <DeleteIcon />
-          </IconButton>
+            <MenuItem onClick={handleEdit}>
+              <ListItemIcon>
+                <EditIcon />
+              </ListItemIcon>
+              {t('label.edit')}
+            </MenuItem>
+            <Divider />
+            <MenuItem onClick={handleDelete} className={classes.delete}>
+              <ListItemIcon>
+                <DeleteIcon className={classes.delete} />
+              </ListItemIcon>
+              {t('label.delete')}
+            </MenuItem>
+          </Menu>
         </ListItemSecondaryAction>
       </ListItem>
       <Divider />

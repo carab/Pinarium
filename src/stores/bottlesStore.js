@@ -74,26 +74,31 @@ const bottlesStore = extendObservable(
      *
      * @param {Log} log
      */
-    async updateFromLogs(bottleRefs) {
+    async applyLogs(bottleRefs) {
       const batch = await this.batch();
 
       const promises = bottleRefs.map(async bottleRef => {
         // First fetch bottle logs
         const snapshot = await logsStore.getByBottle(bottleRef);
 
+        // Initial data is empty to clean values that may have been deleted
+        const data = {
+          cellar: null,
+          shelve: null,
+          reference: null,
+          status: null,
+          rating: null,
+          inDate: null,
+          outDate: null,
+          buyingPrice: null,
+          sellingPrice: null,
+        };
+
         if (!snapshot.empty) {
-          // Initial data is empty to clean values that may have been deleted
-          const data = {
-            cellar: null,
-            shelve: null,
-            reference: null,
-            status: null,
-            rating: null,
-            inDate: null,
-            outDate: null,
-            buyingPrice: null,
-            sellingPrice: null,
-          };
+          // Make sure the fetched logs are in the bottle own logs list
+          data.logs = firebase.firestore.FieldValue.arrayUnion(
+            ...snapshot.docs.map(doc => doc.ref)
+          );
 
           // Apply each log to the data
           snapshot.docs
@@ -101,9 +106,9 @@ const bottlesStore = extendObservable(
             .forEach(log =>
               MAPPINGS.forEach(({si, alors}) => si(log) && alors(log, data))
             );
-
-          return batch.update(bottleRef, data);
         }
+
+        return batch.update(bottleRef, data);
       });
 
       await Promise.all(promises);

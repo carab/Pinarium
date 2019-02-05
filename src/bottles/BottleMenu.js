@@ -21,11 +21,13 @@ import {
   SellIcon,
   DuplicateIcon,
   DeleteIcon,
+  ApplyIcon,
 } from '../ui/Icons';
-import LogDialog from '../logs/LogDialog';
+import LogEditDialog from '../logs/LogEditDialog';
 import useAnchor from '../hooks/useAnchor';
 
 import logsStore from '../stores/logsStore';
+import bottlesStore from '../stores/bottlesStore';
 import {useUser} from '../stores/userStore';
 import uiStore from '../stores/ui';
 import statusesDef, {defaultStatuses} from '../enums/statuses';
@@ -85,6 +87,7 @@ export default observer(function BottleMenu({bottles}) {
 
   function handleEdit() {
     onClose();
+
     if (bottles.length === 1) {
       navigate(`/bottle/${bottles[0].$ref.id}`);
     } else if (bottles.length) {
@@ -95,6 +98,11 @@ export default observer(function BottleMenu({bottles}) {
   function handleOpenDelete() {
     onClose();
     uiStore.bottleDeleteDialog.bottles = bottles;
+  }
+
+  async function handleApplyLogs() {
+    onClose();
+    await bottlesStore.applyLogs(bottles.map(bottle => bottle.$ref));
   }
 
   // Build status change items from all bottles current status
@@ -116,7 +124,7 @@ export default observer(function BottleMenu({bottles}) {
 
   return (
     <>
-      <LogDialog log={log} onClose={handleCloseLog} />
+      <LogEditDialog log={log} onClose={handleCloseLog} />
       <IconButton
         aria-owns={open ? 'menu-bottle' : undefined}
         aria-haspopup="true"
@@ -165,6 +173,12 @@ export default observer(function BottleMenu({bottles}) {
           );
         })}
         {items.length ? <Divider /> : null}
+        <MenuItem onClick={handleApplyLogs}>
+          <ListItemIcon>
+            <ApplyIcon />
+          </ListItemIcon>
+          {t('job.apply_logs')}
+        </MenuItem>
         {bottles.length === 1 ? (
           <MenuItem onClick={onClose}>
             <ListItemIcon>

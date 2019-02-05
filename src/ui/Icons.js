@@ -19,6 +19,7 @@ import ShelfIcon from '@material-ui/icons/GridOn';
 import ColumnsIcon from '@material-ui/icons/ViewColumn';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import SortIcon from '@material-ui/icons/Sort';
+import ApplyIcon from '@material-ui/icons/Replay';
 
 import PickIcon from '@material-ui/icons/ArrowUpward';
 import UnpickIcon from '@material-ui/icons/ArrowDownward';
@@ -104,6 +105,7 @@ export {
   ListIcon,
   CheckboxIcon,
   CheckIcon,
+  ApplyIcon,
   // Statuses
   PickIcon,
   UnpickIcon,

@@ -64,7 +64,8 @@
     "submit": "Sign in"
   },
   "job": {
-    "clean_etiquettes": "Clean etiquettes"
+    "clean_etiquettes": "Clean etiquettes",
+    "apply_logs": "Re-apply logs"
   },
   "settings": {
     "title": "Settings",
@@ -173,7 +174,10 @@
   "log": {
     "form": {
       "edit": "Edit entry",
-      "new": "New history entry"
+      "new": "New history entry",
+      "delete": "Delete log",
+      "remove_only": "Remove only from this bottle",
+      "delete_all": "Delete permanently for all bottles"
     },
     "print": {
       "full": "{{status}}{{who}}{{when}}{{where}}{{why}}{{price}}{{cellar}}{{rating}}.",

@@ -1,15 +1,15 @@
-import React from 'react'
-import {observer} from 'mobx-react-lite'
-import {Trans, useTranslation} from 'react-i18next/hooks'
-import {makeStyles} from '@material-ui/styles'
-import InputAdornment from '@material-ui/core/InputAdornment'
+import React from 'react';
+import {observer} from 'mobx-react-lite';
+import {Trans, useTranslation} from 'react-i18next/hooks';
+import {makeStyles} from '@material-ui/styles';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
-import FieldRow from '../form/FieldRow'
-import TextField from '../form/TextField'
-import AutocompleteField from '../form/AutocompleteField'
-import DateField from '../form/DateFieldPicker'
-import CellarField from '../form/CellarField'
-import SelectField from '../form/SelectField'
+import FieldRow from '../form/FieldRow';
+import TextField from '../form/TextField';
+import AutocompleteField from '../form/AutocompleteField';
+import DateField from '../form/DateFieldPicker';
+import CellarField from '../form/CellarField';
+import SelectField from '../form/SelectField';
 import {
   StatusIcon,
   WhereIcon,
@@ -19,10 +19,10 @@ import {
   CellarIcon,
   WhyIcon,
   CommentIcon,
-} from '../ui/Icons'
+} from '../ui/Icons';
 
-import ratings from '../enums/ratings'
-import statusesDef from '../enums/statuses'
+import ratings from '../enums/ratings';
+import statusesDef from '../enums/statuses';
 
 const useStyles = makeStyles(theme => ({
   sm: {
@@ -36,18 +36,18 @@ const useStyles = makeStyles(theme => ({
   xl: {
     width: '100%',
   },
-}))
+}));
 
 export default observer(function LogForm({log, statuses, onSave}) {
-  const errors = {}
-  const classes = useStyles()
-  const [t] = useTranslation()
+  const errors = {};
+  const classes = useStyles();
+  const [t] = useTranslation();
 
   function handleChange(value, name) {
-    log[name] = value
+    log[name] = value;
   }
 
-  const statusDef = statusesDef.find(status => status.name === log.status)
+  const statusDef = statusesDef.find(status => status.name === log.status);
   const fields = {
     when: (
       <DateField
@@ -187,7 +187,7 @@ export default observer(function LogForm({log, statuses, onSave}) {
         }}
       />
     ),
-  }
+  };
 
   return (
     <FieldRow>
@@ -214,5 +214,5 @@ export default observer(function LogForm({log, statuses, onSave}) {
       ) : null}
       {statusDef ? statusDef.fields.map(field => fields[field]) : null}
     </FieldRow>
-  )
-})
+  );
+});

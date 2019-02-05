@@ -48,6 +48,7 @@ const useStyles = makeStyles(theme => ({
     margin: `${theme.spacing.unit / 2}px ${theme.spacing.unit / 4}px`,
   },
   inputRoot: {
+    minHeight: 40,
     flexWrap: 'wrap',
     display: 'flex',
     flexDirection: 'row',

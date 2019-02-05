@@ -58,7 +58,8 @@
     "submit": "Connexion"
   },
   "job": {
-    "clean_etiquettes": "Nettoyage des etiquettes"
+    "clean_etiquettes": "Nettoyage des etiquettes",
+    "apply_logs": "Ré-appliquer les entrées"
   },
   "settings": {
     "title": "Paramètres",
@@ -168,7 +169,10 @@
   "log": {
     "form": {
       "edit": "Editer l'entrée",
-      "new": "Nouvelle entrée"
+      "new": "Nouvelle entrée",
+      "delete": "Supprimer une entrée",
+      "remove_only": "Retirer uniquement de cette bouteille",
+      "delete_all": "Supprimer complètement de toutes les bouteilles"
     },
     "print": {
       "full": "{{status}}{{who}}{{when}}{{where}}{{why}}{{price}}{{cellar}}{{rating}}.",

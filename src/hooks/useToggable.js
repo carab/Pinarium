@@ -1,19 +1,19 @@
-import {useState} from 'react'
+import {useState} from 'react';
 
 export default function useToggable(initial = false) {
-  const [open, setOpen] = useState(initial)
+  const [open, setOpen] = useState(initial);
 
   const handleToggle = () => {
-    setOpen(!open)
-  }
+    setOpen(!open);
+  };
 
   const handleOpen = () => {
-    setOpen(true)
-  }
+    setOpen(true);
+  };
 
   const handleClose = () => {
-    setOpen(false)
-  }
+    setOpen(false);
+  };
 
-  return [open, handleToggle, handleOpen, handleClose]
+  return [open, handleToggle, handleOpen, handleClose];
 }

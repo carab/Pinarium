@@ -1,25 +1,28 @@
-import React, {useCallback} from 'react'
-import {observer} from 'mobx-react-lite'
-import {Trans} from 'react-i18next/hooks'
-import {navigate} from '@reach/router'
-import {makeStyles} from '@material-ui/styles'
-import Button from '@material-ui/core/Button'
+import React, {useState} from 'react';
+import {observer} from 'mobx-react-lite';
+import {useTranslation} from 'react-i18next/hooks';
+import {Trans} from 'react-i18next/hooks';
+import {navigate} from '@reach/router';
+import {makeStyles} from '@material-ui/styles';
+import {IconButton} from '@material-ui/core';
 
-import Container from '../ui/Container'
-import FieldRow from '../form/FieldRow'
-import TextField from '../form/TextField'
-import cellarsStore, {useCellar} from '../stores/cellarsStore'
+import Container from '../ui/Container';
+import ProgressButton from '../ui/ProgressButton';
+import {SaveIcon} from '../ui/Icons';
+import FieldRow from '../form/FieldRow';
+import TextField from '../form/TextField';
+import cellarsStore, {useCellar} from '../stores/cellarsStore';
 
 export default observer(function CellarForm({id}) {
-  const [cellar, ready] = useCellar(id)
+  const [cellar, ready] = useCellar(id);
 
   if (!ready) {
-    return null
+    return null;
   }
 
   const handleSave = () => {
-    cellarsStore.save(cellar)
-  }
+    cellarsStore.save(cellar);
+  };
 
   return (
     <Form
@@ -27,8 +30,8 @@ export default observer(function CellarForm({id}) {
       cellar={cellar}
       onSave={handleSave}
     />
-  )
-})
+  );
+});
 
 const useStyles = makeStyles(theme => ({
   name: {
@@ -37,36 +40,52 @@ const useStyles = makeStyles(theme => ({
   description: {
     width: '100%',
   },
-}))
+}));
 
 const Form = observer(function({title, cellar, onSave}) {
-  const errors = {}
+  const [saving, setSaving] = useState(false);
+  const errors = {};
 
-  const classes = useStyles()
+  const classes = useStyles();
+  const [t] = useTranslation();
 
-  const handleChange = useCallback((value, name) => {
-    cellar[name] = value
-  }, [])
+  function handleChange(value, name) {
+    cellar[name] = value;
+  }
 
-  const handleSubmit = useCallback(async event => {
-    event.preventDefault()
+  async function handleSubmit(event) {
+    event.preventDefault();
+    setSaving(true);
 
     try {
-      await onSave()
-      navigate('/cellars')
+      await onSave();
+      setTimeout(() => {
+        // Time illusion for feedback
+        setSaving(false);
+      }, 500);
     } catch (error) {
-      console.error(error)
+      setSaving(false);
+      console.error(error);
     }
-  }, [])
+  }
 
   return (
     <Container
       size="sm"
       title={title}
       actions={
-        <Button type="submit" variant="contained" color="secondary">
-          <Trans i18nKey="label.save" />
-        </Button>
+        <ProgressButton
+          Component={IconButton}
+          loading={saving}
+          size={40}
+          type="submit"
+          color="inherit"
+          title={t('label.save')}
+          aria-label={t('label.save')}
+          onClick={handleSubmit}
+        >
+          <SaveIcon />
+        </ProgressButton>
       }
       component="form"
       onSubmit={handleSubmit}
@@ -95,5 +114,5 @@ const Form = observer(function({title, cellar, onSave}) {
         />
       </FieldRow>
     </Container>
-  )
-})
+  );
+});

@@ -24,8 +24,9 @@ import {useSearch, VISIBILITIES} from '../stores/searchStore';
 const useStyles = makeStyles(theme => ({
   root: {},
   paper: {
-    width: theme.spacing.unit * 40,
-    maxWidth: `calc(100vw - ${theme.spacing.unit * 8}px)`,
+    width: '100%',
+    // width: theme.spacing.unit * 40,
+    // maxWidth: `calc(100vw - ${theme.spacing.unit * 8}px)`,
   },
   previousButton: {},
   resetButton: {

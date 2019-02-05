@@ -1,15 +1,15 @@
-import {observer} from 'mobx-react-lite'
+import {observer} from 'mobx-react-lite';
 
-import {useCellar} from '../stores/cellarsStore'
+import {useCellar} from '../stores/cellarsStore';
 
 function CellarRenderer({value}) {
-  const [cellar, ready] = useCellar(value)
+  const [cellar, ready] = useCellar(value);
 
   if (ready) {
-    return cellar ? cellar.name : null
+    return cellar ? cellar.name : null;
   }
 
-  return null
+  return null;
 }
 
-export default observer(CellarRenderer)
+export default observer(CellarRenderer);
