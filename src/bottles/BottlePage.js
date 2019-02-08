@@ -77,7 +77,7 @@ function BottlePage() {
                     ? t('bottle.list.unselectAll')
                     : t('bottle.list.selectAll'),
                 }}
-                color="primary"
+                color="secondary"
               />
               {t('bottle.list.selected', {count: countSelected})}
             </>

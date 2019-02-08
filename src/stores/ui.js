@@ -24,7 +24,7 @@ const ui = observable(
       bottles: [],
     },
     bottlePage: {
-      overed: null,
+      overed: {},
     },
     toggleSidebar(force) {
       this.sidebar.open =

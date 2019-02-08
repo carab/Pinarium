@@ -53,6 +53,7 @@ import ResetIcon from '@material-ui/icons/Cached';
 import ListIcon from '@material-ui/icons/List';
 import CheckboxIcon from '@material-ui/icons/CheckBox';
 import CheckIcon from '@material-ui/icons/Check';
+import VisitIcon from '@material-ui/icons/Forward';
 
 // Fields
 import StatusIcon from '@material-ui/icons/CompareArrows';
@@ -106,6 +107,7 @@ export {
   CheckboxIcon,
   CheckIcon,
   ApplyIcon,
+  VisitIcon,
   // Statuses
   PickIcon,
   UnpickIcon,

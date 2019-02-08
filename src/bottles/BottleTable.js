@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import {
   AutoSizer,
   Column,
-  SortDirection,
+  // SortDirection,
   Table as VirtualizedTable,
 } from 'react-virtualized';
 import {makeStyles} from '@material-ui/styles';
@@ -18,11 +18,10 @@ import {
   TableSortLabel,
   Tooltip,
 } from '@material-ui/core';
+import {Link} from '@reach/router';
 
-import BottleMenu from './BottleMenu';
 import FieldRenderer from '../field/FieldRenderer';
-import {ColumnsIcon} from '../ui/Icons';
-import Link from '../ui/Link';
+import {ColumnsIcon, VisitIcon} from '../ui/Icons';
 
 import useAnchor from '../hooks/useAnchor';
 import uiStore from '../stores/ui';
@@ -43,7 +42,7 @@ const useStyle = makeStyles(theme => ({
     boxSizing: 'border-box',
   },
   tableRow: {
-    cursor: 'pointer',
+    // cursor: 'pointer',
   },
   tableRowHover: {
     '&:hover': {
@@ -67,29 +66,29 @@ const useStyle = makeStyles(theme => ({
 }));
 
 const COLUMNS = [
-  {name: 'sort', width: 40},
-  {name: 'cellar', width: 100},
+  {name: 'sort', sortable: true, width: 40},
+  {name: 'cellar', sortable: true, width: 100},
   {name: 'appellation', sortable: true, width: 200},
   {name: 'vintage', numeric: true, sortable: true, width: 110},
   {name: 'bottlingDate', sortable: true, width: 50},
   {name: 'expirationDate', sortable: true, width: 50},
-  {name: 'cuvee', width: 150},
-  {name: 'producer', width: 150},
-  {name: 'region', width: 100},
-  {name: 'country', width: 100},
-  {name: 'size', sortable: true, width: 100},
-  {name: 'color', width: 100},
-  {name: 'effervescence', width: 100},
-  {name: 'type', width: 100},
-  {name: 'capsule', width: 100},
-  {name: 'alcohol', sortable: true, width: 100},
-  {name: 'medal', width: 100},
-  {name: 'status', width: 100},
-  {name: 'rating', sortable: true, width: 40},
+  {name: 'cuvee', sortable: true, width: 150},
+  {name: 'producer', sortable: true, width: 150},
+  {name: 'region', sortable: true, width: 100},
+  {name: 'country', sortable: true, width: 100},
+  {name: 'size', numeric: true, sortable: true, width: 100},
+  {name: 'color', sortable: true, width: 100},
+  {name: 'effervescence', sortable: true, width: 100},
+  {name: 'type', sortable: true, width: 100},
+  {name: 'capsule', sortable: true, width: 100},
+  {name: 'alcohol', numeric: true, sortable: true, width: 100},
+  {name: 'medal', sortable: true, width: 100},
+  {name: 'status', sortable: true, width: 100},
+  {name: 'rating', numeric: true, sortable: true, width: 40},
   {name: 'inDate', sortable: true, width: 50},
   {name: 'outDate', sortable: true, width: 50},
-  {name: 'buyingPrice', width: 40},
-  {name: 'sellingPrice', width: 40},
+  {name: 'buyingPrice', numeric: true, sortable: true, width: 40},
+  {name: 'sellingPrice', numeric: true, sortable: true, width: 40},
 ];
 
 const HEADER_HEIGHT = 56;
@@ -116,15 +115,15 @@ function BottleTable({bottles, onLoadBottles}) {
   columns.unshift({
     name: 'select',
     width: 80,
-    cellRenderer: ({bottle, column}) => <SelectCell bottle={bottle} />,
+    cellRenderer: props => <SelectCell {...props} />,
     headerRenderer: () => null,
     props: {padding: 'checkbox'},
   });
   columns.push({
     name: 'action',
     width: 80,
-    // cellRenderer: ({bottle, column}) => <ActionCell bottle={bottle} />,
-    cellRenderer: () => null,
+    cellRenderer: props => <ActionCell {...props} />,
+    // cellRenderer: () => null,
     headerRenderer: () => (
       <ColumnsMenu
         onToggle={handleToggleColumn}
@@ -133,9 +132,14 @@ function BottleTable({bottles, onLoadBottles}) {
     ),
   });
 
-  function cellRenderer({rowData, columnData}) {
+  function cellRenderer({rowData, columnData, rowIndex}) {
     return (
-      <DefaultCell bottle={rowData} column={columnData} classes={classes} />
+      <DefaultCell
+        bottle={rowData}
+        column={columnData}
+        rowIndex={rowIndex}
+        classes={classes}
+      />
     );
   }
 
@@ -247,9 +251,17 @@ function BottleTable({bottles, onLoadBottles}) {
   );
 }
 
-const SelectCell = observer(function({bottle}) {
-  const [selected, select, unselect] = useSelection(bottle);
+const useCellStyles = makeStyles(theme => ({
+  hidden: {
+    visibility: 'hidden',
+  },
+}));
+
+const SelectCell = observer(function({bottle, rowIndex}) {
   const [t] = useTranslation();
+  const classes = useCellStyles();
+  const [selected, select, unselect] = useSelection(bottle);
+  const visible = selected || uiStore.bottlePage.overed[rowIndex];
 
   function handleSelect(event) {
     if (selected) {
@@ -259,13 +271,9 @@ const SelectCell = observer(function({bottle}) {
     }
   }
 
-  function handleClick(event) {
-    event.stopPropagation();
-    event.preventDefault();
-  }
-
   return (
     <Checkbox
+      className={visible ? '' : classes.hidden}
       inputProps={{
         'aria-label': selected
           ? t('bottle.list.unselect')
@@ -273,16 +281,26 @@ const SelectCell = observer(function({bottle}) {
       }}
       checked={selected}
       onChange={handleSelect}
-      onClick={handleClick}
     />
   );
 });
 
-const ActionCell = function({bottle}) {
-  return <BottleMenu bottles={[bottle]} />;
-};
+const ActionCell = observer(function({bottle, rowIndex}) {
+  const classes = useCellStyles();
+  const visible = uiStore.bottlePage.overed[rowIndex];
 
-const DefaultCell = function({bottle, column, classes}) {
+  return (
+    <IconButton
+      className={visible ? '' : classes.hidden}
+      component={Link}
+      to={`/bottle/${bottle.$ref.id}`}
+    >
+      <VisitIcon />
+    </IconButton>
+  );
+});
+
+const DefaultCell = function({bottle, column, rowIndex, classes}) {
   return (
     <TableCell
       component="div"
@@ -299,6 +317,7 @@ const DefaultCell = function({bottle, column, classes}) {
         column.cellRenderer({
           bottle,
           column,
+          rowIndex,
         })
       ) : (
         <FieldRenderer
@@ -312,36 +331,26 @@ const DefaultCell = function({bottle, column, classes}) {
 };
 
 const TableRow = observer(function({children, index, bottle, style, ...props}) {
-  const a11yProps = {'aria-rowindex': index + 1};
-
-  a11yProps['aria-label'] = 'row';
-  a11yProps.tabIndex = 0;
-
-  // a11yProps.onClick = event => onRowClick({event, index, rowData})
   function handleMouseOver(event) {
-    uiStore.bottlePage.overed = bottle;
+    uiStore.bottlePage.overed[index] = true;
   }
 
   function handleMouseOut(event) {
-    uiStore.bottlePage.overed = null;
+    uiStore.bottlePage.overed[index] = false;
   }
 
   return (
-    <Link
-      color="inherit"
-      variant="inherit"
-      underline="none"
+    <div
       role="row"
+      aria-rowindex={index + 1}
       aria-label="row"
-      tabIndex={0}
       onMouseOut={handleMouseOut}
       onMouseOver={handleMouseOver}
       style={style}
-      to={`/bottle/${bottle.$ref.id}`}
       {...props}
     >
       {children}
-    </Link>
+    </div>
   );
 });
 
