@@ -13,7 +13,7 @@ import {useEffect} from 'react';
 const DEFAULT_VISIBILITY = 'stocked';
 const DEFAULT_FILTERS = [];
 const DEFAULT_COLUMNS = ['appellation', 'vintage', 'cuvee', 'producer'];
-const DEFAULT_SORTS = ['-inDate'];
+const DEFAULT_SORTS = [[false, 'inDate']];
 
 export const VISIBILITIES = [
   {
@@ -30,9 +30,33 @@ export const VISIBILITIES = [
   },
 ];
 
-export const SORTS = ['-inDate'];
+export const SORTABLE_FIELDS = [
+  'sort',
+  'cellar',
+  'appellation',
+  'vintage',
+  'bottlingDate',
+  'expirationDate',
+  'cuvee',
+  'producer',
+  'region',
+  'country',
+  'size',
+  'color',
+  'effervescence',
+  'type',
+  'capsule',
+  'alcohol',
+  'medal',
+  'status',
+  'rating',
+  'inDate',
+  'outDate',
+  'buyingPrice',
+  'sellingPrice',
+];
 
-export const FIELDS = [
+export const AUTOCOMPLETE_FIELDS = [
   {name: 'sort', type: 'enum'},
   {name: 'cellar', type: 'cellar'},
   {name: 'appellation', type: 'autocomplete'},
@@ -194,34 +218,52 @@ const searchStore = observable(
       }
     },
     serializeSorts(sorts) {
-      return sorts.join(',');
+      return sorts.map(sort => this.serializeSort(sort)).join(',');
     },
     unserializeSorts(sorts) {
       if (!sorts) {
         return null;
       }
 
-      return sorts.split(',');
+      return sorts.split(',').map(sort => this.unserializeSort(sort));
     },
-    isSortActive(name) {
-      const index = this.sorts.findIndex(sort => sort.substring(1) === name);
-      return index >= 0;
+    serializeSort(sort) {
+      return (sort[0] ? '+' : '-') + sort[1];
     },
-    isSortAsc(name) {
-      const index = this.sorts.findIndex(sort => sort === `+${name}`);
-      return index >= 0;
+    unserializeSort(sort) {
+      return [sort.substring(0, 1), sort.substring(1)];
     },
-    toggleSort(name) {
-      const sort = this.sorts.pop();
+    setSortColumn(index, column) {
+      const sort = this.sorts[index];
+      if (sort) {
+        sort[1] = column;
+      }
+    },
+    toggleSortDirection(index) {
+      const sort = this.sorts[index];
+      if (sort) {
+        sort[0] = !sort[0];
+      }
+    },
+    getSort(index) {
+      return this.sorts[index];
+    },
+    findSort(column) {
+      const sort = this.sorts.find(sort => sort[1] === column);
+      return sort;
+    },
+    toggleSort(column, only = true) {
+      const sort = this.findSort(column);
 
-      if (sort.substring(1) === name) {
-        if (sort.substring(0, 1) === '+') {
-          this.sorts.push(`-${name}`);
-        } else {
-          this.sorts.push(`+${name}`);
-        }
+      if (sort) {
+        sort[0] = !sort[0];
       } else {
-        this.sorts.push(`+${name}`);
+        const newSort = [true, column];
+        if (only) {
+          this.sorts = [newSort];
+        } else {
+          this.sorts.push(newSort);
+        }
       }
     },
     reset() {
@@ -244,14 +286,9 @@ const searchStore = observable(
       return filters;
     },
     get itemjsSort() {
-      const sorts = this.sorts.map(sort => [
-        sort.substring(1),
-        sort.substring(0, 1),
-      ]);
-
       const sort = {
-        field: sorts.map(([field]) => field),
-        order: sorts.map(([, order]) => (order === '+' ? 'asc' : 'desc')),
+        field: this.sorts.map(([, column]) => column),
+        order: this.sorts.map(([direction]) => (direction ? 'asc' : 'desc')),
       };
 
       return sort;
@@ -324,7 +361,7 @@ const searchStore = observable(
         return cleanedValue && cleanedValue.indexOf(query) !== -1;
       };
 
-      const suggestions = FIELDS.filter(field => {
+      const suggestions = AUTOCOMPLETE_FIELDS.filter(field => {
         const item = this.filters.find(([name]) => name === field.name);
         return undefined === item;
       }).reduce((accumulator, field) => {

@@ -42,7 +42,8 @@ import SelectIcon from '@material-ui/icons/Redo';
 import UnselectIcon from '@material-ui/icons/Undo';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import RemoveIcon from '@material-ui/icons/RemoveCircleOutline';
+import AddCircleIcon from '@material-ui/icons/AddCircleOutline';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircleOutline';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import SaveIcon from '@material-ui/icons/Save';
 import UploadIcon from '@material-ui/icons/CloudUpload';
@@ -54,6 +55,8 @@ import ListIcon from '@material-ui/icons/List';
 import CheckboxIcon from '@material-ui/icons/CheckBox';
 import CheckIcon from '@material-ui/icons/Check';
 import VisitIcon from '@material-ui/icons/Forward';
+import AscIcon from '@material-ui/icons/ArrowUpward';
+import DescIcon from '@material-ui/icons/ArrowDownward';
 
 // Fields
 import StatusIcon from '@material-ui/icons/CompareArrows';
@@ -90,7 +93,8 @@ export {
   UnselectIcon,
   ExpandLessIcon,
   ExpandMoreIcon,
-  RemoveIcon,
+  AddCircleIcon,
+  RemoveCircleIcon,
   AddIcon,
   SearchIcon,
   CloseIcon,
@@ -108,6 +112,8 @@ export {
   CheckIcon,
   ApplyIcon,
   VisitIcon,
+  AscIcon,
+  DescIcon,
   // Statuses
   PickIcon,
   UnpickIcon,

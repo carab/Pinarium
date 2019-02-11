@@ -1,13 +1,13 @@
-import React from 'react'
-import {observer} from 'mobx-react-lite'
+import React from 'react';
+import {observer} from 'mobx-react-lite';
 
-import SelectField from './SelectField'
+import SelectField from './SelectField';
 
-import {useCellars} from '../stores/cellarsStore'
+import {useCellars} from '../stores/cellarsStore';
 
 export default observer(function CellarField(props) {
-  const [cellars] = useCellars()
-  const options = cellars.slice()
+  const [cellars] = useCellars();
+  const options = cellars.slice();
 
   return (
     <SelectField
@@ -17,5 +17,5 @@ export default observer(function CellarField(props) {
       valueAccessor="$ref"
       {...props}
     />
-  )
-})
+  );
+});

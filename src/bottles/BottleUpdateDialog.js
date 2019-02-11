@@ -19,7 +19,14 @@ import {Divider} from '@material-ui/core';
 
 import {useBottleFields} from './EtiquetteForm';
 import FieldRenderer from '../field/FieldRenderer';
-import {AddIcon, ClearIcon, MoreIcon, BottleIcon} from '../ui/Icons';
+import {
+  ExpandMoreIcon,
+  AddCircleIcon,
+  RemoveCircleIcon,
+  ClearIcon,
+  MoreIcon,
+  BottleIcon,
+} from '../ui/Icons';
 
 import autocompletesStore from '../stores/autocompletesStore';
 import bottlesStore from '../stores/bottlesStore';
@@ -98,7 +105,7 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'center',
   },
   addButtonIcon: {
-    marginRight: theme.spacing.unit,
+    marginLeft: theme.spacing.unit,
   },
   fieldContainer: {
     marginTop: theme.spacing.unit / 2,
@@ -187,8 +194,8 @@ const BottleDialogContent = observer(function({data, bottles, onCancel}) {
             variant="outlined"
             color="secondary"
           >
-            <AddIcon className={classes.addButtonIcon} />
             {t('bottle.dialog.add_field')}
+            <AddCircleIcon className={classes.addButtonIcon} />
           </Button>
           <Menu
             id="bottle-add-field-menu"
@@ -254,7 +261,7 @@ function FieldItem({
           aria-haspopup="true"
           onClick={onOpen}
         >
-          <MoreIcon />
+          <ExpandMoreIcon />
         </IconButton>
         <Menu
           id={id}
@@ -294,14 +301,12 @@ function FieldItem({
               )}
             </MenuItem>
           ))}
-          <Divider />
-          <MenuItem onClick={handleRemove}>
-            <ListItemIcon>
-              <ClearIcon />
-            </ListItemIcon>
-            {t('label.remove')}
-          </MenuItem>
         </Menu>
+      </Grid>
+      <Grid item>
+        <IconButton aria-label={t('label.remove')} onClick={handleRemove}>
+          <RemoveCircleIcon />
+        </IconButton>
       </Grid>
     </Grid>
   );

@@ -1,6 +1,6 @@
-import React from 'react'
-import TextField from '@material-ui/core/TextField'
-import MenuItem from '@material-ui/core/MenuItem'
+import React from 'react';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 
 export default function SelectField({
   multiple,
@@ -17,19 +17,19 @@ export default function SelectField({
   ...props
 }) {
   const handleChange = event => {
-    const {value, name} = event.target
+    const {value, name} = event.target;
 
     if (onChange instanceof Function) {
       const option = options.find(option => {
-        return value === getKey(getValue(option, valueAccessor), keyAccessor)
-      })
+        return value === getKey(getValue(option, valueAccessor), keyAccessor);
+      });
 
       if (option) {
-        const computedValue = getValue(option, valueAccessor)
-        onChange(computedValue, name)
+        const computedValue = getValue(option, valueAccessor);
+        onChange(computedValue, name);
       }
     }
-  }
+  };
 
   return (
     <TextField
@@ -61,47 +61,47 @@ export default function SelectField({
         </MenuItem>
       ))}
     </TextField>
-  )
+  );
 }
 
 SelectField.defaultProps = {
   labelAccessor: 'label',
   keyAccessor: null,
   valueAccessor: 'value',
-}
+};
 
 function getLabel(option, labelAccessor) {
   if (labelAccessor instanceof Function) {
-    return labelAccessor(option)
+    return labelAccessor(option);
   }
 
-  return option[labelAccessor]
+  return option[labelAccessor];
 }
 
 function getKey(value, keyAccessor) {
   if (undefined === value) {
-    return undefined
+    return undefined;
   }
 
   if (null === value) {
-    return ''
+    return '';
   }
 
   if (null === keyAccessor) {
-    return value
+    return value;
   }
 
   if (keyAccessor instanceof Function) {
-    return keyAccessor(value)
+    return keyAccessor(value);
   }
 
-  return value[keyAccessor]
+  return value[keyAccessor];
 }
 
 function getValue(option, valueAccessor) {
   if (valueAccessor instanceof Function) {
-    return valueAccessor(option)
+    return valueAccessor(option);
   }
 
-  return option[valueAccessor]
+  return option[valueAccessor];
 }

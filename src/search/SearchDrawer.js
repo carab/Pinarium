@@ -7,19 +7,18 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  FormControl,
-  FormLabel,
   RadioGroup,
   FormControlLabel,
   Radio,
   Paper,
 } from '@material-ui/core';
 
-import {PreviousIcon, ResetIcon} from '../ui/Icons';
+import {PreviousIcon, ResetIcon, AscIcon, DescIcon} from '../ui/Icons';
+import SelectField from '../form/SelectField';
 import SearchForm from './SearchForm';
 
 import uiStore from '../stores/ui';
-import {useSearch, VISIBILITIES} from '../stores/searchStore';
+import {useSearch, VISIBILITIES, SORTABLE_FIELDS} from '../stores/searchStore';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -44,6 +43,10 @@ const useStyles = makeStyles(theme => ({
   filters: {
     margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px`,
   },
+  sorts: {
+    margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px`,
+    padding: theme.spacing.unit * 2,
+  },
   visibility: {
     margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px`,
     padding: theme.spacing.unit * 2,
@@ -54,7 +57,8 @@ const useStyles = makeStyles(theme => ({
 function SearchDrawer() {
   const classes = useStyles();
 
-  function handleClose() {
+  function handleClose(event) {
+    event.preventDefault();
     uiStore.searchDrawer.open = false;
   }
 
@@ -90,7 +94,7 @@ const SearchDrawerContent = observer(function({onClose}) {
   }
 
   return (
-    <>
+    <form onSubmit={onClose} noValidate autoComplete="off">
       <Toolbar className={classes.toolbar}>
         <IconButton
           color="inherit"
@@ -118,11 +122,14 @@ const SearchDrawerContent = observer(function({onClose}) {
         <Paper className={classes.filters}>
           <SearchForm fullWidth />
         </Paper>
+        <Paper className={classes.sorts}>
+          <SearchSortForm />
+        </Paper>
         <Paper className={classes.visibility}>
           <SearchVisibilityForm />
         </Paper>
       </div>
-    </>
+    </form>
   );
 });
 
@@ -135,23 +142,68 @@ const SearchVisibilityForm = observer(function(props) {
   }
 
   return (
-    <FormControl component="fieldset" {...props}>
-      <FormLabel component="legend">{t('search.visibility.title')}</FormLabel>
-      <RadioGroup
-        aria-label={t('search.visibility.title')}
-        name="visibility"
-        value={search.visibility}
-        onChange={handleChange}
-      >
-        {VISIBILITIES.map(({name, value}) => (
-          <FormControlLabel
-            key={name}
-            value={name}
-            control={<Radio />}
-            label={t(`search.visibility.${name}`)}
-          />
-        ))}
-      </RadioGroup>
-    </FormControl>
+    <RadioGroup
+      aria-label={t('search.visibility.title')}
+      name="visibility"
+      value={search.visibility}
+      onChange={handleChange}
+    >
+      {VISIBILITIES.map(({name, value}) => (
+        <FormControlLabel
+          key={name}
+          value={name}
+          control={<Radio />}
+          label={t(`search.visibility.${name}`)}
+        />
+      ))}
+    </RadioGroup>
   );
+});
+
+const SearchSortForm = observer(function(props) {
+  const [t] = useTranslation();
+  const search = useSearch();
+
+  return search.sorts.map((sort, index) => {
+    const [direction, column] = sort;
+
+    function handleChangeColumn(column) {
+      search.setSortColumn(index, column);
+    }
+
+    function handleChangeDirection() {
+      search.toggleSortDirection(index);
+    }
+
+    return (
+      <SelectField
+        key={index}
+        name="sort"
+        value={column}
+        required
+        onChange={handleChangeColumn}
+        options={SORTABLE_FIELDS.map(field => ({
+          value: field,
+          label: t(`bottle.${field}`),
+        }))}
+        fullWidth
+        InputProps={{
+          inputProps: {
+            'aria-label': t('label.sort_column'),
+          },
+          startAdornment: (
+            <IconButton
+              onClick={handleChangeDirection}
+              title={t('label.sort_direction')}
+              aria-label={t('label.sort_direction')}
+              color="secondary"
+              aria-pressed={direction}
+            >
+              {direction ? <AscIcon /> : <DescIcon />}
+            </IconButton>
+          ),
+        }}
+      />
+    );
+  });
 });

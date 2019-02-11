@@ -8,6 +8,9 @@
     "duplicate": "Dupliquer",
     "delete": "Supprimer",
     "remove": "Retirer",
+    "sort": "Tri",
+    "sort_column": "Champ",
+    "sort_direction": "Ordre",
     "open_menu": "Ouvrir le menu"
   },
   "topbar": {
@@ -93,7 +96,6 @@
       "unselect": "Désélectionner",
       "unselectAll": "Tout déselectionner",
       "unselectAllVisible": "Déselectionner les visibles",
-      "sort": "Tri",
       "pagination": {
         "previous": "Page précédente",
         "next": "Page suivante",

@@ -6,8 +6,11 @@ export default {
   // Cellar data
   name: null,
   description: null,
+  type: null,
+  size: null,
+  occupation: null,
 
   // Stock data
   shelves: [],
   bottles: [],
-}
+};

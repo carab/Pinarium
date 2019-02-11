@@ -12,6 +12,9 @@
     "duplicate": "Duplicate",
     "delete": "Delete",
     "remove": "Remove",
+    "sort": "Sort",
+    "sort_column": "Field",
+    "sort_direction": "Direction",
     "open_menu": "Open menu"
   },
   "topbar": {
@@ -98,7 +101,6 @@
       "unselect": "Unselect",
       "unselectAll": "Unselect all",
       "unselectAllVisible": "Unselect visible",
-      "sort": "Sort",
       "pagination": {
         "previous": "Previous page",
         "next": "Next page",

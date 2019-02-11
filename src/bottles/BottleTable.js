@@ -21,7 +21,7 @@ import {ColumnsIcon, VisitIcon} from '../ui/Icons';
 import useAutoresize from '../hooks/useAutoresize';
 import useAnchor from '../hooks/useAnchor';
 import uiStore from '../stores/ui';
-import {useSearch} from '../stores/searchStore';
+import {useSearch, SORTABLE_FIELDS} from '../stores/searchStore';
 import {useSelection} from '../stores/selectionStore';
 
 const useStyle = makeStyles(theme => ({
@@ -63,29 +63,29 @@ const useStyle = makeStyles(theme => ({
 }));
 
 const COLUMNS = [
-  {name: 'sort', sortable: true, width: 40},
-  {name: 'cellar', sortable: true, width: 100},
-  {name: 'appellation', sortable: true, width: 200},
-  {name: 'vintage', numeric: true, sortable: true, width: 110},
-  {name: 'bottlingDate', sortable: true, width: 50},
-  {name: 'expirationDate', sortable: true, width: 50},
-  {name: 'cuvee', sortable: true, width: 150},
-  {name: 'producer', sortable: true, width: 200},
-  {name: 'region', sortable: true, width: 100},
-  {name: 'country', sortable: true, width: 100},
-  {name: 'size', numeric: true, sortable: true, width: 100},
-  {name: 'color', sortable: true, width: 100},
-  {name: 'effervescence', sortable: true, width: 100},
-  {name: 'type', sortable: true, width: 100},
-  {name: 'capsule', sortable: true, width: 100},
-  {name: 'alcohol', numeric: true, sortable: true, width: 100},
-  {name: 'medal', sortable: true, width: 100},
-  {name: 'status', sortable: true, width: 100},
-  {name: 'rating', numeric: true, sortable: true, width: 40},
-  {name: 'inDate', sortable: true, width: 50},
-  {name: 'outDate', sortable: true, width: 50},
-  {name: 'buyingPrice', numeric: true, sortable: true, width: 40},
-  {name: 'sellingPrice', numeric: true, sortable: true, width: 40},
+  {name: 'sort', width: 40},
+  {name: 'cellar', width: 100},
+  {name: 'appellation', width: 200},
+  {name: 'vintage', numeric: true, width: 110},
+  {name: 'bottlingDate', width: 50},
+  {name: 'expirationDate', width: 50},
+  {name: 'cuvee', width: 150},
+  {name: 'producer', width: 200},
+  {name: 'region', width: 100},
+  {name: 'country', width: 100},
+  {name: 'size', numeric: true, width: 100},
+  {name: 'color', width: 100},
+  {name: 'effervescence', width: 100},
+  {name: 'type', width: 100},
+  {name: 'capsule', width: 100},
+  {name: 'alcohol', numeric: true, width: 100},
+  {name: 'medal', width: 100},
+  {name: 'status', width: 100},
+  {name: 'rating', numeric: true, width: 40},
+  {name: 'inDate', width: 50},
+  {name: 'outDate', width: 50},
+  {name: 'buyingPrice', numeric: true, width: 40},
+  {name: 'sellingPrice', numeric: true, width: 40},
 ];
 
 const ROW_HEIGHT = 56;
@@ -100,8 +100,10 @@ function BottleTable({bottles, onLoadBottles}) {
     return event => Search.toggleColumn(column);
   }
 
-  function handleToggleSort(sort) {
-    return event => Search.toggleSort(sort);
+  function handleToggleSort(column) {
+    return event => {
+      Search.toggleSort(column);
+    };
   }
 
   function handleToggledColumn(column) {
@@ -138,8 +140,7 @@ function BottleTable({bottles, onLoadBottles}) {
               column={column}
               classes={classes}
               style={{width: column.width}}
-              active={Search.isSortActive(column.name)}
-              direction={Search.isSortAsc(column.name) ? 'asc' : 'desc'}
+              sort={Search.findSort(column.name)}
               onSort={handleToggleSort(column.name)}
             />
           ))}
@@ -324,13 +325,16 @@ const HeaderCell = function({
   column,
   className,
   classes,
-  active,
-  direction,
+  sort,
   onSort,
   ...props
 }) {
   const [t] = useTranslation();
+
   const label = t(`bottle.${column.name}`);
+  const sortable = SORTABLE_FIELDS.indexOf(column.name) >= 0;
+  const active = Boolean(sort);
+  const direction = sort && sort[0] ? 'asc' : 'desc';
 
   return (
     <TableCell
@@ -343,9 +347,9 @@ const HeaderCell = function({
     >
       {column.headerRenderer ? (
         <column.headerRenderer column={column} />
-      ) : column.sortable ? (
+      ) : sortable ? (
         <Tooltip
-          title={t('bottle.list.sort')}
+          title={t('label.sort')}
           placement={'bottom-end'}
           enterDelay={300}
         >
