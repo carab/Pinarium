@@ -1,13 +1,8 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {observer} from 'mobx-react-lite';
 import {useTranslation} from 'react-i18next/hooks';
 import classnames from 'classnames';
-import {
-  AutoSizer,
-  Column,
-  // SortDirection,
-  Table as VirtualizedTable,
-} from 'react-virtualized';
+import {FixedSizeList as WindowedList} from 'react-window';
 import {makeStyles} from '@material-ui/styles';
 import {
   Checkbox,
@@ -23,6 +18,7 @@ import {Link} from '@reach/router';
 import FieldRenderer from '../field/FieldRenderer';
 import {ColumnsIcon, VisitIcon} from '../ui/Icons';
 
+import useAutoresize from '../hooks/useAutoresize';
 import useAnchor from '../hooks/useAnchor';
 import uiStore from '../stores/ui';
 import {useSearch} from '../stores/searchStore';
@@ -32,8 +28,6 @@ const useStyle = makeStyles(theme => ({
   tableContainer: {
     overflow: 'auto',
     flexGrow: 1,
-  },
-  table: {
     fontFamily: theme.typography.fontFamily,
   },
   flexContainer: {
@@ -42,26 +36,29 @@ const useStyle = makeStyles(theme => ({
     boxSizing: 'border-box',
   },
   tableRow: {
-    // cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'row',
+    boxSizing: 'border-box',
   },
   tableRowHover: {
     '&:hover': {
       backgroundColor: theme.palette.grey[200],
     },
   },
+  tableRowPicked: {
+    fontWeight: 'bold',
+  },
+  tableRowDisabled: {
+    opacity: 0.5,
+  },
   tableCell: {
-    flex: 1,
+    display: 'flex',
+    alignItems: 'center',
     '&:last-child': {
       // override MaterialUI default padding
       paddingLeft: theme.spacing.unit * 2,
       paddingRight: theme.spacing.unit * 2,
     },
-  },
-  tableCellPicked: {
-    fontWeight: 'bold',
-  },
-  tableCellDisabled: {
-    opacity: 0.3,
   },
 }));
 
@@ -73,7 +70,7 @@ const COLUMNS = [
   {name: 'bottlingDate', sortable: true, width: 50},
   {name: 'expirationDate', sortable: true, width: 50},
   {name: 'cuvee', sortable: true, width: 150},
-  {name: 'producer', sortable: true, width: 150},
+  {name: 'producer', sortable: true, width: 200},
   {name: 'region', sortable: true, width: 100},
   {name: 'country', sortable: true, width: 100},
   {name: 'size', numeric: true, sortable: true, width: 100},
@@ -91,12 +88,12 @@ const COLUMNS = [
   {name: 'sellingPrice', numeric: true, sortable: true, width: 40},
 ];
 
-const HEADER_HEIGHT = 56;
 const ROW_HEIGHT = 56;
 
 function BottleTable({bottles, onLoadBottles}) {
   const classes = useStyle();
-  const [t] = useTranslation();
+  const containerRef = useRef();
+  const [width, height] = useAutoresize(containerRef);
   const Search = useSearch();
 
   function handleToggleColumn(column) {
@@ -115,15 +112,14 @@ function BottleTable({bottles, onLoadBottles}) {
   columns.unshift({
     name: 'select',
     width: 80,
-    cellRenderer: props => <SelectCell {...props} />,
+    cellRenderer: SelectRenderer,
     headerRenderer: () => null,
     props: {padding: 'checkbox'},
   });
   columns.push({
     name: 'action',
     width: 80,
-    cellRenderer: props => <ActionCell {...props} />,
-    // cellRenderer: () => null,
+    cellRenderer: ActionRenderer,
     headerRenderer: () => (
       <ColumnsMenu
         onToggle={handleToggleColumn}
@@ -132,124 +128,74 @@ function BottleTable({bottles, onLoadBottles}) {
     ),
   });
 
-  function cellRenderer({rowData, columnData, rowIndex}) {
-    return (
-      <DefaultCell
-        bottle={rowData}
-        column={columnData}
-        rowIndex={rowIndex}
-        classes={classes}
-      />
-    );
-  }
-
-  // const directions = {
-  //   [SortDirection.ASC]: 'asc',
-  //   [SortDirection.DESC]: 'desc',
-  // }
-
-  function headerRenderer({columnData: column, sortBy, sortDirection}) {
-    const label = t(`bottle.${column.name}`);
-    return (
-      <TableCell
-        component="div"
-        className={classnames(classes.tableCell, classes.flexContainer)}
-        variant="head"
-        style={{height: HEADER_HEIGHT}}
-        align={column.numeric ? 'right' : 'left'}
-        {...column.props}
-      >
-        {column.headerRenderer ? (
-          <column.headerRenderer column={column} />
-        ) : column.sortable ? (
-          <Tooltip
-            title={t('bottle.list.sort')}
-            placement={'bottom-end'}
-            enterDelay={300}
-          >
-            <TableSortLabel
+  function Item({index, style}) {
+    if (index === 0) {
+      return (
+        <HeaderRow classes={classes} style={style}>
+          {columns.map(column => (
+            <HeaderCell
+              key={column.name}
+              column={column}
+              classes={classes}
+              style={{width: column.width}}
               active={Search.isSortActive(column.name)}
               direction={Search.isSortAsc(column.name) ? 'asc' : 'desc'}
-              onClick={handleToggleSort(column.name)}
-            >
-              {label}
-            </TableSortLabel>
-          </Tooltip>
-        ) : (
-          label
-        )}
-      </TableCell>
-    );
-  }
+              onSort={handleToggleSort(column.name)}
+            />
+          ))}
+        </HeaderRow>
+      );
+    }
 
-  function rowRenderer({
-    className,
-    columns,
-    index,
-    key,
-    rowData: bottle,
-    style,
-  }) {
-    const classNames = classnames(className, classes.flexContainer, {
-      [classes.tableRow]: index !== -1,
-      [classes.tableRowHover]: index !== -1,
-    });
+    const realIndex = index - 1;
+    const bottle = bottles[realIndex];
 
     return (
-      <TableRow
-        className={classNames}
+      <BodyRow
+        index={realIndex}
         bottle={bottle}
-        key={key}
-        index={index}
+        classes={classes}
         style={style}
       >
-        {columns}
-      </TableRow>
+        {columns.map(column => (
+          <BodyCell
+            key={column.name}
+            bottle={bottle}
+            column={column}
+            rowIndex={realIndex}
+            classes={classes}
+            style={{width: column.width}}
+          />
+        ))}
+      </BodyRow>
     );
   }
 
-  function headerRowRenderer({className, columns, style}) {
-    const classNames = classnames(className, classes.flexContainer);
+  function itemKey(index) {
+    if (index === 0) {
+      return 'header';
+    }
 
-    return (
-      <div className={classNames} role="row" style={style}>
-        {columns}
-      </div>
-    );
+    const row = bottles[index - 1];
+    return row.$ref.id;
   }
 
   return (
-    <div className={classes.tableContainer}>
-      <AutoSizer>
-        {({height, width}) => (
-          <VirtualizedTable
-            className={classes.table}
-            height={height}
-            width={width}
-            rowCount={bottles.length}
-            rowGetter={({index}) => bottles[index]}
-            rowHeight={ROW_HEIGHT}
-            headerHeight={HEADER_HEIGHT}
-            rowRenderer={rowRenderer}
-            headerRowRenderer={headerRowRenderer}
-          >
-            {columns.map(column => (
-              <Column
-                key={column.name}
-                dataKey={column.name}
-                columnData={column}
-                headerRenderer={headerRenderer}
-                cellRenderer={cellRenderer}
-                className={classes.flexContainer}
-                width={column.width}
-              />
-            ))}
-          </VirtualizedTable>
-        )}
-      </AutoSizer>
+    <div className={classes.tableContainer} ref={containerRef}>
+      <WindowedList
+        height={height}
+        itemCount={1 + bottles.length}
+        itemSize={ROW_HEIGHT}
+        itemKey={itemKey}
+        width={width}
+      >
+        {Item}
+      </WindowedList>
     </div>
   );
 }
+
+export default observer(BottleTable);
 
 const useCellStyles = makeStyles(theme => ({
   hidden: {
@@ -257,7 +203,7 @@ const useCellStyles = makeStyles(theme => ({
   },
 }));
 
-const SelectCell = observer(function({bottle, rowIndex}) {
+const SelectRenderer = observer(function({bottle, rowIndex}) {
   const [t] = useTranslation();
   const classes = useCellStyles();
   const [selected, select, unselect] = useSelection(bottle);
@@ -285,7 +231,7 @@ const SelectCell = observer(function({bottle, rowIndex}) {
   );
 });
 
-const ActionCell = observer(function({bottle, rowIndex}) {
+const ActionRenderer = observer(function({bottle, rowIndex}) {
   const classes = useCellStyles();
   const visible = uiStore.bottlePage.overed[rowIndex];
 
@@ -300,25 +246,32 @@ const ActionCell = observer(function({bottle, rowIndex}) {
   );
 });
 
-const DefaultCell = function({bottle, column, rowIndex, classes}) {
+const BodyCell = function({
+  bottle,
+  column,
+  rowIndex,
+  className,
+  classes,
+  ...props
+}) {
+  const classNames = classnames(className, classes.tableCell);
+
   return (
     <TableCell
       component="div"
-      className={classnames(classes.tableCell, classes.flexContainer, {
-        [classes.tableCellPicked]: bottle.status === 'picked',
-        [classes.tableCellDisabled]: bottle.stocked === false,
-      })}
       variant="body"
+      className={classNames}
       style={{height: ROW_HEIGHT}}
       align={column.numeric ? 'right' : 'left'}
       {...column.props}
+      {...props}
     >
       {column.cellRenderer ? (
-        column.cellRenderer({
-          bottle,
-          column,
-          rowIndex,
-        })
+        <column.cellRenderer
+          bottle={bottle}
+          column={column}
+          rowIndex={rowIndex}
+        />
       ) : (
         <FieldRenderer
           value={bottle[column.name]}
@@ -330,7 +283,20 @@ const DefaultCell = function({bottle, column, rowIndex, classes}) {
   );
 };
 
-const TableRow = observer(function({children, index, bottle, style, ...props}) {
+const BodyRow = observer(function({
+  children,
+  index,
+  bottle,
+  className,
+  classes,
+  ...props
+}) {
+  const classNames = classnames(className, classes.tableRow, {
+    [classes.tableRowHover]: uiStore.bottlePage.overed[index],
+    [classes.tableRowPicked]: bottle.status === 'picked',
+    [classes.tableRowDisabled]: bottle.stocked === false,
+  });
+
   function handleMouseOver(event) {
     uiStore.bottlePage.overed[index] = true;
   }
@@ -346,7 +312,7 @@ const TableRow = observer(function({children, index, bottle, style, ...props}) {
       aria-label="row"
       onMouseOut={handleMouseOut}
       onMouseOver={handleMouseOver}
-      style={style}
+      className={classNames}
       {...props}
     >
       {children}
@@ -354,7 +320,65 @@ const TableRow = observer(function({children, index, bottle, style, ...props}) {
   );
 });
 
-export default observer(BottleTable);
+const HeaderCell = function({
+  column,
+  className,
+  classes,
+  active,
+  direction,
+  onSort,
+  ...props
+}) {
+  const [t] = useTranslation();
+  const label = t(`bottle.${column.name}`);
+
+  return (
+    <TableCell
+      component="div"
+      className={classnames(className, classes.tableCell)}
+      variant="head"
+      align={column.numeric ? 'right' : 'left'}
+      {...column.props}
+      {...props}
+    >
+      {column.headerRenderer ? (
+        <column.headerRenderer column={column} />
+      ) : column.sortable ? (
+        <Tooltip
+          title={t('bottle.list.sort')}
+          placement={'bottom-end'}
+          enterDelay={300}
+        >
+          <TableSortLabel
+            active={active}
+            direction={direction}
+            onClick={onSort}
+          >
+            {label}
+          </TableSortLabel>
+        </Tooltip>
+      ) : (
+        label
+      )}
+    </TableCell>
+  );
+};
+
+const HeaderRow = function({children, className, classes, ...props}) {
+  const classNames = classnames(className, classes.tableRow);
+
+  return (
+    <div
+      className={classNames}
+      role="row"
+      aria-rowindex="0"
+      aria-label="header"
+      {...props}
+    >
+      {children}
+    </div>
+  );
+};
 
 const ColumnsMenu = observer(function({onToggle, isToggled}) {
   const [anchor, open, handleOpen, handleClose] = useAnchor();

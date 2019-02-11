@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {observer} from 'mobx-react-lite';
 import {Link} from '@reach/router';
 import {useTranslation} from 'react-i18next/hooks';
 import classnames from 'classnames';
-import {AutoSizer, List as VirtualizedList} from 'react-virtualized';
+// import {AutoSizer, List as VirtualizedList} from 'react-virtualized';
+import {FixedSizeList as WindowedList} from 'react-window';
 import {makeStyles} from '@material-ui/styles';
 import {
   ListItem,
@@ -14,6 +15,7 @@ import {
 
 import {BottleIcon, CheckIcon} from '../ui/Icons';
 import useLocale from '../hooks/useLocale';
+import useAutoresize from '../hooks/useAutoresize';
 import useFirebaseImage from '../hooks/useFirebaseImage';
 import usePreloadImage from '../hooks/usePreloadImage';
 import {useCellar} from '../stores/cellarsStore';
@@ -35,25 +37,30 @@ const ROW_HEIGHT = 86;
 
 function BottleList({bottles}) {
   const classes = useStyle();
+  const containerRef = useRef();
+  const [, height] = useAutoresize(containerRef);
 
-  function rowRenderer({index, key, style}) {
+  function Row({index, style}) {
     const bottle = bottles[index];
-    return <BottleItem key={key} bottle={bottle} style={style} />;
+    return <BottleItem bottle={bottle} style={style} />;
+  }
+
+  function itemKey(index) {
+    const row = bottles[index];
+    return row.$ref.id;
   }
 
   return (
-    <div className={classes.listContainer}>
-      <AutoSizer>
-        {({width, height}) => (
-          <VirtualizedList
-            rowCount={bottles.length}
-            rowHeight={ROW_HEIGHT}
-            rowRenderer={rowRenderer}
-            width={width}
-            height={height}
-          />
-        )}
-      </AutoSizer>
+    <div className={classes.listContainer} ref={containerRef}>
+      <WindowedList
+        height={height}
+        itemCount={bottles.length}
+        itemSize={ROW_HEIGHT}
+        itemKey={itemKey}
+        width="100%"
+      >
+        {Row}
+      </WindowedList>
     </div>
   );
 }
@@ -105,11 +112,7 @@ const BottleItem = observer(function({bottle, ...props}) {
   const [primary, secondary, tertiary] = bottleRenderer(bottle, cellar, t);
 
   return (
-    <ListItem
-      component={Link}
-      to={`/bottle/${bottle.$ref.id}`}
-      {...props}
-    >
+    <ListItem component={Link} to={`/bottle/${bottle.$ref.id}`} {...props}>
       <ListItemAvatar
         tabIndex="0"
         role="button"
